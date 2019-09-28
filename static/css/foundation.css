@@ -1,0 +1,88 @@
+/*
+Description: Foundation 4 docs style for highlight.js
+Author: Dan Allen <dan.j.allen@gmail.com>
+Website: http://foundation.zurb.com/docs/
+Version: 1.0
+Date: 2013-04-02
+*/
+
+.hljs {
+  display: block !important;
+  overflow-x: auto !important;
+  padding: 0.5em !important;
+  background: #eee; color: black !important;
+}
+
+.hljs-link,
+.hljs-emphasis,
+.hljs-attribute,
+.hljs-addition {
+  color: #070 !important;
+}
+
+.hljs-emphasis {
+  font-style: italic !important;
+}
+
+.hljs-strong,
+.hljs-string,
+.hljs-deletion {
+  color: #d14 !important;
+}
+
+.hljs-strong {
+  font-weight: bold !important;
+}
+
+.hljs-quote,
+.hljs-comment {
+  color: #998 !important;
+  font-style: italic !important;
+}
+
+.hljs-section,
+.hljs-title {
+  color: #900 !important;
+}
+
+.hljs-class .hljs-title,
+.hljs-type {
+  color: #458 !important;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #336699 !important;
+}
+
+.hljs-bullet {
+  color: #997700 !important;
+}
+
+.hljs-meta {
+  color: #3344bb !important;
+}
+
+.hljs-code,
+.hljs-number,
+.hljs-literal,
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #099 !important;
+}
+
+.hljs-regexp {
+  background-color: #fff0ff !important;
+  color: #880088 !important;
+}
+
+.hljs-symbol {
+  color: #990073 !important;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #007700 !important;
+}

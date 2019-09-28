@@ -1,0 +1,88 @@
+/*
+
+Arduino® Light Theme - Stefania Mellai <s.mellai@arduino.cc>
+
+*/
+
+.hljs {
+  display: block !important;
+  overflow-x: auto !important;
+  padding: 0.5em !important;
+  background: #FFFFFF !important;
+}
+
+.hljs,
+.hljs-subst {
+  color: #434f54 !important;
+}
+
+.hljs-keyword,
+.hljs-attribute,
+.hljs-selector-tag,
+.hljs-doctag,
+.hljs-name {
+  color: #00979D !important;
+}
+
+.hljs-built_in,
+.hljs-literal,
+.hljs-bullet,
+.hljs-code,
+.hljs-addition {
+  color: #D35400 !important;
+}
+
+.hljs-regexp,
+.hljs-symbol,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-link,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #00979D !important;
+}
+
+.hljs-type,
+.hljs-string,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-deletion {
+  color: #005C5F !important;
+}
+
+.hljs-title,
+.hljs-section {
+  color: #880000 !important;
+  font-weight: bold !important;
+}
+
+.hljs-comment {
+  color: rgba(149,165,166,.8) !important;
+}
+
+.hljs-meta-keyword {
+  color: #728E00 !important;
+}
+
+.hljs-meta {
+  color: #728E00 !important;
+  color: #434f54 !important;
+}
+
+.hljs-emphasis {
+  font-style: italic !important;
+}
+
+.hljs-strong {
+  font-weight: bold !important;
+}
+
+.hljs-function {
+  color: #728E00 !important;
+}
+
+.hljs-number {
+  color: #8A7B52;  
+}

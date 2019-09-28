@@ -1,0 +1,92 @@
+
+/*
+  xt256.css
+
+  Contact: initbar [at] protonmail [dot] ch
+         : github.com/initbar
+*/
+
+.hljs {
+  display: block !important;
+  overflow-x: auto !important;
+  color: #eaeaea !important;
+  background: #000 !important;
+  padding: 0.5 !important;
+}
+
+.hljs-subst {
+  color: #eaeaea !important;
+}
+
+.hljs-emphasis {
+  font-style: italic !important;
+}
+
+.hljs-strong {
+  font-weight: bold !important;
+}
+
+.hljs-builtin-name,
+.hljs-type {
+  color: #eaeaea !important;
+}
+
+.hljs-params {
+  color: #da0000 !important;
+}
+
+.hljs-literal,
+.hljs-number,
+.hljs-name {
+  color: #ff0000 !important;
+  font-weight: bolder !important;
+}
+
+.hljs-comment {
+  color: #969896 !important;
+}
+
+.hljs-selector-id,
+.hljs-quote {
+  color: #00ffff !important;
+}
+
+.hljs-template-variable,
+.hljs-variable,
+.hljs-title {
+  color: #00ffff !important;
+  font-weight: bold !important;
+}
+
+.hljs-selector-class,
+.hljs-keyword,
+.hljs-symbol {
+  color: #fff000 !important;
+}
+
+.hljs-string,
+.hljs-bullet {
+  color: #00ff00 !important;
+}
+
+.hljs-tag,
+.hljs-section {
+  color: #000fff !important;
+}
+
+.hljs-selector-tag {
+  color: #000fff !important;
+  font-weight: bold !important;
+}
+
+.hljs-attribute,
+.hljs-built_in,
+.hljs-regexp,
+.hljs-link {
+  color: #ff00ff !important;
+}
+
+.hljs-meta {
+  color: #fff !important;
+  font-weight: bolder !important;
+}

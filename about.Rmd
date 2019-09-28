@@ -1,0 +1,118 @@
+---
+title: "about"
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-07-30T14:59:43+05:30'
+cover: /img/H3_programming.png
+description: CV and notes on Houston's experience 
+draft: no
+tags:
+- Moog
+- TherpyEdge
+- AI
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+library(fontawesome)
+```
+<div class="clearfix"><img class="ui medium left floated circular image" src="/img/H3_suit">Hello and welcome! Since you were likely referred one of my public profiles, you might have an idea of my skills and background. However, there’s more to my story than you’ll find on LinkedIn or online resume listings. Over the past few years I have returned to my original passion – big data, artificial intelligence and related areas in data science. I built this site to showcase anonymized and abstracted examples of that work along with personal/side projects in mobile and IoT. As these projects mature I’ll extend this portfolio and add entries with code excerpts and other details about each project.</div>
+
+---
+# `r fa("black-tie")` My CV
+
+Aside from posting my updated CV here, I also share some details about my background that you won’t find elsewhere.
+
+
+#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
+
+---
+
+
+# `r fa("music")` Moog and Machine Learning
+
+My professional history begins at Big Briar, a company started by electronic music titan Bob Moog before he reclaimed the “Moog Music” company name several years later. But prior to that I was one of Bob’s university students, where I had my first brush with machine learning. Before I learned that Bob had joined the world of academia, I had spent two years studying composition and theory in a conservatory environment. But when I got wind that Bob (then “Dr. Moog”) had become the Research Professor of Music at the University of North Carolina, Asheville – practically in my back yard – I transferred to study electronic music “from the wires up” on a formal basis. At the time he joined the faculty there, the plan was to build a computer music research facility to rival those of nationally well-known programs. And more broadly, the audio engineering program at UNC-A was gaining a very good reputation, both in its creative and technical components to the curriculum. On the technical side there were hardware and software engineering requirements, and I took full advantage of both. Because of that I was always around the electronic music and computer science labs. When it came time to find an academic sponsor for my final project, I immediately thought of Bob as the perfect fit. Initially he declined, not only because of his other schedule demands, but also because of the nature of the project. 
+
+## `r fa("drafting-compass")` Accidental Machine Learning
+
+Bob believed that a computer science professor would be a better fit for my research project. I argued otherwise, due to the music component to the project being more challenging than the computer engineering element. He eventually agreed. This could have been because of Bob’s personal connection to the work of Leon Theremin, a contemporary of and collaborator with a figure central to my research. It also could have been because I was volunteering my time to help him complete his article for the Encyclopedia of Applied Physics, and he thought it would be fair to return the favor. Whether it was personal interest or a mild guilt trip, I was ecstatic to have him on board. Not only was it an easy way to recruit other faculty members to pitch in when I dropped his name, but he later became the linchpin to turning the conceptual design on its head. That critical moment led to the project’s eventual (measured) success.
+
+The research centered on the early theoretical work of Russian composer and physicist, Joseph Schillinger. In the 1920s and 30s he developed a mathematical system of music composition. His method later became well-known through his students, who were among the most popular American composers of that era. I became familiar with Schillinger and his system before my time at UNC-A, as a composition student of Dr. David Berry at the Petrie School of Music. Shortly before I transferred, he gave me a two-volume set of Schillinger’s correspondence courses along with a few other texts he had written. In many ways it foreshadowed electronic music-making that producers take for granted today, but it also had ideas and concepts that I had never seen before. I was mesmerized, and even though I didn’t immediately grok all of what the system had to offer, it struck me that Schillinger’s full method could take on new dimensions in a computing environment. It wasn’t until I had several years of technical schooling under my belt (and a few years wrapping my head around Schillinger’s thesis) that I felt comfortable delving into the mechanics of an application.
+
+<img class="ui centered rounded bordered image" src="/img/Schillinger_Bach.jpg">
+
+In the summer before my final year at UNC-A I applied for and received a research grant for the project. A large part of the success of that grant application was setting a target that seemed achievable. The dilemma was to balance an example with “useful” complexity while also being simple enough to complete within the time window for the project. In short, I wanted to produce something between “Hello World” and IBM’s Deep Blue – within a few months. Musical styles vary widely, and Schillinger’s system claims to encompass all of them. So, the challenge was to show enough of the system to effectively demonstrate its use in a computing environment without getting lost in the weeds. And further, the demonstration had to be apparent to non-musicians (and to non-computer-scientists) without too much prompting. I decided on the fugue as a primary subject, starting with the works from J.S. Bach’s “Well Tempered Clavier”. From a general music theory perspective, the fugue already starts with a constellation of fairly well-understood rules. So mapping those tendencies into patterns seemed like a relatively easy “leap” to make. Another advantage is that it’s recognizable even to non-musicians – most people know a fugue when they hear it, even if they don’t know a specific composer or work by name. (I often use the song “Row Row Row Your Boat” as a base conceptual example – even though it’s not a fugue from a music theory standpoint.) And finally, when I saw a Schillinger chart of a famous Bach invention, I thought it would be to my advantage to connect the application to his early demonstrations.
+
+By those measures I had what I thought was a relatively attainable target. I had previously analyzed some of Bach’s fugues when studying music theory, so I felt like I had a conceptual start on the process. I began with definition of container classes for the various musical structures and loaded MIDI file data into a small in-memory data set, each containing several closely-related works from the WTC. I then processed those structures through various permutations of the analyzed structures (I called them “Schillinger rules”) to modify the themes and developments by greater and lesser degrees. The resulting “secondary” structure was then played, each as its own piece, to audition each permutation as a new work. The results of those new pieces ranged from sounding like the original Bach work – with occasional “wrong notes” – to a poorly-schooled student that simply assembled a series of unrelated ideas. It was not what I expected, but as they say, it was a finding. Bob suggested that I sit down with a computer science professor to provide some feedback. The critique I received was as un-musical as my initial results.
+
+> “This looks like a narrow vector field reconstruction – a pretty weak one. And to be honest you’re barely passing it enough data to qualify.”
+
+Ouch. I also remember it (or more honestly I specifically recall my embarrassment) like it was yesterday, as I still have a clear mental picture of everything that was going on in the room at the time. To my right was a professor building a ray tracing application on a SPARC system. Behind and to my left were atmospheric sciences majors working on a weather forecasting algorithm that fed on data from the International Climatic Data Center – also based in Asheville. I was the only person in the room that didn’t understand the terms he used, but I certainly understood what he meant. Fortunately I was also certain that any insult was purely unintentional. This professor had a reputation for being particularly direct, and I appreciated his candor and brevity – the primary reason I asked for his input. Fortunately everyone else in the room was so engrossed in their own work that no one noticed the heat radiating from my face. Still, I did my best to hide it by pointing my nose into my notebook and feverishly took notes as he continued to deconstruct my work.
+
+This is what anyone would call humble beginnings. I sat down with Bob to go over the notes from that early review. I watched Bob pivot in his chair and gaze out the window as he digested what I had just read to him. I’m not sure how long the room was quiet, but it felt like an eternity had passed before he spoke again. “Have you thought about turning the conceptual model around?” which I didn’t follow. He explained that the process would be to fully analyze and generate all possibilities, starting with the opening theme. The analog (!) that he used was the process of troubleshooting an electronic circuit. The approach there is to separate the circuit into logical sections and solve for one area before moving on to the next. And when connecting them to each other look at how the later circuit connected to the previous, and ensure that it “connects back” properly. I had taken a few classes in electronic circuit design, but hadn’t made that logical leap until Bob pressed the point. And to be honest, it didn’t really make sense to me at first blush. He further reasoned that this is was what composer’s actually do in the musical domain. And that was a relatable idea to me – knowing the eventual cadence or “landing chord” at the end of a phrase – and making sure the melody and harmony arrived at the right time in the correct register. That became my conceptual hook, but the implications were daunting. It would break down my initial concept for one rule guiding the work – a precept which I presumed to be central to Schillinger’s thesis. I argued that generating distributed data sets, and then using Schillinger’s rules to audition and select them was the direct opposite of his original intent. Bob then made a point that would eventually change the way I viewed Schillinger in specific and computing in general. He said I was forcing Schillinger to be a prescriptive system, but Schillinger and his students use it both de-scriptively and pre-scriptively. His point was that Schillinger’s students used the system both for analysis and for generating new ideas, and that I should model that behavior as much as mimicking the mathematical permutations of his system. I was still resistant to the idea, arguing that “a shotgun approach” would invalidate Schillinger’s method. Bob then said something that brought me around to the idea:
+
+> “If Joseph Schillinger was alive today – with all of the technology and tools at his disposal – do you think he would at least try this approach, or do you think he’d stay with graph paper and pencil?”
+
+I was both excited and daunted by the implications of that rhetorical question. It meant loosening my (naive, dogmatic) concept of Schillinger’s system. It also meant starting over. But I was stuck – and this was a brand new idea that seemed to have several conceptual underpinnings I hadn’t considered before. I began (again) with re-analysis of Bach’s work – looking at each theme, variation and transition as it’s own “Schillinger rule”. That would be read as a pattern by the application, and all permutations of that pattern (according to Schillinger’s system) would be generated to create new “candidate” thematic material. But this time they wouldn’t propagate to variations and other elements “downstream” in the piece. The “rules” from the subsequent section of the work would be read in, and those rules would be used to generate a similarity rank against all of the permutations of the original theme. It was in-effect creating a self-training model, and it had the desired effect of taming some of the wider values generated by a strict mathematical propagation of musical pitches and durations. From that “reverse imposition” of rules a ranking system developed, with higher-ranked permutations given preference to those that didn’t match the variations down-stream in the time line.
+
+That was the good news. The bad news was that the process was slow – really slow. I was stepping out of the application to audition highly-ranked (and some low-ranked) versions to determine which ones sounded better “to my ear”. I decided to grade them separately myself, adding a new “perceptual rank” for each generated phrase. It felt like things were trending in the right direction musically, but the wrong direction time-wise. On a creative/compositional level, I knew that I could write counterpoint by hand faster than this process was allowing. That in and of itself ran counter to the claims Schillinger made about his system. Another problem was that it was taking a great amount of calendar time to get these results. Eventually I had to present my findings, and submit the work as part of completing my degree. But I was committed to this approach, as it certainly gave more useful results, if only in bits and pieces.
+
+<div class="clearfix"><img class="ui medium right floated image" src="/img/BachAnalysis.png">The concept was to eventually reduce the stop-and-audition cycles (i.e. my auditioning and applying “perceptual ranks”) as the layered rule sets and ranks made better choices without my intervention. And it eventually became apparent that progress was being made. With the persistence of generated themes alongside the rules that created them (and the respective ranking), an ersatz semantic layer was created that would make better choices as the history continued to grow and more sub-styles of fugue were analyzed. That large set of weighted factors yielded meta data well-suited to meta analysis. I was still a long way from that goal, but I happily abandoned my original thesis when the program starting yielding themes and variations that sounded like real music. But time was running out to “complete” the project before the presentation deadline, and I was nowhere near the original stated goal. Still, there were some pretty interesting things happening, as I had built up enough information to process fairly consistent theme and variation combinations. I wanted to get another round of feedback before I made the final presentation, so I returned to the computer science lab for a fresh appraisal of my work.</div>
+
+The professor had less to say during the second walk-through, and after a few minutes with the app in debug mode he called some of his students over to watch the application recycle the first results. As we proceeded, someone in the group used a term I had only encountered in passing – neural net. The instructor referred to it as a “machine learning application” which was the first I had ever encountered that term. Honestly, I was still unsure about my results, but everyone around me seemed to be pretty excited about it from a computer science context. Later that day I met with Bob, where he and the computer science professor were already discussing my project. Bob turned and posited, “so I hear you’ve built an AI engine” to which I replied “have I?” with a silly grin on my face. We talked about how it had progressed between major revisions, Bob’s pivotal recommendation, and how I hadn’t really closed the gap between my original concept and the applications ability to create a new piece of music.
+
+Aside from that, I had concerns about whether I was creating a “one trick pony”. I wanted the application to properly express the Schillinger system, which is a general model – like a periodic table of elements for music. If I created something that analyzed and (eventually) generated music for only for one genre, then the question would remain whether I had really established the validity of Schillinger’s system. The computer scientist answered with his signature deadpan, “It’s called an over-trained model, and in your case that would be a great problem to have.” Bob echoed, “That’s the kind of problem that doctoral theses are made of.” So, even with what I considered a “partially” complete project the final presentation went well. Faculty from both the music and computer science departments seemed pleased with what had been shown. I suppose they knew from the outset how presumptuous I had been when initially outlining the project, but that too seems to be a common “problem” in this kind of research. After graduation I set the project aside and hadn’t thought about it much since that time, as “normal” life – including taking a full time job working for Bob.
+
+And as I write this, it strikes me that many of those residual lessons are familiar to the more recent “big data” projects I’ve undertaken:
+
+1. Starting with pre-conceived notions about results often leads to wasted effort
+2. The vast majority of project time was spent parsing and structuring input and interim data
+3. “Wrong” and “right” answers can weigh equally on confidence in the final result, and
+4. Well understood dead-ends are more valuable than accidental successes
+
+I have considered re-approaching this project, but I’ll save my thoughts on that for another time.
+
+#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
+
+---
+
+
+# `r fa("user-md")` Data Science and N-of-1
+
+
+
+
+#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
+
+---
+
+
+# `r fa("hand-holding-usd")` The Dark Side
+
+
+
+
+#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
+
+---
+
+
+# `r fa("certificate")` Certifications and Continued Learning
+
+
+
+
+#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
+
+---

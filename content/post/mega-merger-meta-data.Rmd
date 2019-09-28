@@ -1,0 +1,37 @@
+---
+title: "Managing Mega-Merger Meta-Data"
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-07-15T14:59:43+05:30'
+cover: /img/Meta-data.png
+description: Data forensics techniques help settle accounts and speed pay-outs to creatives at a major global content distributor
+draft: yes
+tags:
+- SAP
+- Hyperion
+- Accelatis
+- SQL Server
+- SSIS
+categories: 
+- enterprise
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+library(fontawesome)
+library(jsonlite)
+library(highcharter)
+library(widgetframe)
+```
+

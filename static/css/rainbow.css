@@ -1,0 +1,85 @@
+/*
+
+Style with support for rainbow parens
+
+*/
+
+.hljs {
+  display: block !important;
+  overflow-x: auto !important;
+  padding: 0.5em !important;
+  background: #474949 !important;
+  color: #d1d9e1 !important;
+}
+
+
+.hljs-comment,
+.hljs-quote {
+  color: #969896 !important;
+  font-style: italic !important;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type,
+.hljs-addition {
+  color: #cc99cc !important;
+}
+
+.hljs-number,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #f99157 !important;
+}
+
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp {
+  color: #8abeb7 !important;
+}
+
+.hljs-title,
+.hljs-name,
+.hljs-section,
+.hljs-built_in {
+  color: #b5bd68 !important;
+}
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-selector-id,
+.hljs-class .hljs-title {
+   color: #ffcc66 !important;
+}
+
+.hljs-section,
+.hljs-name,
+.hljs-strong {
+  font-weight: bold !important;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst,
+.hljs-meta,
+.hljs-link {
+  color: #f99157 !important;
+}
+
+.hljs-deletion {
+  color: #dc322f !important;
+}
+
+.hljs-formula {
+  background: #eee8d5 !important;
+}
+
+.hljs-attr,
+.hljs-attribute {
+  color: #81a2be !important;
+}
+
+.hljs-emphasis {
+  font-style: italic !important;
+}

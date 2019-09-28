@@ -1,0 +1,57 @@
+baseURL = "https://www.h3tech.io/"
+languageCode = "en-us"
+defaultContentLanguage = "en"
+title = "Houston Haynes"
+theme = "hugo-dream-plus"
+
+googleAnalytics = "UA-122964326-1"
+
+enableRobotsTXT = true
+
+#Enable Hugo Emoji Conversion
+enableEmoji=true
+
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+
+[params]
+	author = "Houston Haynes"
+	description = "Examples of previous work and current explorations in data science."
+	avatar = "/img/H3_suit.jpg"
+	motto = "Department lead of intelligent teams & systems with experience in audio, entertainment, medical, IoT & devops."
+	enableToc = true
+	enableShareCard = false
+	relativeurls = true
+	
+	highlightjsVersion = "9.11.0"
+  highlightjsCDN = "//cdn.bootcss.com"
+  highlightjsLang = ["r", "yaml", "css", "http", "javascript", "php", "sql", "json", "c#", "markdown", "java", "python", "bash", "typescript", "scala", "groovy", "dockerfile", "apache"]
+  highlightjsTheme = "sunburst"
+
+  MathJaxCDN = "//cdn.bootcss.com"
+  MathJaxVersion = "2.7.1"
+
+	favicon = "/img/favicon.ico"
+  	
+  #Background settings
+	enableColorBG= false
+	bgBlur = "1px"
+	bgImage = "/img/Sunset3.jpg"
+  
+	#Post-displaying Settings
+	enableTags = false
+	enableCategories = true
+
+	#Cards or posts shown per page
+	itemsPerPage = 4
+
+	#Set whether you're hosting "cards" or "post"
+	contentType = "post"
+
+	#Enable Twitter Emoji
+	twitterEmoji =  true
+
+[social]
+	email = "ds@h3tech.io"
+	github = "houstonhaynes"
+	twitter = "whiskersedge" 
+	siteStartYear = 2017

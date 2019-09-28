@@ -1,0 +1,35 @@
+---
+title: "Bragi In-Ear Wireless Audio with Pulse Oximeter"
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-06-20T14:59:43+05:30'
+cover: /img/Bragi-1.png
+description: Measuring heart rate through optical pulse oximeters placed in the ear canal
+draft: yes
+tags:
+- Android
+- API
+- Bluetooth
+categories: 
+- IoT
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+library(fontawesome)
+library(jsonlite)
+library(highcharter)
+library(widgetframe)
+```
+

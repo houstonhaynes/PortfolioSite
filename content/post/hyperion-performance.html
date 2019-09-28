@@ -1,0 +1,234 @@
+---
+title: "Tracking Global Hyperion EPM Performance"
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-07-30T14:59:43+05:30'
+cover: /img/world-map-black.png
+description: Using PowerBI to create a Lamda-architecture "speed layer" monitor for Hyperion Finance activity 
+draft: no
+tags:
+- Azure
+- Oracle
+- Hyperion
+- Accelatis
+- SQL Server
+- PowerBI
+- SSIS
+categories: 
+- enterprise
+editor_options: 
+  chunk_output_type: inline
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
+<script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#beginning-with-the-end-in-mind"><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 496 512"><path d="M336.5 160C322 70.7 287.8 8 248 8s-74 62.7-88.5 152h177zM152 256c0 22.2 1.2 43.5 3.3 64h185.3c2.1-20.5 3.3-41.8 3.3-64s-1.2-43.5-3.3-64H155.3c-2.1 20.5-3.3 41.8-3.3 64zm324.7-96c-28.6-67.9-86.5-120.4-158-141.6 24.4 33.8 41.2 84.7 50 141.6h108zM177.2 18.4C105.8 39.6 47.8 92.1 19.3 160h108c8.7-56.9 25.5-107.8 49.9-141.6zM487.4 192H372.7c2.1 21 3.3 42.5 3.3 64s-1.2 43-3.3 64h114.6c5.5-20.5 8.6-41.8 8.6-64s-3.1-43.5-8.5-64zM120 256c0-21.5 1.2-43 3.3-64H8.6C3.2 212.5 0 233.8 0 256s3.2 43.5 8.6 64h114.6c-2-21-3.2-42.5-3.2-64zm39.5 96c14.5 89.3 48.7 152 88.5 152s74-62.7 88.5-152h-177zm159.3 141.6c71.4-21.2 129.4-73.7 158-141.6h-108c-8.8 56.9-25.6 107.8-50 141.6zM19.3 352c28.6 67.9 86.5 120.4 158 141.6-24.4-33.8-41.2-84.7-50-141.6h-108z"/></svg> Beginning With The End In Mind</a></li>
+<li><a href="#accelatis-pitfalls"><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 576 512"><path d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/></svg> Accelatis Pitfalls</a></li>
+<li><a href="#data-enrichment"><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 448 512"><path d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"/></svg> Data Enrichment</a></li>
+<li><a href="#visualization-part-1"><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 512 512"><path d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zM456 96H344c-21.4 0-32.1 25.9-17 41l32.9 32.9-72 72.9-55.6-55.6c-4.7-4.7-12.2-4.7-16.9 0L96.4 305c-4.7 4.6-4.8 12.2-.2 16.9l28.5 29.4c4.7 4.8 12.4 4.9 17.1.1l82.1-82.1 55.5 55.5c4.7 4.7 12.3 4.7 17 0l109.2-109.2L439 249c15.1 15.1 41 4.4 41-17V120c0-13.3-10.7-24-24-24z"/></svg> Visualization, Part 1</a></li>
+<li><a href="#visualization-full-circle"><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 640 512"><path d="M496 256c8.8 0 16-7.2 16-16s-7.2-16-16-16-16 7.2-16 16 7.2 16 16 16zm-176-80c48.5 0 88-39.5 88-88S368.5 0 320 0s-88 39.5-88 88 39.5 88 88 88zM59.8 364c10.2 15.3 29.3 17.8 42.9 9.8 16.2-9.6 56.2-31.7 105.3-48.6V416h224v-90.7c49.1 16.8 89.1 39 105.3 48.6 13.6 8 32.7 5.3 42.9-9.8l17.8-26.7c8.8-13.2 7.6-34.6-10-45.1-11.9-7.1-29.7-17-51.1-27.4-28.1 46.1-99.4 17.8-87.7-35.1C409.3 217.2 365.1 208 320 208c-57 0-112.9 14.5-160 32.2-.2 40.2-47.6 63.3-79.2 36-11.2 6-21.3 11.6-28.7 16-17.6 10.5-18.8 31.8-10 45.1L59.8 364zM368 344c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm-96-96c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm-160 8c8.8 0 16-7.2 16-16s-7.2-16-16-16-16 7.2-16 16 7.2 16 16 16zm512 192H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h608c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16z"/></svg> Visualization, Full Circle</a></li>
+</ul>
+</div>
+
+<div id="tldr" class="section level2">
+<h2><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"/></svg> tl:dr</h2>
+<div class="clearfix">
+<img class="ui medium left floated image" src="/img/oracle_hyperion.png">The term “performance” can mean different things within a given corporate context. In financial firms it most often refers to profit or loss. In tech companies, it can refer to throughput of an application or service. In this case, the term “performance” shares both of those connotations. The company was upgrading their Oracle Hyperion Financial Management installation, which is used to measure the company’s financial performance (and supports other tasks, such as forecasting). And because of the global nature of the company, and reliance on detailed ledger data ETL’d in from remote manufacturing locations, there was also a system-level performance aspect to the assignment. Due of the critical nature of close period reporting, there was a high degree of sensitivity around timely submission of data. This entry in my portfolio will focus on that latter portion of the “performance” equation, though the implications to the former will become clear as this entry progresses.
+</div>
+</div>
+<div id="beginning-with-the-end-in-mind" class="section level1">
+<h1><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 496 512"><path d="M336.5 160C322 70.7 287.8 8 248 8s-74 62.7-88.5 152h177zM152 256c0 22.2 1.2 43.5 3.3 64h185.3c2.1-20.5 3.3-41.8 3.3-64s-1.2-43.5-3.3-64H155.3c-2.1 20.5-3.3 41.8-3.3 64zm324.7-96c-28.6-67.9-86.5-120.4-158-141.6 24.4 33.8 41.2 84.7 50 141.6h108zM177.2 18.4C105.8 39.6 47.8 92.1 19.3 160h108c8.7-56.9 25.5-107.8 49.9-141.6zM487.4 192H372.7c2.1 21 3.3 42.5 3.3 64s-1.2 43-3.3 64h114.6c5.5-20.5 8.6-41.8 8.6-64s-3.1-43.5-8.5-64zM120 256c0-21.5 1.2-43 3.3-64H8.6C3.2 212.5 0 233.8 0 256s3.2 43.5 8.6 64h114.6c-2-21-3.2-42.5-3.2-64zm39.5 96c14.5 89.3 48.7 152 88.5 152s74-62.7 88.5-152h-177zm159.3 141.6c71.4-21.2 129.4-73.7 158-141.6h-108c-8.8 56.9-25.6 107.8-50 141.6zM19.3 352c28.6 67.9 86.5 120.4 158 141.6-24.4-33.8-41.2-84.7-50-141.6h-108z"/></svg> Beginning With The End In Mind</h1>
+<center>
+<iframe width="940" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiNTljZTM0ZGUtNTk4Ni00MjMxLWE1ZTYtYjJiODJiMWU4ODU5IiwidCI6Ijc4N2QxYzAwLTgyMjgtNDAzYy1iZjVmLTg1YjM3NzFmM2M0MiIsImMiOjZ9/" frameborder="0" allowFullScreen="true">
+</iframe>
+</center>
+<p>The above visualization is one of several artifacts that stemmed from collecting and collating data out of a combined Hyperion/Accelatis deployment. It provides snapshot views of requests that originate from company offices around the globe. Locations, request types and time interval can all be tailored to suit the viewer’s interest. It is used as a component for production support teams to actively monitor consolidations and other close period activities during critical windows of operation.</p>
+<div class="clearfix">
+<p><img class="ui medium left floated rounded bordered image" src="/img/image010.jpg">There are other visualizations based on this schema which was built in PowerBI, and are demonstrated through this portfolio entry. Another useful “end point” to consider is the schema diagram shown here. As I will detail later, the Concurrency table is the hub, as it has a row for every “grain” in the temporal span. From that, all time-based tables have a field with many-to-one relationship mapped to that central table. As visualizations are presented, the nature of how that hub maintains consistent time-scoping between various elements of a given chart will become apparent.</p>
+In the following pages, aside from the technical walkthrough, I will also detail some of the business and justifications for the process as a whole. While it would certainly help to have familiarity with Hyperion’s lexicon, it’s certainly not a requirement. This should not be considered a primer on Accelatis or Hyperion. Terms from those applications will be used in passing, with focus on how the data is collected and visualized. My goal is show how meaningful business process information can be gleaned from low-level data that the vendors themselves have not recognized. So, I’ve made an effort to keep the language as broad as possible.
+</div>
+<div id="back-to-top" class="section level4">
+<h4><a href="#TOC">Back To Top</a> <svg style="height:0.8em;top:.04em;position:relative;fill:firebrick;" viewBox="0 0 512 512"><path d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm143.6 28.9l72.4-75.5V392c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V209.4l72.4 75.5c9.3 9.7 24.8 9.9 34.3.4l10.9-11c9.4-9.4 9.4-24.6 0-33.9L273 107.7c-9.4-9.4-24.6-9.4-33.9 0L106.3 240.4c-9.4 9.4-9.4 24.6 0 33.9l10.9 11c9.6 9.5 25.1 9.3 34.4-.4z"/></svg></h4>
+<hr />
+</div>
+</div>
+<div id="accelatis-pitfalls" class="section level1">
+<h1><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 576 512"><path d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/></svg> Accelatis Pitfalls</h1>
+<div class="clearfix">
+<img class="ui medium right floated image" src="/img/Accelatis_Logo.png">In order to understand this solution, it’s useful to see some key points in Accelatis Performance Management Platform. This section of the document details how I first attempted to stay with “native” data and visualizations, and the efforts that followed from encountering its limitations. One of the major stumbling blocks with Accelatis is the lack of a consolidated view of activity. Charts for system performance and charts for user activity were in separate areas of the application. Similarly, consolidation views were in still a third area of the application. Any question about this led to the Accelatis consultants steering me to extract data out of the application and re-charting in Excel.
+</div>
+<div id="challenge-1-csv-extracts-from-accelatis" class="section level2">
+<h2>Challenge 1: CSV Extracts from Accelatis</h2>
+<div class="clearfix">
+<p><img class="ui medium left floated rounded bordered image" src="/img/image001.png">I started moving data out of Accelatis for its own analysis by using CSV files exported from the Accelatis Performance Lab and Activity Analysis Grid View. However, manual extraction of the data and then creating all of the necessary charts and pivots was both time-consuming and limiting.</p>
+Aside from the inability to see “rolling reports” as was envisioned when the company licensed the tool, the CSV files were missing columns of data that I was looking to chart in the reports. Due to those factors, as well as general limitations in the Accelatis CSV data, (such as missing agent location information) I came up with our own method of direct SQL extraction to present findings in the deliverables.
+</div>
+</div>
+<div id="challenge-2-direct-query-of-accelatis-data" class="section level2">
+<h2><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 640 512"><path d="M512.1 191l-8.2 14.3c-3 5.3-9.4 7.5-15.1 5.4-11.8-4.4-22.6-10.7-32.1-18.6-4.6-3.8-5.8-10.5-2.8-15.7l8.2-14.3c-6.9-8-12.3-17.3-15.9-27.4h-16.5c-6 0-11.2-4.3-12.2-10.3-2-12-2.1-24.6 0-37.1 1-6 6.2-10.4 12.2-10.4h16.5c3.6-10.1 9-19.4 15.9-27.4l-8.2-14.3c-3-5.2-1.9-11.9 2.8-15.7 9.5-7.9 20.4-14.2 32.1-18.6 5.7-2.1 12.1.1 15.1 5.4l8.2 14.3c10.5-1.9 21.2-1.9 31.7 0L552 6.3c3-5.3 9.4-7.5 15.1-5.4 11.8 4.4 22.6 10.7 32.1 18.6 4.6 3.8 5.8 10.5 2.8 15.7l-8.2 14.3c6.9 8 12.3 17.3 15.9 27.4h16.5c6 0 11.2 4.3 12.2 10.3 2 12 2.1 24.6 0 37.1-1 6-6.2 10.4-12.2 10.4h-16.5c-3.6 10.1-9 19.4-15.9 27.4l8.2 14.3c3 5.2 1.9 11.9-2.8 15.7-9.5 7.9-20.4 14.2-32.1 18.6-5.7 2.1-12.1-.1-15.1-5.4l-8.2-14.3c-10.4 1.9-21.2 1.9-31.7 0zm-10.5-58.8c38.5 29.6 82.4-14.3 52.8-52.8-38.5-29.7-82.4 14.3-52.8 52.8zM386.3 286.1l33.7 16.8c10.1 5.8 14.5 18.1 10.5 29.1-8.9 24.2-26.4 46.4-42.6 65.8-7.4 8.9-20.2 11.1-30.3 5.3l-29.1-16.8c-16 13.7-34.6 24.6-54.9 31.7v33.6c0 11.6-8.3 21.6-19.7 23.6-24.6 4.2-50.4 4.4-75.9 0-11.5-2-20-11.9-20-23.6V418c-20.3-7.2-38.9-18-54.9-31.7L74 403c-10 5.8-22.9 3.6-30.3-5.3-16.2-19.4-33.3-41.6-42.2-65.7-4-10.9.4-23.2 10.5-29.1l33.3-16.8c-3.9-20.9-3.9-42.4 0-63.4L12 205.8c-10.1-5.8-14.6-18.1-10.5-29 8.9-24.2 26-46.4 42.2-65.8 7.4-8.9 20.2-11.1 30.3-5.3l29.1 16.8c16-13.7 34.6-24.6 54.9-31.7V57.1c0-11.5 8.2-21.5 19.6-23.5 24.6-4.2 50.5-4.4 76-.1 11.5 2 20 11.9 20 23.6v33.6c20.3 7.2 38.9 18 54.9 31.7l29.1-16.8c10-5.8 22.9-3.6 30.3 5.3 16.2 19.4 33.2 41.6 42.1 65.8 4 10.9.1 23.2-10 29.1l-33.7 16.8c3.9 21 3.9 42.5 0 63.5zm-117.6 21.1c59.2-77-28.7-164.9-105.7-105.7-59.2 77 28.7 164.9 105.7 105.7zm243.4 182.7l-8.2 14.3c-3 5.3-9.4 7.5-15.1 5.4-11.8-4.4-22.6-10.7-32.1-18.6-4.6-3.8-5.8-10.5-2.8-15.7l8.2-14.3c-6.9-8-12.3-17.3-15.9-27.4h-16.5c-6 0-11.2-4.3-12.2-10.3-2-12-2.1-24.6 0-37.1 1-6 6.2-10.4 12.2-10.4h16.5c3.6-10.1 9-19.4 15.9-27.4l-8.2-14.3c-3-5.2-1.9-11.9 2.8-15.7 9.5-7.9 20.4-14.2 32.1-18.6 5.7-2.1 12.1.1 15.1 5.4l8.2 14.3c10.5-1.9 21.2-1.9 31.7 0l8.2-14.3c3-5.3 9.4-7.5 15.1-5.4 11.8 4.4 22.6 10.7 32.1 18.6 4.6 3.8 5.8 10.5 2.8 15.7l-8.2 14.3c6.9 8 12.3 17.3 15.9 27.4h16.5c6 0 11.2 4.3 12.2 10.3 2 12 2.1 24.6 0 37.1-1 6-6.2 10.4-12.2 10.4h-16.5c-3.6 10.1-9 19.4-15.9 27.4l8.2 14.3c3 5.2 1.9 11.9-2.8 15.7-9.5 7.9-20.4 14.2-32.1 18.6-5.7 2.1-12.1-.1-15.1-5.4l-8.2-14.3c-10.4 1.9-21.2 1.9-31.7 0zM501.6 431c38.5 29.6 82.4-14.3 52.8-52.8-38.5-29.6-82.4 14.3-52.8 52.8z"/></svg> Challenge 2: Direct Query of Accelatis Data</h2>
+<p>As soon as I stepped away from the Accelatis application context to query the data directly from the database, other ‘wrinkles’ were found in the data. On the plus side, we had access to agent fields in the “AUXDATA” column of the Opt_ActivityPerformance table. These were the actual agent machine names, which gave us a corollary to the geographical location of the activity. This was not available to us in the Grid View of Accelatis’ Performance Lab.</p>
+<p>On the negative side, we found that each agent reported the time stamp of their activity according to the local time zone of that agent. So, a time stamp from the agent in Shenzhen could be 15 or 16 hours “ahead” of the time zone in El Segundo (depending on whether daylight saving time was in effect on the west coast). This led to a two-step process for deriving the “window” of time for each location.</p>
+<ol style="list-style-type: decimal">
+<li>Use the date of the “local start time” to calculate the number of “Adjustment” hours for each location</li>
+<li>Calculate the Start and End time for each location based on the derived Adjustment value</li>
+</ol>
+<p>Calculating the “Adjustment” value is non-trivial, as Daylight Saving Time applies (where it applies) to different regions of the globe over different date ranges. So aside from “pulling everything in” to match US local time during DST, there were other regions (such as Mexico and Europe) that had their own adjustments, gated by different calendar dates). After all of that was sorted, I created a single step in the SSIS process to populate the “Adjustment” column. From there, the “Start” and “End” DateTime values are calculated for each location, again, this was done within a single iterative SSIS task.</p>
+<p><img class="ui centered rounded bordered image" src="/img/ScreenShot2016-09-21at8.12.02PM.png"></p>
+<p>The fully populated table (after the SSIS setup processing) contains the relative time periods for each agent location. The data in this table is used by downstream SSIS objects to pull Accelatis data for the time period that’s “correct” for each respective location. After that initial data is pulled, a separate “Adjusted DateTime” column is populated, again using the “Adjustment” value to subtract the necessary hours and insert the values in the new column. This ensures two things: 1) that the time values for each location is sortable by local time, and 2) the process can be used to “reach back” into the historical record of the database to retrieve records for any period and any location. This allows for follow-up analysis runs when the working group might opt for other, more detailed findings from historical data.</p>
+</div>
+<div id="challenge-3-accelatis-time-stamps-.net-and-unix-issues" class="section level2">
+<h2><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 448 512"><path d="M436 160H12c-6.6 0-12-5.4-12-12v-36c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48v36c0 6.6-5.4 12-12 12zM12 192h424c6.6 0 12 5.4 12 12v260c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V204c0-6.6 5.4-12 12-12zm116 204c0-6.6-5.4-12-12-12H76c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm0-128c0-6.6-5.4-12-12-12H76c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm128 128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm0-128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm128 128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm0-128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40z"/></svg> Challenge 3: Accelatis time stamps (.NET and Unix issues)</h2>
+<p>Once I had extracted the local agent data, I noticed that the time stamp string would present a problem. Even though we were in an Oracle solution stack, the Accelatis tooling was built on a .NET code base. This meant that timestamps had the now-infamous “leap year bug” that stemmed from Excel attempting to support an error in Lotus 1-2-3. So instead of adding the date to 1-Jan-1900 I had to use 30-Dec-1900 (because .NET also incorrectly calculates for a leap year in 2000).</p>
+<pre><code class="sql">SELECT DISTINCT Substr(accelatis.metricsamples.servername, 7, 6) AS Server, 
+                To_date('12/30/1899', 'MM/DD/YYYY') 
+                + accelatis.metricsamples.datetime               AS DATETIME, 
+                accelatis.metricsamples.metricvalue              AS CPU 
+FROM   accelatis.metricsamples 
+       join accelatis.metricdefs 
+         ON accelatis.metricdefs.metricdefid = 
+            accelatis.metricsamples.metricdefid 
+WHERE  To_date('12/30/1899', 'MM/DD/YYYY') 
+       + datetime >= To_date('3/6/2016 11:12:00 AM', 'MM/DD/YYYY HH:MI:SS AM') 
+       AND To_date('12/30/1899', 'MM/DD/YYYY') 
+           + datetime <= To_date('3/6/2016 1:12:00 PM', 'MM/DD/YYYY HH:MI:SS AM' 
+                         ) 
+       AND accelatis.metricdefs.metricname LIKE '%Processor Time' 
+ORDER  BY datetime ASC</code></pre>
+<p>To make the situation even more confusing – a bug was discovered in the timestamp code that Accelatis used to monitor Unix servers. The net result was that database CPU values were again mis-counted by one day after Febrary 29, 2016. So again, I had to split off the database CPU extraction because I had to then decide whether to use 30-Dec or 31-Dec as the epoch day-month in the calculation. This also meant that database CPU data overlapped on 29-February and 1-March, so data from that time period was nearly impossible to disambiguate. Needless to say, this was reported to Accelatis, and hopefully it will be resolved before Leap Year 2020.</p>
+<div id="back-to-top-1" class="section level4">
+<h4><a href="#TOC">Back To Top</a> <svg style="height:0.8em;top:.04em;position:relative;fill:firebrick;" viewBox="0 0 512 512"><path d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm143.6 28.9l72.4-75.5V392c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V209.4l72.4 75.5c9.3 9.7 24.8 9.9 34.3.4l10.9-11c9.4-9.4 9.4-24.6 0-33.9L273 107.7c-9.4-9.4-24.6-9.4-33.9 0L106.3 240.4c-9.4 9.4-9.4 24.6 0 33.9l10.9 11c9.6 9.5 25.1 9.3 34.4-.4z"/></svg></h4>
+<hr />
+</div>
+</div>
+</div>
+<div id="data-enrichment" class="section level1">
+<h1><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 448 512"><path d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"/></svg> Data Enrichment</h1>
+<p>Microsoft SQL Server Integration Services (SSIS) extracts data from both Accelatis and HFM schemas, which reside on the same Oracle database. It then enriches and moves data into an ersatz temporal data warehouse.The term “ersatz” is used because there are no relationships to the tables as they stand within the store. As I showed in the first page of this entry, the relationship between the concurrency table and the other time-based tables is created within PowerBI, as that effects the behavior of drill-downs and other forms of filtering.</p>
+<p><img class="ui centered rounded bordered image" src="/img/SSIS_flat-1.png"></p>
+<div id="staging-tables-agent-data" class="section level2">
+<h2><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 448 512"><path d="M436 160H12c-6.6 0-12-5.4-12-12v-36c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48v36c0 6.6-5.4 12-12 12zM12 192h424c6.6 0 12 5.4 12 12v260c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V204c0-6.6 5.4-12 12-12zm116 204c0-6.6-5.4-12-12-12H76c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm0-128c0-6.6-5.4-12-12-12H76c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm128 128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm0-128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm128 128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm0-128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40z"/></svg> Staging tables – Agent data</h2>
+<p>For each agent there is a representative staging table in the DW. That table holds data that’s specific to that agent’s activity during the activity window.</p>
+<pre><code class="sql">SELECT auxdata    AS AGENT, 
+       activity, 
+       To_date('12/30/1899', 'MM/DD/YYYY') 
+       + datetime AS ORIGIN_DATETIME, 
+       duration, 
+       concurrency, 
+       resultstring 
+FROM   accelatis.opt_activityperformance 
+WHERE  auxdata = [machine name] 
+       AND To_date('12/30/1899', 'MM/DD/YYYY') 
+           + datetime >= To_date([location startdatetime], 
+                         'MM/DD/YYYY HH:MI:SS AM') 
+       AND To_date(datestring, 'MM/DD/YYYY HH:MI:SS AM') <= 
+           To_date([location enddatetime], 'MM/DD/YYYY HH:MI:SS AM') 
+       AND duration NOT IN ( 0 ) </code></pre>
+<p><img class="ui centered rounded bordered image" src="/img/image011.png"></p>
+<p>Note that there’s both an “ORIGIN_DATETIME”, which is the local time as reported originally by the agent, and a separate “DATETIME” column. This field is part of the SSIS enrichment process, which subtracts the number of hours from the Agent fact table (as described previously) for that location to give the compensated time matching the server time on the west coast. These agent-specific staging tables contain both successful activities and failures. Later in the SSIS process those are split off from each staging table into consolidated “ALLDATA” and “ERRORS” tables for reporting. (In the query below, the highlighted AUXDATA and date-time values are substituted as part of the SSIS process)</p>
+</div>
+<div id="data-tables-consolidations" class="section level2">
+<h2><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 384 512"><path d="M336 64h-80c0-35.3-28.7-64-64-64s-64 28.7-64 64H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM96 424c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm96-192c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm128 368c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16z"/></svg> Data Tables – Consolidations</h2>
+<p>A primary driver of load on the HFM server is global consolidations. For that reason we made effort to reconcile each consolidation event for concurrency, and captured the actual detail information as they occurred.</p>
+<pre><code class="sql">SELECT activitysessionid               AS SESSIONID, 
+       To_date('12/30/1899', 'MM/DD/YYYY') 
+       + starttime - interval '7' hour AS STARTTIME, 
+       To_date('12/30/1899', 'MM/DD/YYYY') 
+       + endtime - interval '7' hour   AS ENDTIME, 
+       Substr(strdescription, 42)      AS DESCRIPTION 
+FROM   hfm.prod_task_audit 
+WHERE  strdescription LIKE '%Consolidation Completed%' 
+       AND To_date('12/30/1899', 'MM/DD/YYYY') 
+           + starttime - interval '7' hour >= 
+           To_date('4/6/2016 11:12:00 AM', 'MM/DD/YYYY HH:MI:SS PM') 
+       AND To_date('12/30/1899', 'MM/DD/YYYY') 
+           + starttime - interval '7' hour <= 
+           To_date('4/6/2016 1:12:00 PM', 'MM/DD/YYYY HH:MI:SS PM') 
+ORDER  BY starttime ASC </code></pre>
+<p>Note here that Consolidation times are recorded in GMT. So again, an on-the-fly conversion is required – one that shifts depending on whether the date period is during Daylight Saving Time.</p>
+<p><img class="ui centered rounded bordered image" src="/img/image012.png"></p>
+</div>
+<div id="data-tables-hfm-and-db-cpu" class="section level2">
+<h2><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 512 512"><path d="M416 48v416c0 26.51-21.49 48-48 48H144c-26.51 0-48-21.49-48-48V48c0-26.51 21.49-48 48-48h224c26.51 0 48 21.49 48 48zm96 58v12a6 6 0 0 1-6 6h-18v6a6 6 0 0 1-6 6h-42V88h42a6 6 0 0 1 6 6v6h18a6 6 0 0 1 6 6zm0 96v12a6 6 0 0 1-6 6h-18v6a6 6 0 0 1-6 6h-42v-48h42a6 6 0 0 1 6 6v6h18a6 6 0 0 1 6 6zm0 96v12a6 6 0 0 1-6 6h-18v6a6 6 0 0 1-6 6h-42v-48h42a6 6 0 0 1 6 6v6h18a6 6 0 0 1 6 6zm0 96v12a6 6 0 0 1-6 6h-18v6a6 6 0 0 1-6 6h-42v-48h42a6 6 0 0 1 6 6v6h18a6 6 0 0 1 6 6zM30 376h42v48H30a6 6 0 0 1-6-6v-6H6a6 6 0 0 1-6-6v-12a6 6 0 0 1 6-6h18v-6a6 6 0 0 1 6-6zm0-96h42v48H30a6 6 0 0 1-6-6v-6H6a6 6 0 0 1-6-6v-12a6 6 0 0 1 6-6h18v-6a6 6 0 0 1 6-6zm0-96h42v48H30a6 6 0 0 1-6-6v-6H6a6 6 0 0 1-6-6v-12a6 6 0 0 1 6-6h18v-6a6 6 0 0 1 6-6zm0-96h42v48H30a6 6 0 0 1-6-6v-6H6a6 6 0 0 1-6-6v-12a6 6 0 0 1 6-6h18v-6a6 6 0 0 1 6-6z"/></svg> Data Tables – HFM and DB CPU</h2>
+<p>As shown on the previous page, another key metric is CPU level for the main application and database servers. In most cases all server values are queried for the given time period, and PowerBI is used to filter, sort and categorize the results.</p>
+<p><img class="ui centered rounded large bordered image" src="/img/image013.png"></p>
+<p>Note that the “SERVER” column has a somewhat-human-readable “HFMxxx” indicator for each entry. This is another substring function based on the actual server name as recorded in the database, shortened here to simplify the presentation of the CPU legend in PowerBI. (Like previous examples, the highlighted datetime values are substituted as part of the SSIS process, read in from the project-level parameters that are set before run-time)</p>
+<div id="htmlwidget-1" style="width:100%;height:480px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/hyperion-performance_files/figure-html//widgets/widget_Concurrency of Hyperion Processes.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p>This is the portion of the process which has the most technical “inner workings”. Up to this point SSIS has been used mainly for parameter substitution to collect data through queries. This section will show how C# scripting is used to construct the concurrency table.</p>
+<center>
+<div id="htmlwidget-2" style="width:100%;height:480px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/hyperion-performance_files/figure-html//widgets/widget_Data Table for Hyperion Concurrency.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</center>
+<p>Here is an example of the final result with calculated values. From that, a stepped area can be plotted. This supports analysis of user activity against server demand. To produce the table with various integer counts at each second, we must first know when each event starts and completes. We already have this data collected in the LIST_CONS table, so the process here derives the data from that table.</p>
+<pre><code class="c#">for (DateTime date = CurrentRow; CurrentRow <= PeriodEnd; CurrentRow = CurrentRow.AddSeconds(1.0)) {
+ if ((CurrentRow >= CONS_StartTime) && (CurrentRow <= CONS_EndTime)) {
+  comm = new SqlCommand("Select Consolidation FROM CONCURRENCY WHERE DateTime = ('" + CurrentRow.ToString(@ "MM-dd-yyyy hh:mm:ss tt", new CultureInfo("en-US")) + "')", conn);
+  conn.CreateCommand();
+  ConcurrencyValue = (int) comm.ExecuteScalar();
+  ConcurrencyValue = ++ConcurrencyValue;
+  comm = new SqlCommand("UPDATE CONCURRENCY SET Consolidation = " + ConcurrencyValue.ToString() + " WHERE  DateTime = ('" + CurrentRow.ToString(@ "MM-dd-yyyy hh:mm:ss tt", new CultureInfo("en-US")) + "')", conn);
+  conn.CreateCommand();
+  rowsAffected = comm.ExecuteNonQuery();
+ }
+}</code></pre>
+<p>The for loop controls the “march down” through the values of the concurrency table. The check is made at each row of the table via the if statement. Only rows that match the criteria are updated, so only fields that correspond to the time range of the consolidation are “touched”. While it looks like there’s a connection made in every iteration through the for loop, SSIS handles this elegantly and uses one connection for all calls during the task.
+From that point it’s simply a matter of charting those values in visualization tools such as PowerBI or HighCharts.js. The latter example can be seen at the top of this section, and PowerBI is used in the next chart.</p>
+</div>
+</div>
+<div id="visualization-part-1" class="section level1">
+<h1><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 512 512"><path d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zM456 96H344c-21.4 0-32.1 25.9-17 41l32.9 32.9-72 72.9-55.6-55.6c-4.7-4.7-12.2-4.7-16.9 0L96.4 305c-4.7 4.6-4.8 12.2-.2 16.9l28.5 29.4c4.7 4.8 12.4 4.9 17.1.1l82.1-82.1 55.5 55.5c4.7 4.7 12.3 4.7 17 0l109.2-109.2L439 249c15.1 15.1 41 4.4 41-17V120c0-13.3-10.7-24-24-24z"/></svg> Visualization, Part 1</h1>
+<p>In previous assignments I have implemented Analysis Services “cube” to view and analyze data via SSRS or Excel data source connection. In other cases, I’ve created a PowerQuery profile to be used in a shared document. PowerBI fits somewhere in the “Goldilocks Zone” between the two. Beyond Microsoft’s legacy products, those who are familiar with Tableau will also find many similarities.</p>
+<div id="derivation-of-maximum-reasonable-response-times-for-slas" class="section level2">
+<h2><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 448 512"><path d="M432 304c0 114.9-93.1 208-208 208S16 418.9 16 304c0-104 76.3-190.2 176-205.5V64h-28c-6.6 0-12-5.4-12-12V12c0-6.6 5.4-12 12-12h120c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-28v34.5c37.5 5.8 71.7 21.6 99.7 44.6l27.5-27.5c4.7-4.7 12.3-4.7 17 0l28.3 28.3c4.7 4.7 4.7 12.3 0 17l-29.4 29.4-.6.6C419.7 223.3 432 262.2 432 304zm-176 36V188.5c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12V340c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12z"/></svg> Derivation of maximum reasonable response times for SLAs</h2>
+<p>One of the initial motivations for using a tool like PowerBI was to calculate statistical data and analyze response times for various task/location combinations without having to build an entire Analysis Cube. Due to the variability of response times for tasks originating from HFM locations, we sought a means to view the data both in the aggregate and based on location-specific data. I decided to use a 95th percentile measure as the “high water mark”. It seemed reasonable to view values beyond the 2nd standard deviation (2σ – assuming a normal distribution) as outliers that might require further review.</p>
+<p><img class="ui centered rounded bordered image" src="/img/image020.png"></p>
+<p>As opposed to creating a calculated column of data, DAX calculates “on the fly” based on the scope of data selected. The data can be constrained by time interval, task type and as was the focus for our purposes – location.</p>
+<p><img class="ui centered rounded  bordered image" src="/img/image021.png"></p>
+<p>The chart above shows an example where the 95th percentile is calculated for each task type for all locations. The column presents the minimum, maximum and average using built-in PowerBI functions.</p>
+<p><img class="ui centered rounded bordered image" src="/img/image022.jpg"></p>
+<p>This is an example where PowerBI is used to analyze the duration for tasks on a location basis (with the lower chart showing duration for all other locations). The top chart focuses on data from the Penang location, while the summary table below has all data <em>except</em> for values from Penang.</p>
+</div>
+<div id="analysis-using-powerbi-to-review-error-incident-rates-by-location-and-type" class="section level2">
+<h2><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 512 512"><path d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zM372.7 159.5L288 216l-85.3-113.7c-5.1-6.8-15.5-6.3-19.9 1L96 248v104h384l-89.9-187.8c-3.2-6.5-11.4-8.7-17.4-4.7z"/></svg> Analysis – using PowerBI to review error incident rates by location and type</h2>
+<p>PowerBI was also used to troubleshoot error conditions during simulation runs, and would be later used as a tool for production support. Here we have pie charts that show errors which occurred by location and by task type. Because of the relationship between the various tables pulled from the data snapshot, selecting an area of a pie chart also auto-focuses the data set that is shown for all other charts on display. Below – if you select the “Amstelveen” portion of the pie chart that all other charts will follow that as an ersatz filter. To change all of those visual elements, simply select a different location or an error type from the other pie chart.</p>
+<center>
+<iframe width="940" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiMDI4MDdlNzktZTNmYi00ZWEwLWFiMjktM2IyMWQ1MmYyNTA0IiwidCI6Ijc4N2QxYzAwLTgyMjgtNDAzYy1iZjVmLTg1YjM3NzFmM2M0MiIsImMiOjZ9" frameborder="0" allowFullScreen="true">
+</iframe>
+</center>
+<p>Note that in all cases the highlighting/lowlighting of pie chart areas maintains the overall view of data. Simply selecting an alternate pie chart area updates the other respective areas of the displayed information.</p>
+<p>On a business note: In this case the 404 errors were caused by an EPM server using a different authority manager than other machines in the tier, and occasionally not authenticating sessions/connections made from the web server. This chart was used to isolate whether the errors were by location, request type, or user. It turned out to be none-of-the-above, and once all of the servers were pointing to the same grant authority the issue was resolved. As such, the report was kept as a tool for future troubleshooting tasks.</p>
+<div id="back-to-top-2" class="section level4">
+<h4><a href="#TOC">Back To Top</a> <svg style="height:0.8em;top:.04em;position:relative;fill:firebrick;" viewBox="0 0 512 512"><path d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm143.6 28.9l72.4-75.5V392c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V209.4l72.4 75.5c9.3 9.7 24.8 9.9 34.3.4l10.9-11c9.4-9.4 9.4-24.6 0-33.9L273 107.7c-9.4-9.4-24.6-9.4-33.9 0L106.3 240.4c-9.4 9.4-9.4 24.6 0 33.9l10.9 11c9.6 9.5 25.1 9.3 34.4-.4z"/></svg></h4>
+<hr />
+</div>
+</div>
+</div>
+<div id="visualization-full-circle" class="section level1">
+<h1><svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 640 512"><path d="M496 256c8.8 0 16-7.2 16-16s-7.2-16-16-16-16 7.2-16 16 7.2 16 16 16zm-176-80c48.5 0 88-39.5 88-88S368.5 0 320 0s-88 39.5-88 88 39.5 88 88 88zM59.8 364c10.2 15.3 29.3 17.8 42.9 9.8 16.2-9.6 56.2-31.7 105.3-48.6V416h224v-90.7c49.1 16.8 89.1 39 105.3 48.6 13.6 8 32.7 5.3 42.9-9.8l17.8-26.7c8.8-13.2 7.6-34.6-10-45.1-11.9-7.1-29.7-17-51.1-27.4-28.1 46.1-99.4 17.8-87.7-35.1C409.3 217.2 365.1 208 320 208c-57 0-112.9 14.5-160 32.2-.2 40.2-47.6 63.3-79.2 36-11.2 6-21.3 11.6-28.7 16-17.6 10.5-18.8 31.8-10 45.1L59.8 364zM368 344c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm-96-96c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm-160 8c8.8 0 16-7.2 16-16s-7.2-16-16-16-16 7.2-16 16 7.2 16 16 16zm512 192H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h608c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16z"/></svg> Visualization, Full Circle</h1>
+<p>For the purposes of the graph below the primary interest is viewing interaction between user Activities, Consolidations and HFM server demands. One of the early issues found regarded “sudden” inflation of response times for Activities where the database usage was otherwise low. The first chart in the visualization below is an example of what users observed. Note that when Activity times are longest that the database level is near nominal levels.</p>
+<center>
+<iframe width="940" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiNTljZTM0ZGUtNTk4Ni00MjMxLWE1ZTYtYjJiODJiMWU4ODU5IiwidCI6Ijc4N2QxYzAwLTgyMjgtNDAzYy1iZjVmLTg1YjM3NzFmM2M0MiIsImMiOjZ9" frameborder="0" allowFullScreen="true">
+</iframe>
+</center>
+<p>It was difficult to pinpoint the core issue using only the standard Accelatis performance views, but here, where the graphs are all charted together, the cause becomes more transparent. While it seems unlikely with low database CPU usage that user activities would be delayed, it can bee seen here the the HFM server – the home of the “cube” that resides over the datastore, continues to process data – with locks applied to various intersections of data while the processing is completed. Oracle does a good job of orchestrating and prioritizing these tasks, but there’s an inflection point unrelated to database usage where the queuing expands considerably. Without seeing this “confluence of events” the cause can be maddeningly elusive. With that “lurking observation” brought to the surface and correlated in the visualization, the relationship becomes obvious.</p>
+<p>Similar to visualizing overall request latency based on server load, its also possible to see what’s occurring on a per-location basis with the same corpus of data. Here you can see we’ve returned to the chart that served as introduction to this portfolio entry. While there are only 7 Agents listed for this period, there are as many as 10 running at any given time. Beyond that, when users are active in the system their location can be reverse mapped using the IP address of the requests they send. In all there are more than 50 discrete points that can be fixed to a point on this global location, and the chart can be further tailored to focus on a specific time period and Activity type.</p>
+<center>
+<iframe width="940" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiNjAyZjYzYzctN2M2Ni00YTYxLTgwODktMjVjMmUxNzllZTMzIiwidCI6Ijc4N2QxYzAwLTgyMjgtNDAzYy1iZjVmLTg1YjM3NzFmM2M0MiIsImMiOjZ9" frameborder="0" allowFullScreen="true">
+</iframe>
+</center>
+<p>In one instance this data helped to isolate location-specific network issues impacting systems well beyond Hyperion. As is the case, locations that are close to each other geographically can be on completely different network “backbones”. Shenzhen and Hong Kong are one such example – the former always performing well over time, and the latter almost always an outlier – for all Activity types. It turned out that there wasn’t just an issue with the Hyperion configuration or the scope of consolidations or other requests performed – but a network routing error at the Hong Kong location that caused the issue. Once that was resolved, not only did that location fall back within the range of response times seen by Shenzhen and other global locations – but overall network latency improved for all users at the Hong Kong location. So, in that manner the detailed scrutiny of location-based client-side data led to an overall quality-of-work improvement for everyone in that office – not just the Hyperion users.</p>
+<p>With this system the financial performance measurement will likely see impact from the performance of the Hyperion system itself. And while most of these data snapshots are user-triggered in nature, with the new real-time streaming analytics functionality in PowerBI it’s possible to now keep a ‘running tab’ on systems and user locations in near-real time. This would be the final component to matching (and in many cases exceeding) the functionality of a Hyperion/Accelatis implementation.</p>
+<div id="back-to-top-3" class="section level4">
+<h4><a href="#TOC">Back To Top</a> <svg style="height:0.8em;top:.04em;position:relative;fill:firebrick;" viewBox="0 0 512 512"><path d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm143.6 28.9l72.4-75.5V392c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V209.4l72.4 75.5c9.3 9.7 24.8 9.9 34.3.4l10.9-11c9.4-9.4 9.4-24.6 0-33.9L273 107.7c-9.4-9.4-24.6-9.4-33.9 0L106.3 240.4c-9.4 9.4-9.4 24.6 0 33.9l10.9 11c9.6 9.5 25.1 9.3 34.4-.4z"/></svg></h4>
+<hr />
+</div>
+</div>
