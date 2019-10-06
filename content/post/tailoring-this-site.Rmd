@@ -10,7 +10,7 @@ author: "Houston Haynes"
 date: '2018-05-01T14:59:43+05:30'
 cover: /img/Hugo.png
 description: On the shift from Wordpress to a blogdown/Hugo based personal web platform
-draft: yes
+draft: true
 tags:
 - R
 - blogdown
@@ -29,7 +29,6 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 
-library(fontawesome)
 library(jsonlite)
 library(highcharter)
 library(widgetframe)

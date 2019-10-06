@@ -1,5 +1,5 @@
 ---
-title: "Migrating Telematics To Semi-Structured Data"
+title: "Telematics in Two Lines"
 output:
   blogdown::html_page:
     toc: true
@@ -10,7 +10,7 @@ author: "Houston Haynes"
 date: '2018-06-25T14:59:43+05:30'
 cover: /img/Telematics.png
 description: On scaling a nation-wide telematics platform to the cloud
-draft: yes
+draft: true
 tags:
 - MongoDB
 - EC2
@@ -29,7 +29,6 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 
-library(fontawesome)
 library(jsonlite)
 library(highcharter)
 library(widgetframe)

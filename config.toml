@@ -1,57 +1,199 @@
-baseURL = "https://www.h3tech.io/"
+baseurl = "https://stg.h3tech.io"
 languageCode = "en-us"
-defaultContentLanguage = "en"
-title = "Houston Haynes"
-theme = "hugo-dream-plus"
-
-googleAnalytics = "UA-122964326-1"
-
+title = "H3 Tech Portfolio"
+theme = "hugo-future-imperfect"
+preserveTaxonomyNames = true
+paginate = 4
+disqusShortname = ""
+googleAnalytics = ""
+pluralizeListTitles = false
+# Set the followings to true as part of your site SEO
 enableRobotsTXT = true
-
-#Enable Hugo Emoji Conversion
-enableEmoji=true
-
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+canonifyURLs = true
+ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [params]
-	author = "Houston Haynes"
-	description = "Examples of previous work and current explorations in data science."
-	avatar = "/img/H3_suit.jpg"
-	motto = "Department lead of intelligent teams & systems with experience in audio, entertainment, medical, IoT & devops."
-	enableToc = true
-	enableShareCard = false
-	relativeurls = true
-	
-	highlightjsVersion = "9.11.0"
-  highlightjsCDN = "//cdn.bootcss.com"
-  highlightjsLang = ["r", "yaml", "css", "http", "javascript", "php", "sql", "json", "c#", "markdown", "java", "python", "bash", "typescript", "scala", "groovy", "dockerfile", "apache"]
-  highlightjsTheme = "sunburst"
+  # Sets the meta tag description
+  description          = "HTML5 UP theme, Future Imperfect with some extra goodies, ported by Julio Pescador. Powered by Hugo"
+  # Sets the navbarTitle that appears in the top left of the navigation bar
+  navbarTitle          = "Navigation"
+  # Sets where "View More Posts" links
+  viewMorePostLink     = "/blog/"
 
+# Optional Params
+  # Sets navbarTitle to match the section of the website
+  dynamicTitles        = true
+  # Sets RSS icons to appear on the sidebar with the social media buttons
+  rssAppearAtTop       = true
+  rssAppearAtBottom    = true
+  # Sets Social Media icons to appear on the sidebar
+  socialAppearAtTop    = false
+  socialAppearAtBottom = true
+  # Sets Categories to sort by number of posts instead of alphabetical
+  categoriesByCount    = true
+  # set to show or to hide categories in the sidebar
+  showSidebarCategories = true
+  # Sets Estimated Reading Time to appear in post headers
+  includeReadingTime   = true
+  # Sets the Favicon and Version for the site. Default support is for
+  # apple-touch-icon-precomposed.png, favicon.png, favicon.ico, and mstile.png.
+  # These are stored in the favicon folder. See the following for more information:
+  # https://github.com/audreyr/favicon-cheat-sheet
+  loadFavicon          = true
+  faviconVersion       = ""
+  # Sets Social Share links to appear on posts
+  socialShare          = true
+  # Sets specific share to appear on posts (default behavior is to appear)
+  socialShareTwitter   = true
+  socialShareGoogleplus = false
+  socialShareFacebook  = false
+  socialShareReddit    = true
+  socialShareLinkedin  = true
+  socialShareStumbleupon = true
+  socialSharePinterest = false
+  socialShareEmail     = true
+
+  # Load custom CSS or JavaScript files. The variable is an array so that you
+  # can load multiple files if necessary. You can also load the standard theme
+  # files by adding the value, "default".
+  # customCSS            = ["default", "/path/to/file"]
+  # customJS             = ["default", "/path/to/file"]
+  customCSS             = ["default", "/css/semantic.min.css"]
+  customJS              = ["default", "/js/dark-mode-listener.js", "/js/semantic.min.js"]
+
+  # options for highlight.js (version, additional languages, and theme)
+  disable_highlight = false # set to true to disable Highlight
+  highlightjsVersion = "9.11.0"
+  highlightjsCDN = "//cdn.bootcss.com"
+  highlightjsLang = ["r", "yaml", "css", "apache", "sql", "groovy", "java", "cs", "rust"]
+  highlightjsTheme = "docco"
   MathJaxCDN = "//cdn.bootcss.com"
   MathJaxVersion = "2.7.1"
 
-	favicon = "/img/favicon.ico"
-  	
-  #Background settings
-	enableColorBG= false
-	bgBlur = "1px"
-	bgImage = "/img/Sunset3.jpg"
-  
-	#Post-displaying Settings
-	enableTags = false
-	enableCategories = true
+# Disqus will take priority over Staticman (github.com/eduardoboucas/staticman)
+# due to its ease of use. Feel free to check out both and decide what you would
+# prefer to use. See Staticman.yml for additional settings.
+[params.staticman]
+  # Sets Statiman to be active
+  staticman = false
+  # Sets the location for Staticman to connect to
+  username  = ""
+  repo      = ""
+  branch    = ""
 
-	#Cards or posts shown per page
-	itemsPerPage = 4
+  [params.staticman.recaptcha]
+    sitekey = "SITE_KEY"
+    secret  = "ENCRYPTED_SECRET"
 
-	#Set whether you're hosting "cards" or "post"
-	contentType = "post"
+  # These are optional params related to the sidebar. They are recommended, but not
+  # required for proper functionality. HTML is supported within the params.
+[params.intro]
+  header    = "Technology Portfolio"
 
-	#Enable Twitter Emoji
-	twitterEmoji =  true
+  paragraph = "Houston's Personal<br>Sidebars in Hardware &amp;<br>Software Engineering<br><i class='fas fa-brain'></i> Cognitive Computing <i class='fas fa-brain'></i><br><i class='fas fa-microchip'></i> IoT &amp; Cloud <i class='fas fa-cloud'></i>"
 
+  about     = "Houston has been dubbed a 'data philosopher' and an 'electronics wizard'. His travels range from architectural abstraction to quite literally working directly on the metal - and many points in between. Whether toggling EPROM hex codes or running machine learning workloads in the cloud - he's been there, done that and lived to tell the tale - which of course happens to be the reason for this site."
+  # This appears at the top of the sidebar above params.intro.header.
+  # A width of less than 100px is recommended from a design perspective.
+  [params.intro.pic]
+    src       = "/img/favicon-96x96.png"
+    # Sets Image to be a cirlce
+    circle    = true
+    # Sets Image to be Future Imperfect's hexagon
+    imperfect = false
+    width     = ""
+    alt       = "H3"
+
+[params.postAmount]
+# Sets the number of recent posts to show in the sidebar. The default value is 5.
+    sidebar = 5
+
+# Sets the menu items in the navigation bar
+# Identifier prepends a Font Awesome icon to the menu item
+[[menu.main]]
+  name = "Home"
+  url = "/"
+  identifier = "fas fa-home"
+  weight = 1
+
+[[menu.main]]
+  name = "About"
+  url = "/about/"
+  identifier = "fa fa-id-card-o"
+  weight = 2
+
+[[menu.main]]
+  name = "Blog"
+  url = "/blog/"
+  identifier = "fa fa-newspaper-o"
+  weight = 3
+
+[[menu.main]]
+  name = "Itemized"
+  url = "/itemized/"
+  identifier = "fa fa-list"
+  weight = 4
+
+[[menu.main]]
+  name = "Categories"
+  url = "/categories/"
+  identifier = "fa fa-sitemap"
+  weight = 5
+
+[[menu.main]]
+  name = "Contact"
+  url = "/contact/"
+  identifier = "fa fa-envelope-o"
+  weight = 6
+
+
+
+# Sets Social Media icons to appear and link to your account. Value should be your
+# username unless otherwise noted. These are the icons affected by socialAppearAtTop
+# and socialAppearAtBottom.
 [social]
-	email = "ds@h3tech.io"
-	github = "houstonhaynes"
-	twitter = "whiskersedge" 
-	siteStartYear = 2017
+  # Coding Communities
+  github           = "houstonhaynes"
+  gitlab           = ""
+  stackoverflow    = "" # User Number
+  bitbucket        = ""
+  jsfiddle         = ""
+  codepen          = ""
+  # Visual Art Communities
+  deviantart       = ""
+  flickr           = ""
+  behance          = ""
+  dribbble         = ""
+  # Publishing Communities
+  wordpress        = ""
+  medium           = "HoustonHHaynes"
+  # Professional/Business Oriented Communities
+  linkedin         = "houstonhaynes"
+  linkedin_company = ""
+  foursquare       = ""
+  xing             = ""
+  slideshare       = ""
+  # Social Networks
+  facebook         = ""
+  googleplus       = ""
+  reddit           = ""
+  quora            = ""
+  youtube          = ""
+  vimeo            = ""
+  whatsapp         = "" # WhatsApp Number
+    # WeChat and QQ need testing.
+    wechat         = ""
+    qq             = "" # User ID Number
+  instagram        = ""
+  tumblr           = ""
+  twitter          = "whiskersedge"
+  skype            = ""
+  snapchat         = ""
+  pinterest        = ""
+  telegram         = ""
+  vine             = ""
+  googlescholar    = ""
+  orcid            = ""
+  researchgate     = ""
+  # Email
+  email            = "h3techsme@gmail.com"

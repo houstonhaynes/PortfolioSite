@@ -1,15 +1,12 @@
 ---
-title: "Improving Conversion Win-Loss"
+title: "Conversion Win-Loss"
 output:
   blogdown::html_page:
-    toc: true
-    toc_depth: 1
-    fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
 date: '2018-07-24T14:59:43+05:30'
 cover: /img/Micro-services.png
-description: Walkthrough of analysis and remediation of web scale e-commerce win-loss ratios
+description: Increasing E-commerce sell-through by re-tooling the stack
 draft: no
 tags:
 - AWS
@@ -30,7 +27,6 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 
-library(fontawesome)
 library(jsonlite)
 library(highcharter)
 library(widgetframe)
@@ -68,25 +64,25 @@ dfConversionRate <- data.frame(Conversions, Lost, Won)
 ```
 
 
-##  `r fa("readme")` tl:dr
-<div class="clearfix"><img class="ui medium left floated rounded bordered image" src="/img/Splunk-Chart.png">Conversion in e-commerce generally refers to a process where site visitors become paying customers. This portfolio entry discusses some of the analysis conducted for the one of the largest e-commerce sites in the world. I also refer to some of the mobile device simulations and related functions used to verify (and in some cases, dismiss) the assumptions on which the company’s win-loss analytics was based. And finally, I show some of the tooling used to verify partner data feeds and how that became a central component to a new distributed conversion marketing strategy.</div>
+## tl;dr
 
-# `r fa("exclamation-triangle")` Weblog Blind Spots
+Conversion in e-commerce generally refers to a process where site visitors become paying customers. This portfolio entry discusses some of the analysis conducted for the one of the largest e-commerce sites in the world. I also refer to some of the mobile device simulations and related functions used to verify (and in some cases, dismiss) the assumptions on which the company’s win-loss analytics was based. And finally, I show some of the tooling used to verify partner data feeds and how that became a central component to a new distributed conversion marketing strategy.
 
-<div class="clearfix"><img class="ui medium right floated rounded bordered image" src="/img/web_v_mobile.png">Our working group created an array of federated micro-services that would serve as an interface between mobile users and the legacy commerce servers. This was new to the company, and so our baseline of information stemmed from web-only user activity. While there are many new wrinkles that are introduced in the API-building process, many of the assumptions about the conversion rate(s) originated from the up-to-then web-only data. And as our working group later found out, that “model” ended up being a collection of very old data and grossly inaccurate generalizations. The company's primary conversion marketing tactic was a timed cart, a function which served dual purposes in the legacy technology stack. Once the user had selected an item, they had a few minutes to complete the transaction or the cart would be discarded and the user would have to re-initiate the process. There were places in the cart workflow where time might be added to the cart, but there was an inflection point where the countdown was simply a means to release inventory back into general availability.</div>
+`r blogdown::shortcode("fancybox", "/img", "Splunk-Chart.png")`
+
+# Weblog Blind Spots
+
+`r blogdown::shortcode("fancybox", "/img", "web_v_mobile.png")`
+Our working group created an array of federated micro-services that would serve as an interface between mobile users and the legacy commerce servers. This was new to the company, and so our baseline of information stemmed from web-only user activity. While there are many new wrinkles that are introduced in the API-building process, many of the assumptions about the conversion rate(s) originated from the up-to-then web-only data. And as our working group later found out, that “model” ended up being a collection of very old data and grossly inaccurate generalizations. The company's primary conversion marketing tactic was a timed cart, a function which served dual purposes in the legacy technology stack. Once the user had selected an item, they had a few minutes to complete the transaction or the cart would be discarded and the user would have to re-initiate the process. There were places in the cart workflow where time might be added to the cart, but there was an inflection point where the countdown was simply a means to release inventory back into general availability.
 
 
 When we reviewed the web logs in order to get an idea of the conversion rate, we couldn’t see the difference between a cart that lapsed due to time-out, a cart that was intentionally discarded by the user, and an error from the server side that prevented the user from completing the cart transaction. All that was recorded in the web logs was the transaction ID for completed cart transactions. And that wasn’t the only place with a lack of data salience. When my team inquired about this, we were told that the logging was “too burdensome” so that level of detail was left out of the record. In essence, this left the task of recording that level of detail to the API and mobile developers – my team.
 
-#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
-
----
-
-# `r fa("database")` Data Mining
+# Data Mining
 
 Along with the new partner API layer created by the team, a new set of user activity logs were generated based on API activity. This provided the ability to create a more accurate reconstruction of user behavior and analyze system performance. This was useful in general – but especially when analyzing reaction to “sale” events. These marketing pushes were both regional and national, and due to the regional deployment of production servers we could look at comparative statistics for conversions that occurred by geography as well as time period. This is something that could be accomplished in the legacy and web server stacks, but only by inference. Because of the nature of the API server deployments we gained a much more articulated view into user activity.
 
-<img class="ui centered rounded bordered image" src="/img/Splunk_chart.png">
+`r blogdown::shortcode("fancybox", "/img", "Splunk_chart.png")`
 
 This is the initial view into cart creation established a useful baseline for a national sale event. What I had been told was to expect 60-70 cart creations per second in the first hour of a sale across the API tier. That was based on their own informatics, which I never had the chance to scrutinize directly. As can be seen here from the API data, the situation is much more nuanced.
 
@@ -94,7 +90,7 @@ From that point, the gap between what I had been told in meetings and what the d
 
 Along those lines, it wasn’t the first hour that was important, it was the first minute of the first hour. And similarly, it wasn’t just the first minute of the first hour, but the first 10-15 seconds of the first minute.
 
-<img class="ui centered rounded bordered image" src="/img/Splunk_perItem.png">
+`r blogdown::shortcode("fancybox", "/img", "Splunk_perItem.png")`
 
 This plot is a different view for the same time period, a stacked bar chart to review spread of products selected. It’s interesting that promotional products are placed in a user cart in the first few seconds, based on a national promotion that started on the hour. Then that product seems to disappear. In fact it continues to sell through, but in small numbers that don’t appear in the bar stack as easily as the first few seconds.
 
@@ -147,11 +143,7 @@ Bear in mind that the cart could have been lost at any point during the countdow
 
 From there I rolled up the summary wins/loss percentage for the period. A win rate of over 21% may seem like a non-controversial figure, the expectation for a period with an active campaign was expected to close at a 30% rate, even when factoring in baseline conversion of non-campaign items for the same period. With the added visibility into the types of attrition, the API team could make adjustments and monitor the results with a much more prismatic view of the data.
 
-#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
-
----
-
-# `r fa("magic")` Cache Warming
+# Cache Warming
 
 The initial target was to reduce the volume of cart expirations (Timeout attrition) by shortening the time between creating the cart and the user being presented with conversion incentive options. To improve the win rate the API team approached the issue from two angles, the server side and the partner side. From that, two strategies were employed:
 
@@ -163,7 +155,7 @@ Because of the caching strategy in the partner API, the length of time for an in
 
 So we created a cache “warming” method to request sale events before they were generally available to potential customers. I created a user that was provisioned to have access to “sale” event information before the item was officially active. I then programmatically called into each specific application cache server directly to request that information just before the official start time of the sale event.
 
-<img class="ui centered rounded bordered image" src="/img/SOLR_framework.png">
+`r blogdown::shortcode("fancybox", "/img", "SOLR_framework.png")`
 
 I created this process in the soapUI framework, as I was managing infrastructure for the partner API group at the time – and test management was part of the purview. The advantage of using soapUI was that the process could be compiled as a jar and run from any server. So the network operations group deployed the jar to a server that had access to the cache servers and set it to run just before the hour.
 
@@ -175,10 +167,8 @@ AND sales.publication_end_date_time <= Dateadd(getdate(), INTERVAL 1 HOUR)</code
 
 This became the seed data that fed into the SOLR requests that were processed against each server. Below is a re-creation of the filter that’s used by the SOLR service to retrieve up-sell and conversion items. This is concatenated into the request that’s sent for each item from the soapUI jar. For all intents and purposes, these requests “look like” the same form of request that’s received directly from the API request layer, except for the time band I’m imposing on the request.
 
-<pre><code class="apache">sch.solr.item.listing=q=&fq=-Merchandise:true&fq=(MajorGenreId:10001 OR
-MinorGenreId:203 OR MinorGenreId:51)&fq=-ItemType:3&fq=-ItemType:4&fq=-TCode1:APE
+<pre><code class="ruby">sch.solr.item.listing=q=&fq=-Merchandise:true&fq=(MajorGenreId:10001 OR MinorGenreId:203 OR MinorGenreId:51)&fq=-ItemType:3&fq=-ItemType:4&fq=-TCode1:APE
 sch.solr.exclude.mlb=fq=-AttractionOrganization:mlb
-sch.solr.global.filter=
 sch.solr.item.filter=fq=VisibilityDate:[NOW TO NOW+1HOUR]&fq=-ItemType:6&fq=-ItemType:15</code></pre>
 
 From that, the cache is populated with the values from the SOLR index just before the sale event occurs. With a cache refresh of 2 minutes this gives sufficient “shelf life” to the values such that the early spike of requests can be directly served by the cache. While it’s of secondary importance that the tool verifies the a response, deep validation is not necessary. The function below is simply checking to see that a valid cart item was returned.
@@ -214,12 +204,9 @@ else
         testRunner.gotoStepByName( "delayForItemPollingInterval" )
         } 
     }</code></pre>
+  
     
-#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
-    
----
-    
-# `r fa("cogs")` Partner Feeds
+# Partner Feeds
 
 Following on the success of the cache warming process, executives worked with some of the larger partners (Apple, Google, etc) to deliver a feed of upcoming sale items – and their related conversion and up-sell options – in a file feed that could be retrieved shortly before a sale event. This meant creating an API service for retrieving that feed, which was very similar to the process that I had created for warming the cache.
 
@@ -260,11 +247,7 @@ In this case I wasn’t making a request from the database, but rather simply re
 
 Once the feed file was validated, a status byte was set that allowed the file to be pulled by a partner with a valid cert. This ensured that partners always received a complete and correct feed file for caching item information (including URLs to graphics, conversion marketing tie-ins, etc) on their side. Like the cache warming process, this validation process was deployed as a jar with the service, and was executed on each server just before each hour.
 
-#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
-
----
-
-# `r fa("diagnoses")` Closing the Gap
+# Closing the Gap
 
 After the cache warming and partner feed changes (along with a few other API tweaks, primarily reduction of the number of requests made to gather up-sell and conversion marketing products) there were noticeable improvements in sell-through and user retention. These time charts show that overall cart creations increased for similar sales periods, and also that cart loss due to timeout had been reduced.
 
@@ -382,5 +365,3 @@ frameWidget(hcConversionRate)
 ```
 
 In that legacy context this is not a surprise, as some of the systems at that company date back to the late 1970s. Horizontal scaling was (and in this case – is) the only option for technology of that generation. In this case we found new and useful ways to “pierce the veil” and work more efficiently in and around the existing solution stack. From that point we continued to refine the API layer – and likewise – measured changes in system and user behavior in a way that provided new insight to IT and marketing executives.
-
-#### [Back To Top](#TOC) `r fa("arrow-circle-up",  fill = "firebrick")`
