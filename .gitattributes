@@ -1,7 +1,7 @@
+# Basic .gitattributes for a R repo.
+
 * linguist-vendored
 *.R linguist-vendored=false
-
-# Basic .gitattributes for a R repo.
 
 # Source files
 # ============

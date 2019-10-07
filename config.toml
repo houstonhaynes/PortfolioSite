@@ -1,4 +1,4 @@
-baseurl = "https://stg.h3tech.io"
+baseurl = "/"
 languageCode = "en-us"
 title = "H3 Tech Portfolio"
 theme = "hugo-future-imperfect"
@@ -18,7 +18,7 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   # Sets the navbarTitle that appears in the top left of the navigation bar
   navbarTitle          = "Navigation"
   # Sets where "View More Posts" links
-  viewMorePostLink     = "/blog/"
+  viewMorePostLink     = "/post/"
 
 # Optional Params
   # Sets navbarTitle to match the section of the website
@@ -58,8 +58,8 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   # files by adding the value, "default".
   # customCSS            = ["default", "/path/to/file"]
   # customJS             = ["default", "/path/to/file"]
-  customCSS             = ["default", "/css/semantic.min.css"]
-  customJS              = ["default", "/js/dark-mode-listener.js", "/js/semantic.min.js"]
+  customCSS             = ["default", "/css/add.css"]
+  customJS              = ["default", "/js/dark-mode-listener.js"]
 
   # options for highlight.js (version, additional languages, and theme)
   disable_highlight = false # set to true to disable Highlight
@@ -92,11 +92,11 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
   paragraph = "Houston's Personal<br>Sidebars in Hardware &amp;<br>Software Engineering<br><i class='fas fa-brain'></i> Cognitive Computing <i class='fas fa-brain'></i><br><i class='fas fa-microchip'></i> IoT &amp; Cloud <i class='fas fa-cloud'></i>"
 
-  about     = "Houston has been dubbed a 'data philosopher' and an 'electronics wizard'. His travels range from architectural abstraction to quite literally working directly on the metal - and many points in between. Whether toggling EPROM hex codes or running machine learning workloads in the cloud - he's been there, done that and lived to tell the tale - which of course happens to be the reason for this site."
+  about     = "Houston has been dubbed a 'data philosopher' and an 'electronics wizard'. His travels range from architectural abstraction to working literally on the metal - and many points in between. Whether toggling EPROM hex codes or running machine learning workloads in the cloud - he's been there, done that and lived to tell the tale - which of course happens to be the reason for this site."
   # This appears at the top of the sidebar above params.intro.header.
   # A width of less than 100px is recommended from a design perspective.
   [params.intro.pic]
-    src       = "/img/favicon-96x96.png"
+    src       = "/favicon/favicon-96x96.png"
     # Sets Image to be a cirlce
     circle    = true
     # Sets Image to be Future Imperfect's hexagon
@@ -124,27 +124,33 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [[menu.main]]
   name = "Blog"
-  url = "/blog/"
+  url = "/post/"
   identifier = "fa fa-newspaper-o"
   weight = 3
-
-[[menu.main]]
-  name = "Itemized"
-  url = "/itemized/"
-  identifier = "fa fa-list"
-  weight = 4
 
 [[menu.main]]
   name = "Categories"
   url = "/categories/"
   identifier = "fa fa-sitemap"
+  weight = 4
+
+[[menu.main]]
+  name = "History"
+  url = "/history/"
+  identifier = "fas fa-archive"
   weight = 5
+  
+[[menu.main]]
+  name = "Resume"
+  url = "/resume/index.html"
+  identifier = "fas fa-list"
+  weight = 6
 
 [[menu.main]]
   name = "Contact"
   url = "/contact/"
   identifier = "fa fa-envelope-o"
-  weight = 6
+  weight = 7
 
 
 
