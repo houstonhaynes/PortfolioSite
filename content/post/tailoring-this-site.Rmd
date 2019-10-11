@@ -8,7 +8,8 @@ output:
     dev: "svg"
 author: "Houston Haynes"
 date: '2018-05-01T14:59:43+05:30'
-cover: /img/Hugo.png
+featuredpath: img
+featured: Hugo.png
 description: On the shift from Wordpress to a blogdown/Hugo based personal web platform
 draft: true
 tags:

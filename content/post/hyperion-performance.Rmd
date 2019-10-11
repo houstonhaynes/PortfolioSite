@@ -2,11 +2,12 @@
 title: "Global Hyperion Lambda"
 output:
   blogdown::html_page:
-    fig_width: 8
+    fig_width: 6
     dev: "svg"
 author: "Houston Haynes"
 date: '2018-07-30T14:59:43+05:30'
-cover: /img/world-map-black.png
+featuredpath: img
+featured: world-map-black.png
 description: A cloud-based "speed layer" monitor for consolidation heuristics
 draft: false
 tags:

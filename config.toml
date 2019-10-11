@@ -1,11 +1,11 @@
 baseurl = "/"
 languageCode = "en-us"
-title = "H3 Tech Portfolio"
+title = "Tech Portfolio"
 theme = "hugo-future-imperfect"
 preserveTaxonomyNames = true
 paginate = 4
 disqusShortname = ""
-googleAnalytics = ""
+googleAnalytics = "UA-122964326-1"
 pluralizeListTitles = false
 # Set the followings to true as part of your site SEO
 enableRobotsTXT = true
@@ -14,7 +14,7 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [params]
   # Sets the meta tag description
-  description          = "HTML5 UP theme, Future Imperfect with some extra goodies, ported by Julio Pescador. Powered by Hugo"
+  description          = "Houston Haynes personal web site containing articles and information about his work and experiences in technology"
   # Sets the navbarTitle that appears in the top left of the navigation bar
   navbarTitle          = "Navigation"
   # Sets where "View More Posts" links
@@ -98,9 +98,9 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   [params.intro.pic]
     src       = "/favicon/favicon-96x96.png"
     # Sets Image to be a cirlce
-    circle    = true
+    circle    = false
     # Sets Image to be Future Imperfect's hexagon
-    imperfect = false
+    imperfect = true
     width     = ""
     alt       = "H3"
 
@@ -119,40 +119,38 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 [[menu.main]]
   name = "About"
   url = "/about/"
-  identifier = "fa fa-id-card-o"
+  identifier = "far fa-compass"
   weight = 2
+  
+[[menu.main]]
+  name = "CV & History"
+  url = "/resume/"
+  identifier = "far fa-folder-open"
+  weight = 3
 
 [[menu.main]]
   name = "Blog"
+  url = "/blog/"
+  identifier = "fa fa-pen"
+  weight = 4
+  
+[[menu.main]]
+  name = "Posts"
   url = "/post/"
-  identifier = "fa fa-newspaper-o"
-  weight = 3
+  identifier = "fas fa-feather-alt"
+  weight = 4
+  
+[[menu.main]]
+  name = "Contact"
+  url = "/contact/"
+  identifier = "fa fa-envelope-o"
+  weight = 6
 
 [[menu.main]]
   name = "Categories"
   url = "/categories/"
   identifier = "fa fa-sitemap"
-  weight = 4
-
-[[menu.main]]
-  name = "History"
-  url = "/history/"
-  identifier = "fas fa-archive"
-  weight = 5
-  
-[[menu.main]]
-  name = "Resume"
-  url = "/resume/index.html"
-  identifier = "fas fa-list"
-  weight = 6
-
-[[menu.main]]
-  name = "Contact"
-  url = "/contact/"
-  identifier = "fa fa-envelope-o"
   weight = 7
-
-
 
 # Sets Social Media icons to appear and link to your account. Value should be your
 # username unless otherwise noted. These are the icons affected by socialAppearAtTop

@@ -1,8 +1,0 @@
----
-title: "resume index"
-author: "Houston Haynes"
-date: "July 11, 2018"
-draft: false
-output: html_document
----
-<span id="siteseal"><script async type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3t7z5NdHKlEOH8ner4ix07knGVQGAa32tnve357ql7EdquZguhPQKCxMOOtN"></script></span>
