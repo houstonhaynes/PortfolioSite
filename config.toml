@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://h3tech.io"
 languageCode = "en-us"
 title = "Tech Portfolio"
 theme = "hugo-future-imperfect"
@@ -58,8 +58,8 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   # files by adding the value, "default".
   # customCSS            = ["default", "/path/to/file"]
   # customJS             = ["default", "/path/to/file"]
-  customCSS             = ["default", "/css/add.css"]
-  customJS              = ["default", "/js/dark-mode-listener.js"]
+  customCSS             = ["default", "/css/add.css", "/css/skeleton-alerts.css"]
+  customJS              = ["default", "/js/dark-mode-listener.js", "/js/contact.js", "/js/iframe.js"]
 
   # options for highlight.js (version, additional languages, and theme)
   disable_highlight = false # set to true to disable Highlight
