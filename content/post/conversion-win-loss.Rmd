@@ -8,7 +8,7 @@ date: '2018-07-24T14:59:43+05:30'
 featuredpath: img
 featured: Micro-services.png
 description: Increasing E-commerce sell-through by re-tooling the stack
-draft: true
+draft: false
 tags:
 - AWS
 - micro-services

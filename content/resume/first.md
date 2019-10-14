@@ -15,5 +15,13 @@ link = "#"
 
 # Shared via OneDrive
 Note: you can use the control in the bottom right of the window to download in the original or PDF format.
-
-<iframe class="iframe" src="https://onedrive.live.com/embed?cid=C8792DC9FD06F2E0&resid=C8792DC9FD06F2E0%2145743&authkey=ALFb_yR5LiYaFoo&em=2" height="1200" width="800" frameborder="0" scrolling="no"></iframe>
+<style>
+  iframe {
+    width: 1px;
+    min-width: 100%;
+  }
+</style>
+<iframe id="OneDrive" class="iframe" src="https://onedrive.live.com/embed?cid=C8792DC9FD06F2E0&resid=C8792DC9FD06F2E0%2145743&authkey=ALFb_yR5LiYaFoo&em=2" height="1200" width = "800" frameborder="0" scrolling="no"></iframe>
+<script>
+  iResize({ log: true }, '#OneDrive')
+</script>
