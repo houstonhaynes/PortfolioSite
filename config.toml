@@ -90,7 +90,7 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 [params.intro]
   header    = "Technology Portfolio"
 
-  paragraph = "Houston's Personal<br>Sidebars on Agile Teamwork,<br>Software &amp; Hardware Engineering<br><i class='fas fa-brain'></i> Cognitive Computing <i class='fas fa-brain'></i><br><i class='fas fa-microchip'></i> IoT &amp; Cloud <i class='fas fa-cloud'></i>"
+  paragraph = "Sidebars on agility<br>Software &amp; Hardware<br><i class='fas fa-brain'></i> Cognitive Computing <i class='fas fa-brain'></i><br><i class='fas fa-microchip'></i> IoT &amp; Cloud <i class='fas fa-cloud'></i>"
 
   about     = "Houston has been dubbed a 'data philosopher' and an 'electronics wizard'. His travels range from architectural abstraction to working literally on the metal - and many points in between. Whether toggling EPROM hex codes or running machine learning workloads in the cloud - he's been there, done that and lived to tell the tale - which of course happens to be the reason for this site."
   # This appears at the top of the sidebar above params.intro.header.
