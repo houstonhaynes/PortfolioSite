@@ -96,17 +96,17 @@ ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   # This appears at the top of the sidebar above params.intro.header.
   # A width of less than 100px is recommended from a design perspective.
   [params.intro.pic]
-    src       = "/favicon/favicon-96x96.png"
+    src       = "img/H3Logo.svg"
     # Sets Image to be a cirlce
     circle    = false
     # Sets Image to be Future Imperfect's hexagon
-    imperfect = true
-    width     = ""
+    imperfect = false
+    width     = "96"
     alt       = "H3"
 
 [params.postAmount]
 # Sets the number of recent posts to show in the sidebar. The default value is 5.
-    sidebar = 5
+    sidebar = 3
 
 # Sets the menu items in the navigation bar
 # Identifier prepends a Font Awesome icon to the menu item

@@ -1,5 +1,5 @@
 ---
-title: "Telematics in Two Lines of Code - and other Beautiful Lies"
+title: "Managing Email Contact with an Azure Serverless Function"
 output:
   blogdown::html_page:
     toc: true
@@ -7,19 +7,19 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2019-10-07T14:59:43+05:30'
+date: '2019-10-01T14:59:43+05:30'
 featuredpath: img
-featured: Telematics.png
-description: On scaling a nation-wide telematics platform to the cloud
+featured: hex-FunctionApps.png
+description: Giving a static site some server-side flare with Node.js and SendGrid
 draft: true
 tags:
-- MongoDB
-- EC2
-- Mobile
-- Telematics
-- IoT
+- R
+- blogdown
+- Hugo
+- RStudio
+- Azure
 categories: 
-- enterprise
+- web
 editor_options: 
   chunk_output_type: inline
 ---
@@ -34,4 +34,3 @@ library(jsonlite)
 library(highcharter)
 library(widgetframe)
 ```
-

@@ -1,5 +1,5 @@
 ---
-title: "Building An R-markdown Static Site"
+title: "Building a Static Site with Serious 
 output:
   blogdown::html_page:
     toc: true
@@ -7,10 +7,10 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2018-05-01T14:59:43+05:30'
+date: '2019-10-11T14:59:43+05:30'
 featuredpath: img
-featured: Hugo.png
-description: On the shift from Wordpress to a blogdown/Hugo based personal web platform
+featured: h3sitehex.png
+description: Using Rmarkdown, blogdown, Hugo and Azure Infrastructure to build a robust web domain
 draft: true
 tags:
 - R

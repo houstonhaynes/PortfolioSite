@@ -1,5 +1,5 @@
 ---
-title: "Global Hyperion Lambda"
+title: "Global Hyperion Lambda Stream Analysis"
 output:
   blogdown::html_page:
     fig_width: 6

@@ -7,10 +7,10 @@ description = "Houston's latest resume in Word/PDF format"
 featured = ""
 featuredpath = ""
 featuredalt = ""
-categories = ["resume"]
+categories = [""]
 linktitle = ""
 format = ""
-link = "#"
+link = ""
 +++
 
 # Shared via OneDrive
