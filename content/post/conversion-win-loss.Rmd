@@ -168,7 +168,7 @@ AND sales.publication_end_date_time <= Dateadd(getdate(), INTERVAL 1 HOUR)</code
 
 This became the seed data that fed into the SOLR requests that were processed against each server. Below is a re-creation of the filter that’s used by the SOLR service to retrieve up-sell and conversion items. This is concatenated into the request that’s sent for each item from the soapUI jar. For all intents and purposes, these requests “look like” the same form of request that’s received directly from the API request layer, except for the time band I’m imposing on the request.
 
-<pre><code class="ruby">sch.solr.item.listing=q=&fq=-Merchandise:true&fq=(MajorGenreId:10001 OR MinorGenreId:203 OR MinorGenreId:51)&fq=-ItemType:3&fq=-ItemType:4&fq=-TCode1:APE
+<pre><code class="apache">sch.solr.item.listing=q=&fq=-Merchandise:true&fq=(MajorGenreId:10001 OR MinorGenreId:203 OR MinorGenreId:51)&fq=-ItemType:3&fq=-ItemType:4&fq=-TCode1:APE
 sch.solr.exclude.mlb=fq=-AttractionOrganization:mlb
 sch.solr.item.filter=fq=VisibilityDate:[NOW TO NOW+1HOUR]&fq=-ItemType:6&fq=-ItemType:15</code></pre>
 
