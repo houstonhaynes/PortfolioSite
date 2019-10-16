@@ -1,5 +1,5 @@
 ---
-title: "Building a Static Site with Serious 
+title: "Crafting a Static Site with Serious Server-Side Chops"
 output:
   blogdown::html_page:
     toc: true
