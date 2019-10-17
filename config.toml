@@ -11,6 +11,7 @@ pluralizeListTitles = false
 enableRobotsTXT = true
 canonifyURLs = true
 ignoreFiles             = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+enableGitInfo = true
 
 [params]
   # Sets the meta tag description
