@@ -60,7 +60,7 @@ enableGitInfo = true
   # customCSS            = ["default", "/path/to/file"]
   # customJS             = ["default", "/path/to/file"]
   customCSS             = ["default", "/css/add.css", "/css/skeleton-alerts.css", "/css/loading.css", "/css/loading-btn.css"]
-  customJS              = ["default", "/js/dark-mode-listener.js", "/js/contact.js", "/js/iframe.js", "/js/iFrameResizer.min.js", "/js/iframeResizer.contentWindow.min.js", "/js/spin.js"]
+  customJS              = ["default", "/js/dark-mode-listener.js", "/js/contact.js", "/js/iframe.js", "/js/iFrameResizer.min.js", "/js/iframeResizer.contentWindow.min.js", "/js/spin.js", "/js/hideGitInfoInProd.js"]
 
   # options for highlight.js (version, additional languages, and theme)
   disable_highlight = false # set to true to disable Highlight
