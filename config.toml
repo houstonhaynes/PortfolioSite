@@ -15,7 +15,7 @@ enableGitInfo = true
 
 [params]
   # Sets the meta tag description
-  description          = "Houston Haynes personal web site containing articles and information about his work and experiences in technology"
+  description          = "Houston H. Haynes Sidebars & Deep Dives in Software & Hardware - Cognitive Computing, IoT & Cloud"
   # Sets the navbarTitle that appears in the top left of the navigation bar
   navbarTitle          = "Navigation"
   # Sets where "View More Posts" links
@@ -93,7 +93,7 @@ enableGitInfo = true
 
   paragraph = "Sidebars & Deep Dives<br>in Software &amp; Hardware<br><i class='fas fa-brain'></i> Cognitive Computing <i class='fas fa-brain'></i><br><i class='fas fa-microchip'></i> IoT &amp; Cloud <i class='fas fa-cloud'></i>"
 
-  about     = "Houston has been dubbed a 'data philosopher' and an 'electronics wizard'. His travels range from architectural abstraction to working literally on the metal - and many points in between. Whether toggling EPROM hex codes or running machine learning workloads in the cloud - he's been there, done that and lived to tell the tale - which of course happens to be the reason for this site."
+  about     = "My roles have ranged from solder jockey to managing data architect. This site covers some highlights and lowlights from those travels, and a bit about the future too."
   # This appears at the top of the sidebar above params.intro.header.
   # A width of less than 100px is recommended from a design perspective.
   [params.intro.pic]
