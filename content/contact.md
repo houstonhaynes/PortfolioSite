@@ -2,7 +2,7 @@
 title = "Contact"
 author = "Houston Haynes"
 +++ 
-
+<script src="/js/contact.js"></script>
   <div id="container" class="ld-over-full-inverse">
     <div id="output"></div> 
     <!-- output initially empty by design - waits for contact.js response from Azure Function -->
