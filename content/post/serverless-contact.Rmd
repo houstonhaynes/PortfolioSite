@@ -1,0 +1,52 @@
+---
+title: "Serverless message relay"
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2019-10-01T14:59:43+05:30'
+featuredpath: img
+featured: hex-FunctionApps.png
+cover: \img\contact_image_large.png
+description: Using Azure Function Apps and SendGrid for light message housekeeping
+draft: false
+tags:
+- R
+- blogdown
+- Node
+- Azure Functions
+- SendGrid
+categories: 
+- web
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+library(jsonlite)
+library(highcharter)
+library(widgetframe)
+```
+# tl;dr
+
+The end result is fairly simple but the process was not particularly straightfoward. Once the message was parsed for the SendGrid v3 API and a few tweaks applied to the Azure Function CORS settings the result is pretty great. I added some JavaScript and CSS to annimate the Azure Function Apps logo for a bit of flare. You can view the GitHub repo `r blogdown::shortcode("url-link", "here.", "https://github.com/houstonhaynes/ContactFunction")`
+
+# Innocent Beginnings
+
+This all started, like many tech digressions, with a simple web query. I wanted to find if anyone else had used Azure Functions for handling messaging through their static site, and there were several examples. Unfortunately as is the case with most newer technology tracks, the half-life of the information had grown stale in every case I found. So I did a bit of my own homework with the SendGrid v3 API and crafted a bit of front-end.
+
+# Beginning With The End in Mind
+
+Let's start with the result. Here's a GIF of the form in action.
+
+`r blogdown::shortcode("img-post", "/img", "ContactAzureFunction.gif", "Contact Animation", "center")`
+
+When the Function runs from a cold start, it can take up to 20 seconds to respond. So this GIF has been edited as a courtesy. But it goes to show that having a bit of *action* in the page to represent the request/response wait time can help smooth the user experience a bit. 
