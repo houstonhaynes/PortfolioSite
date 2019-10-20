@@ -1,5 +1,5 @@
 ---
-title: "Telematics in Two Lines"
+title: "Telematics in Two Lines of Code - and other Beautiful Lies"
 output:
   blogdown::html_page:
     toc: true
@@ -7,8 +7,9 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2018-06-25T14:59:43+05:30'
-cover: /img/Telematics.png
+date: '2019-10-07T14:59:43+05:30'
+featuredpath: img
+featured: Telematics.png
 description: On scaling a nation-wide telematics platform to the cloud
 draft: true
 tags:

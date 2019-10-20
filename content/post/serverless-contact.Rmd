@@ -1,0 +1,212 @@
+---
+title: "Serverless message relay"
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2019-10-01T14:59:43+05:30'
+featuredpath: img
+featured: hex-FunctionApps.png
+cover: \img\contact_image_large.png
+description: Using Azure Function Apps and SendGrid for email housekeeping
+draft: false
+tags:
+- R
+- blogdown
+- Node
+- Azure Functions
+- SendGrid
+categories: 
+- web
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+library(jsonlite)
+library(highcharter)
+library(widgetframe)
+```
+# tl;dr
+
+While it's an elegant and inexpensive result, bringing this side project to a notch point was not exactly straightfoward. Once I determined how the message was to be parsed for the SendGrid v3 API along with a few tweaks applied to the Function App settings, it all came together. I added some JavaScript and CSS to animate the Azure Function Apps logo, which I think provides a more active visual experience. For the full project with sample HTML and JS files (highlighted below) you can proceed to the GitHub repo `r blogdown::shortcode("url-link", "here", "https://github.com/houstonhaynes/ContactFunction")` - and an animation of the form in the following section.
+
+# A Well-Intended, Slightly Naive Adventure
+
+This all started, like many tech digressions, with a simple web query. I wanted to find if anyone else had used Azure Functions for handling messaging through their static site, and there were several examples. Unfortunately the information had grown stale by the time I found it. So I did a bit of my own homework and came up with a pretty tidy solution. I'll start with the end result. Here's a GIF of an early version of the form in action.
+
+`r blogdown::shortcode("fancybox", "/img", "ContactAzureFunction.gif")`
+
+The Function can take up to 20 seconds to respond when running from a cold start. So this GIF has been edited as a courtesy. And as much as I'd like to think I'm popular, the likelihood of multiple people clicking "Submit" when a Function App instance is idling is relatively slim. Even while testing there's still enough wait time to see the animation cycle once or twice. So it's more to the point that having a bit of *action* in the page to represent the request/response cycle can give an indicator to the user that things are happening behind the scenes. 
+
+# The Code
+
+While I provided inline comments for some of the code blocks, there's still a few bits of context worth mentioning here. Below is the message binding, key being the nested _from_ element that contains both the name and email of the submitted form.
+
+<pre><code class="node">module.exports = async function (context, req) {
+    if (req.body.email) {
+        context.bindings.message = {
+            subject: 'Message from ' + req.body.name + ' via YOUR_SITE_HERE', //fix this line!
+            from: { 
+                name: req.body.name, 
+                email: req.body.email 
+            },
+            content: [{
+                type: 'text/plain',
+                value: req.body.message
+            }]
+        };
+    return {
+            res: {
+                status: 200
+            },
+        };
+    } else {
+        return {
+            res: {
+                status: 400
+            }
+        };
+    }
+};</code></pre>
+
+There were no examples online that showed this - other than the SendGrid v3 API itself. So I cobbled this together by looking at those docs plus the message binding in the SendGrid template that Microsoft makes available in the Function Apps portal. 
+
+In the HTML form you'll see there are several placeholder elements - waiting for actions based the javascript below. 
+
+<pre><code class="html"><div id="container" class="ld-over-full-inverse">
+    <div id="output"></div> 
+    <!-- output initially empty by design - waits for contact.js response from Azure Function -->
+        <form id="submitMessage" method="post" style="visibility:visible;"> 
+        <!-- form initially visible but to be hidden by contact.js after response is processed -->
+          <div class="form-group"> 
+            <input type="text" id="name" class="form-control" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <input type="email" id="email" class="form-control" placeholder="Your email" required>
+          </div>
+          <div class="form-group">
+            <textarea id="message" class="form-control" placeholder="Type your message..." required></textarea>
+          </div>
+          <input class="button-primary" type="submit" value="Submit">&nbsp;&nbsp;&nbsp;&nbsp;
+          <img id="AzureFunctionHeartbeat" class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/></img>
+          <!-- inline style set to hide at page load, then is shown by contact.js when submitMessage event is triggered, then hidden again after response is processed -->
+        </form>
+  </div></code></pre>
+
+I've read several posts from prima facea front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty.
+
+Below is the javascript that handles the interaction with the service and transitions the UI elements.
+
+<pre><code class="javascript">// waits for the button to be clicked on Contact form
+document.getElementById('submitMessage').addEventListener('submit', submitMessage);
+
+// this transitions the UI, processes the form input then submits to SendGrid via Azure Function
+function submitMessage(e) {
+    e.preventDefault();
+    document.getElementById('container').classList.add('running'); // run dark overlay
+    document.getElementById('AzureFunctionHeartbeat').style.visibility = "visible"; // make svg visible
+    let name = document.getElementById('name').value;
+    let email = document.getElementById('email').value;
+    let message = document.getElementById('message').value;
+    fetch(' YOUR_AZURE_FUNCTION_URL_GOES_HERE  ', { // fix this line!!
+            method: 'POST',
+            cache: 'no-cache',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                message: message
+            })
+        })
+        .then((res) => processResponse(res))
+}
+
+// this clears the on-submit dark gray overlay and heartbeat and then processes Azure Function response
+function processResponse(response) {
+    document.getElementById('container').classList.remove('running'); // remove gray form overlay
+    document.getElementById('AzureFunctionHeartbeat').style.visibility = "hidden"; // remove svg
+    if (response.status === 200) { // HTTP 200 is "OK"
+        output =
+            `
+        <div class="alert alert-success" role="alert">
+          Thanks, ${document.getElementById('name').value}! We'll be in touch soon!
+        </div>        
+        `;
+    } else { // anything else is "not OK"
+        output =
+            `
+        <div class="alert alert-warning" role="alert">
+          Oh no! Something went wrong :(
+        </div>        
+        `;
+    }
+    document.getElementById('output').innerHTML = output; // write to empty output div on page
+    document.getElementById('submitMessage').style.visibility = "hidden"; // hide form for clean UI
+}</code></pre>
+
+The inline comments provide enough breadcrumbs to follow the logic. There's a possibility for more verbose error messaging (see my caveat below) but this works well enough to get things moving along. 
+
+# Styling
+
+In the original Wordpress version of this site I used the Pagelines framework, which included SemanticUI. So I could drop in alerts with a class tag and everything just *lit up* as expected. But that came at a cost, which is as much on Wordpress - but the JS/CSS bulk certainly didn't help. So while I didn't want to hand-craft my own CSS I also didn't want to deal with another bulky framework. So I found the `r blogdown::shortcode("url-link", "skeleton-alerts CSS library,", "https://github.com/nathancahill/skeleton-alerts")` which fits the bill perfectly.
+
+The icon animation also came from an online resource. `r blogdown::shortcode("url-link", "Loading CSS", "https://loading.io/button/")` provides a concise library to handle a variety of behaviors. I auditioned the heartbeat behavior on a lark, and liked it so much that I decided that it was the keeper of the bunch.
+
+# Caveats
+
+So while I gloss over how well everything works when it's working, there were a few stumbling blocks that was a mixture of my own cobwebs working with Node and some minor gaps in documentation here and there. Below are two examples of things that cost me a lot more time than they would have if I was a more seasoned front-end developer.
+
+### The fault, dear Brutus, is not in our stars... 
+
+The first thing that tripped me up was an output binding error message I was seeing when testing in the portal. I had started with an HTTP triggered function template, and added the SendGrid output bindings afterward. While the bundle was added when the project was instantiated, the "sendGrid" extension call-out was __not__ there by default.
+
+<pre><code class="json">{
+    "version": "2.0",
+    "extensionBundle": {
+        "id": "Microsoft.Azure.Functions.ExtensionBundle",
+        "version": "[1.*, 2.0.0)"
+    },
+    "__comment": "the element below was added manually, and delete this!!",
+    "extensions": {
+        "sendGrid": {}
+    }
+}</code></pre>
+
+Fortunately a quick reply on Twitter had me back on track.
+
+`r blogdown::shortcode("tweet", "1182465920930701312")`
+
+### ...But in ourselves, that we are underlings
+
+I was in a hurry. That was my first mistake. My machine is _still_ relatively new and I hadn't bothered changing my default browser from Microsoft Edge. I would open Firefox or Chrome manually and paste in the local URL when I need to check the local build on those browsers. In this case that was a strategic mistake. The messages coming back in Edge didn't give me the detail to show me the *other* mistake I had made - that is - to make sure my CORS settings would allow my localhost as an origin. Once I popped over to Chrome I nearly blew a gasket - both at the lack of verbosity in Edge and in my own impatience for missing this.
+
+`r blogdown::shortcode("fancybox", "/img", "FunctionAppDebugging.png")`
+
+When running the test in portal, everything worked fine. The browser is on my desktop so there's no problem, right? But the origin header for the request from the test in portal is already _pre-cleared_ by the function app defaults.
+
+I had already set up my production and staging endpoints to pass through, but simply forgot to add the localhost origin. And of course I paid almost no attention to the origins that were alreaady listed - which I assume allow the tests in the Funtion App portal to process without issue. I lost more than an hour beating myself up trying to get this to work. Eventually I gave up and simply deployed into my staging instance to run the tests, which was fine - but the find/fix cycle is not nearly as quick as running locally. I suppose if I had configured VSCode for remote debugging I would have found this earlier. That's what _"being in a hurry"_ gets me...
+
+So now I have Firefox set as my default browser, which is a real acid test for a variety of reasons I'll delve into with another post.
+
+`r blogdown::shortcode("fancybox", "/img", "FunctionAppNodeCORS.png")`
+
+Above are the settings that allow my localhost to work - your mileage (and localhost declaration pattern/port) may vary. If you're familiar with serving locally in RStudio/Hugo you'll know about how ports will change if you happen to be accidentally running more than one server instance. Port 4321 is the intial default - CTRL/CMD+Alt+F10 is your friend here.
+
+# Finishing touches
+
+I really had fun placing the `r blogdown::shortcode("url-link", "Azure Function App logo", "https://www.microsoft.com/en-us/download/details.aspx?id=41937")` into the form as a spinner. That plus the gray overlay give the page a guided feel that an empty "static" form simly doesn't convey. That said, there are still some wrinkles to iron out. The shadow that covers the entire page *should* only cover the email form itself. I'm certain it's something I'm missing in my CSS or other markup, but I'll save that for later when I do a deeper dive into responsive grid design.
+
+I'm a huge fan of serverless, and am really glad to have this as a resource. It's essentially free - as the basic SendGrid account allows 25,000 free messages per month. I doubt I see 25 messages per month from my site - outside of my own testing. Of course the first paid tier for Azure Function App in the Consumption plan is after 1 million runs, so again it feels like you're getting free money. And as I mentioned at the outset, this will also come in handy for processing notifications out of my GitHub Actions pipelines. 
+
+If you're intersted in trying something similar, feel free to `r blogdown::shortcode("url-link", "fork the repo", "https://github.com/houstonhaynes/ContactFunction")` and give it a try!
