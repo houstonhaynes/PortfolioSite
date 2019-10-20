@@ -82,7 +82,7 @@ While I commented the relatively short code blocks, there's still a few bits of 
 
 There were no examples online that showed this - other than the SendGrid v3 API itself. So I cobbled this together by looking at those docs plus the message binding in the SendGrid template that Microsoft makes available in the Function Apps portal. 
 
-The next two blocks of code are ported from a gist because the raw embeds as above doesn't go so well with raw html and JSON. That's something I'll look into but for now you should get a picture - even with GitHub's ugly, nearly useless highlighting.
+The next two blocks of code are ported from a gist because the raw embeds as above don't go so well with raw html and JSON. That's something I'll look into but for now you should get a picture - even with GitHub's ugly, nearly useless highlighting.
 `r blogdown::shortcode("gist", "houstonhaynes", "b2788162f642d36298c85d2a0f4a43c2", "contact.html")`
 You'll see there are several placeholder elements - waiting for actions based the javascript below. I've read several posts from prima facea front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty.
 
