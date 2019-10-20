@@ -183,11 +183,9 @@ The first thing that tripped me up was an output binding error message I was see
     }
 }</code></pre>
 
-Fortunately a quick shout-out on Twitter got me back on track.
+Fortunately a quick reply on Twitter had me back on track.
 
 `r blogdown::shortcode("tweet", "1182465920930701312")`
-
-_Hat tip to Anthony Chu!!_
 
 ### ...But in ourselves, that we are underlings
 
@@ -211,4 +209,4 @@ I really had fun placing the `r blogdown::shortcode("url-link", "Azure Function 
 
 I'm a huge fan of serverless, and am really glad to have this as a resource. It's essentially free - as the basic SendGrid account allows 25,000 free messages per month. I doubt I see 25 messages per month from my site - outside of my own testing. Of course the first paid tier for Azure Function App in the Consumption plan is after 1 million runs, so again it feels like you're getting free money. And as I mentioned at the outset, this will also come in handy for processing notifications out of my GitHub Actions pipelines. 
 
-If you're intersted in doing the same thing, feel free to `r blogdown::shortcode("url-link", "fork the repo", "https://github.com/houstonhaynes/ContactFunction")` and give it a try!
+If you're intersted in trying something similar, feel free to `r blogdown::shortcode("url-link", "fork the repo", "https://github.com/houstonhaynes/ContactFunction")` and give it a try!
