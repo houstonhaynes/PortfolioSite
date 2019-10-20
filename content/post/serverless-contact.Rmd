@@ -37,7 +37,7 @@ library(widgetframe)
 ```
 # tl;dr
 
-The end result is elegant and inexpensive, but getting this side project to a notch point was not exactly straightfoward. Once I figured out how the message was to be parsed for the SendGrid v3 API along with a few tweaks applied to the Function App settings things are clicked. I added some JavaScript and CSS to animate the Azure Function Apps logo, which I think provides a more active visual experience. For the full project with sample HTML and JS files (shown below) you can proceed the GitHub repo `r blogdown::shortcode("url-link", "here", "https://github.com/houstonhaynes/ContactFunction")` - and an animation of the form in use is shown below.
+While it's an elegant and inexpensive result, bringing this side project to a notch point was not exactly straightfoward. Once I determined how the message was to be parsed for the SendGrid v3 API along with a few tweaks applied to the Function App settings, it all came together. I added some JavaScript and CSS to animate the Azure Function Apps logo, which I think provides a more active visual experience. For the full project with sample HTML and JS files (shown below) you can proceed the GitHub repo `r blogdown::shortcode("url-link", "here", "https://github.com/houstonhaynes/ContactFunction")` - and an animation of the form in use is shown below.
 
 # A Well-Intended, Slightly Naive Adventure
 
