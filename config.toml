@@ -60,14 +60,14 @@ enableGitInfo = true
   # customCSS            = ["default", "/path/to/file"]
   # customJS             = ["default", "/path/to/file"]
   customCSS             = ["default", "/css/add.css", "/css/skeleton-alerts.css", "/css/loading.css", "/css/loading-btn.css"]
-  customJS              = ["default", "/js/contact.js", "/js/dark-mode-listener.js", "/js/iFrameResizer.min.js", "/js/iframeResizer.contentWindow.min.js", "/js/hideGitInfoInProd.js"]
+  customJS              = ["default", "/js/encodeMarkup.js", "/js/contact.js", "/js/dark-mode-listener.js", "/js/iFrameResizer.min.js", "/js/iframeResizer.contentWindow.min.js", "/js/hideGitInfoInProd.js"]
 
   # options for highlight.js (version, additional languages, and theme)
   disable_highlight = false # set to true to disable Highlight
   highlightjsVersion = "9.11.0"
   highlightjsCDN = "//cdn.bootcss.com"
-  highlightjsLang = ["r", "yaml", "css", "apache", "sql", "groovy", "java", "cs", "rust", "ruby"]
-  highlightjsTheme = "foundation"
+  highlightjsLang = ["r", "yaml", "html", "ini", "http", "javascript", "css", "apache", "sql", "groovy", "java", "cs", "rust", "ruby"]
+  highlightjsTheme = "docco"
   MathJaxCDN = "//cdn.bootcss.com"
   MathJaxVersion = "2.7.1"
 
