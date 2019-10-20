@@ -11,7 +11,7 @@ date: '2019-10-01T14:59:43+05:30'
 featuredpath: img
 featured: hex-FunctionApps.png
 cover: \img\contact_image_large.png
-description: Using Azure Function Apps and SendGrid for light message housekeeping
+description: Using Azure Function Apps and SendGrid for light email housekeeping
 draft: false
 tags:
 - R
@@ -29,15 +29,79 @@ editor_options:
 
 <div id="tldr" class="section level1">
 <h1>tl;dr</h1>
-<p>The end result is fairly simple but the process was not particularly straightfoward. Once the message was parsed for the SendGrid v3 API and a few tweaks applied to the Azure Function CORS settings the result is pretty great. I added some JavaScript and CSS to annimate the Azure Function Apps logo for a bit of flare. You can view the GitHub repo {{% url-link "here." "https://github.com/houstonhaynes/ContactFunction" %}}</p>
+<p>The end result for managing my contact form is fairly simple but getting to this point was not particularly straightfoward. Once the message was parsed for the SendGrid v3 API and a few tweaks applied to the Azure Function CORS settings the result is pretty great. I added some JavaScript and CSS to annimate the Azure Function Apps logo for a bit of flare. You can view the GitHub repo {{% url-link "here." "https://github.com/houstonhaynes/ContactFunction" %}}</p>
+<p>Aside from contact emails the function app will also come in handy when it’s time to send notifications from my CI/CD pipeline built in GitHub Actions. <em>COMING SOON!</em></p>
 </div>
-<div id="innocent-beginnings" class="section level1">
-<h1>Innocent Beginnings</h1>
-<p>This all started, like many tech digressions, with a simple web query. I wanted to find if anyone else had used Azure Functions for handling messaging through their static site, and there were several examples. Unfortunately as is the case with most newer technology tracks, the half-life of the information had grown stale in every case I found. So I did a bit of my own homework with the SendGrid v3 API and crafted a bit of front-end.</p>
-</div>
-<div id="beginning-with-the-end-in-mind" class="section level1">
-<h1>Beginning With The End in Mind</h1>
-<p>Let’s start with the result. Here’s a GIF of the form in action.</p>
+<div id="a-well-intended-slightly-naive-adventure" class="section level1">
+<h1>A Well-Intended, Slightly Naive Adventure</h1>
+<p>This all started, like many tech digressions, with a simple web query. I wanted to find if anyone else had used Azure Functions for handling messaging through their static site, and there were several examples. Unfortunately the information had grown stale by the time I found it. So I did a bit of my own homework and came up with a pretty tidy solution. I’ll start with the end result. Here’s a GIF of an early version of the form in action.</p>
 {{% img-post "/img" "ContactAzureFunction.gif" "Contact Animation" "center" %}}
-<p>When the Function runs from a cold start, it can take up to 20 seconds to respond. So this GIF has been edited as a courtesy. But it goes to show that having a bit of <em>action</em> in the page to represent the request/response wait time can help smooth the user experience a bit.</p>
+<p>The Function can take up to 20 seconds to respond when running from a cold start. So this GIF has been edited as a courtesy. And as much as I’d like to think I’m popular, the likelihood of multiple people clicking “Submit” when a Function App instance is idling is relatively slim. Even while testing there’s still enough wait time to see the animation cycle once or twice. So it’s more to the point that having a bit of <em>action</em> in the page to represent the request/response cycle can help smooth the user experience a bit.</p>
+</div>
+<div id="the-code" class="section level1">
+<h1>The Code</h1>
+<p>While I commented the relatively short code blocks, there’s still a few bits of context worth mentioning here. Below is the message binding, key being the nested <em>from</em> element that contains both the name and email of the submitted form.</p>
+<pre><code class="node">module.exports = async function (context, req) {
+    if (req.body.email) {
+        context.bindings.message = {
+            subject: 'Message from ' + req.body.name + ' via YOUR_SITE_HERE', //fix this line!
+            from: { 
+                name: req.body.name, 
+                email: req.body.email 
+            },
+            content: [{
+                type: 'text/plain',
+                value: req.body.message
+            }]
+        };
+    return {
+            res: {
+                status: 200
+            },
+        };
+    } else {
+        return {
+            res: {
+                status: 400
+            }
+        };
+    }
+};</code></pre>
+<p>There were no examples online that showed this - other than the SendGrid v3 API itself. So I cobbled this together by looking at those docs plus the message binding in the SendGrid template that Microsoft makes available in the Function Apps portal.</p>
+<p>The next two blocks of code are ported from a gist because the raw embeds as above doesn’t go so well with raw html and JSON. That’s something I’ll look into but for now you should get a picture - even with GitHub’s ugly, nearly useless highlighting.
+{{% gist "houstonhaynes" "b2788162f642d36298c85d2a0f4a43c2" "contact.html" %}}
+You’ll see there are several placeholder elements - waiting for actions based the javascript below. I’ve read several posts from prima facea front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty.</p>
+{{% gist "houstonhaynes" "b2788162f642d36298c85d2a0f4a43c2" "contact.js" %}}
+<p>The inline comments provide enough breadcrumbs to follow the logic. There’s a possibility for more verbose error messaging (see my caveat below) but this works well enough to get things moving along.</p>
+</div>
+<div id="caveats" class="section level1">
+<h1>Caveats</h1>
+<p>So while I gloss over how well everything works when it’s working, there were a few stumbling blocks that was a mixture of my own cobwebs working with Node and some minor gaps in documentation here and there. Below are two examples of things that cost me a lot more time than they would have if I was a more seasoned front-end developer.</p>
+<div id="the-fault-dear-brutus-is-not-in-our-stars" class="section level3">
+<h3>The fault, dear Brutus, is not in our stars…</h3>
+<p>The first thing that tripped me up was an output binding error message I was seeing when testing in the portal. I had started with an HTTP triggered function template, and added the SendGrid output bindings afterward. While the bundle was added when the project was instantiated, the “sendGrid” extension call-out was not there by default.</p>
+<pre><code class="json">{
+    "version": "2.0",
+    "extensionBundle": {
+        "id": "Microsoft.Azure.Functions.ExtensionBundle",
+        "version": "[1.*, 2.0.0)"
+    },
+    "__comment": "the element below was added manually, and delete this!!",
+    "extensions": {
+        "sendGrid": {}
+    }
+}</code></pre>
+<p>Fortuantely a quick shout-out on Twitter got me back on track.</p>
+{{% tweet "1182465920930701312" %}}
+<p>Hat tip to Anthony Chu!!</p>
+</div>
+<div id="but-in-ourselves-that-we-are-underlings" class="section level3">
+<h3>…But in ourselves, that we are underlings</h3>
+<p>I was in a hurry. That was my first mistake. My machine is <em>still</em> relatively new and I hadn’t bothered changing my default browser from Microsoft Edge. I would open Firefox or Chrome manually and paste in the local URL when I need to check the local build on those browsers. In this case that was a strategic mistake. The messages coming back in Edge didn’t give me the detail to show me the <em>other</em> mistake I had made - that is - to make sure my CORS settings would allow my localhost as an origin.</p>
+{{% fancybox "/img" "FunctionAppDebugging.png" %}}
+<p>When running the test in portal, everything worked fine. The browser is on my desktop so there’s no problem, right? But the origin header for the request from the test in portal is already <em>pre-cleared</em> by the function app defaults.</p>
+<p>I had gone in already to set up my production and staging endpoints to pass through, but simply forgot to add the localhost origin. I lost more than an hour beating myself up trying to get this to work. Eventually I gave up and simply deployed into my staging instance to run the tests, which was fine - but not nearly as quick as running locally. I suppose if I had configured VSCode for remote debugging I would have found this earlier. That’s what “being in a hurry” gets me…</p>
+{{% fancybox "/img" "FunctionAppNodeCORS.png" %}}
+<p>So here are the settings that allow my localhost to work - your mileage (and localhost declaration pattern/port) may vary. If you’re familiar with serving locally in RStudio/Hugo you’ll know about how ports will change if you happen to be accidentally running more than one server instance. CTRL/CMD+Alt+F10 is your friend here.</p>
+</div>
 </div>
