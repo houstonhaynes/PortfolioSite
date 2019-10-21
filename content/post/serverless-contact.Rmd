@@ -229,13 +229,13 @@ Above are the settings that allow my localhost to work - your mileage (and local
 
 # Finishing touches
 
-I really had fun placing the `r blogdown::shortcode("url-link", "Azure Function App logo", "https://www.microsoft.com/en-us/download/details.aspx?id=41937")` into the form as a spinner. That plus the gray overlay give the page a guided feel that an empty "static" form simly doesn't convey. That said, there are still some wrinkles to iron out. The shadow that covers the entire page *should* only cover the email form itself. I'm certain it's something I'm missing in my CSS or other markup, but I'll save that for later when I do a deeper dive into responsive grid design.
+I really had fun placing the `r blogdown::shortcode("url-link", "Azure Function App logo", "https://www.microsoft.com/en-us/download/details.aspx?id=41937")` into the form as a spinner. That plus the gray overlay gives the page a guided feel that an empty "static" form simly doesn't convey. That said, there are still some wrinkles to iron out. The shadow that covers the entire page *should* only cover the email form itself. I'm certain it's something I'm missing in my CSS or other markup, but I'll save that for later when I do a deeper dive into responsive grid design.
 
 I'm a huge fan of serverless, and am really glad to have this as a resource. It's essentially free - as the basic SendGrid account allows 25,000 free messages per month. I doubt I see 25 messages per month from my site - outside of my own testing. Of course the first paid tier for Azure Function App in the Consumption plan is after 1 million runs, so again it feels like you're getting free money. And this will also come in handy for processing notifications out of my GitHub Actions pipelines, which is a subject for a later post. 
 
 If you're interested in trying something similar, feel free to `r blogdown::shortcode("url-link", "fork the repo", "https://github.com/houstonhaynes/ContactFunction")` and give it a try!
 
-# Reception
+# Coda - Reception
 
 As usual, there's *one* more thing... the email. In my case, I'm routing to a Gmail account. Since this is coming from SendGrid the messages were automatically flagged as possible SPAM. The answer in my case was to create a filter that ensured it wouldn't get routed to the SPAM folder.
 
