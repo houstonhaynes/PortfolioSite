@@ -7,7 +7,7 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2019-10-01T14:59:43+05:30'
+date: '2019-10-19T14:59:43+05:30'
 featuredpath: img
 featured: hex-FunctionApps.png
 cover: \img\contact_image_large.png
@@ -37,21 +37,21 @@ library(widgetframe)
 ```
 # tl;dr
 
-While it's an elegant and inexpensive result, bringing this side project to a notch point was not exactly straightfoward. Once I determined how the message was to be parsed for the SendGrid v3 API along with a few tweaks applied to the Function App settings, it all came together. I added some JavaScript and CSS to animate the Azure Function Apps logo, which I think provides a more active visual experience. For the full project with sample HTML and JS files (highlighted below) you can proceed to the GitHub repo `r blogdown::shortcode("url-link", "here", "https://github.com/houstonhaynes/ContactFunction")` - and an animation of the form in the following section.
+While it's an elegant and inexpensive result, bringing this side project to a notch point was not exactly straightfoward. Once I determined how the message was to be constructed for the SendGrid v3 API, along with a few tweaks to `r blogdown::shortcode("url-link", "Function App bindings,", "https://docs.microsoft.com/en-us/azure/store-sendgrid-nodejs-how-to-send-email")` it all came together. I added some JavaScript and CSS to animate the Function Apps logo, which provides a more active visual experience. 
 
 # A Well-Intended, Slightly Naive Adventure
 
-This all started, like many tech digressions, with a simple web query. I wanted to find if anyone else had used Azure Functions for handling messaging through their static site, and there were several examples. Unfortunately the information had grown stale by the time I found it. So I did a bit of my own homework and came up with a pretty tidy solution. I'll start with the end result. Here's a GIF of an early version of the form in action.
+This all started, like many tech digressions, with humble beginnings. I wanted to find if anyone else had used Azure Functions for handling messaging through their static site, and there were several examples. Unfortunately the information had grown stale by the time I found it. The core concept is out there in several repos/blog posts, but there have been changes since then which invalidates a straight fork-and-deploy approach. So I did a bit of my own homework and derived a workable solution. I'll start with a brief walkthrough - a GIF of an early version of the form in action.
 
 `r blogdown::shortcode("fancybox", "/img", "ContactAzureFunction.gif")`
 
-The Function can take up to 20 seconds to respond when running from a cold start. So this GIF has been edited as a courtesy. And as much as I'd like to think I'm popular, the likelihood of multiple people clicking "Submit" when a Function App instance is idling is relatively slim. Even while testing there's still enough wait time to see the animation cycle once or twice. So it's more to the point that having a bit of *action* in the page to represent the request/response cycle can give an indicator to the user that things are happening behind the scenes. 
+The Function can take up to 20 seconds to respond when initiating from a cold start. So this GIF has been edited as a courtesy. And as much as I'd like to think I'm popular, the likelihood of multiple people clicking "Submit" when a Function App instance is idling is - in a word - remote. Even while testing on an idling Function instance there's still enough wait time to see the animation "pulse" on screen once or twice. So it's more to the point that having a bit of *action* in the page to represent the request/response cycle can indicate to the user that things are happening behind the scenes. 
 
 # The Code
 
-While I provided inline comments for some of the code blocks, there's still a few bits of context worth mentioning here. Below is the message binding, key being the nested _from_ element that contains both the name and email of the submitted form.
+While I provided inline comments for some of the code blocks, there's still a few bits of context worth mentioning here. Below is the Function App message binding, key being the nested _from_ element that contains both the name and email of the submitted form. There are several alternatives to this using "personalization" but it's really unnecessary with the latest API.
 
-<pre><code class="node">module.exports = async function (context, req) {
+<figure><figcaption class="caption">index.js from Azure Function App project</figcaption><pre><code class="node">module.exports = async function (context, req) {
     if (req.body.email) {
         context.bindings.message = {
             subject: 'Message from ' + req.body.name + ' via YOUR_SITE_HERE', //fix this line!
@@ -76,13 +76,13 @@ While I provided inline comments for some of the code blocks, there's still a fe
             }
         };
     }
-};</code></pre>
+};</code></pre></figure>
 
-There were no examples online that showed this - other than the SendGrid v3 API itself. So I cobbled this together by looking at those docs plus the message binding in the SendGrid template that Microsoft makes available in the Function Apps portal. 
+There were no examples online that showed this specific binding pattern. So I cobbled this together by looking at SendGrid's API docs plus the sample message binding in a SendGrid-native template that Microsoft makes available in the Function Apps portal. 
 
-In the HTML form you'll see there are several placeholder elements - waiting for actions based the javascript below. 
+In the HTML below form you'll see there are several placeholder elements - waiting for actions based the javascript listener and promise response.
 
-<pre><code class="html"><div id="container" class="ld-over-full-inverse">
+<figure><figcaption class="caption">HTML form in Contact page</figcaption><pre><code class="html"><div id="container" class="ld-over-full-inverse">
     <div id="output"></div> 
     <!-- output initially empty by design - waits for contact.js response from Azure Function -->
         <form id="submitMessage" method="post" style="visibility:visible;"> 
@@ -100,13 +100,11 @@ In the HTML form you'll see there are several placeholder elements - waiting for
           <img id="AzureFunctionHeartbeat" class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/></img>
           <!-- inline style set to hide at page load, then is shown by contact.js when submitMessage event is triggered, then hidden again after response is processed -->
         </form>
-  </div></code></pre>
+  </div></code></pre></figure>
 
-I've read several posts from prima facea front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty.
+I've read several posts from prima facea front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty. It may be something I refactor at a later date.
 
-Below is the javascript that handles the interaction with the service and transitions the UI elements.
-
-<pre><code class="javascript">// waits for the button to be clicked on Contact form
+<figure><figcaption class="caption">JavaScript that manages SendGrid request/response and HTML form state</figcaption><pre><code class="javascript">// waits for the button to be clicked on Contact form
 document.getElementById('submitMessage').addEventListener('submit', submitMessage);
 
 // this transitions the UI, processes the form input then submits to SendGrid via Azure Function
@@ -153,7 +151,7 @@ function processResponse(response) {
     }
     document.getElementById('output').innerHTML = output; // write to empty output div on page
     document.getElementById('submitMessage').style.visibility = "hidden"; // hide form for clean UI
-}</code></pre>
+}</code></pre></figure>
 
 The inline comments provide enough breadcrumbs to follow the logic. There's a possibility for more verbose error messaging (see my caveat below) but this works well enough to get things moving along. 
 
@@ -169,9 +167,33 @@ So while I gloss over how well everything works when it's working, there were a 
 
 ### The fault, dear Brutus, is not in our stars... 
 
-The first thing that tripped me up was an output binding error message I was seeing when testing in the portal. I had started with an HTTP triggered function template, and added the SendGrid output bindings afterward. While the bundle was added when the project was instantiated, the "sendGrid" extension call-out was __not__ there by default.
+The first thing that tripped me up was an output binding error message I was seeing when testing in the portal. I had started with an HTTP triggered function template, and added the SendGrid output bindings afterward. 
 
-<pre><code class="json">{
+
+<figure><figcaption class="caption">function.json from Azure Function App project</figcaption><pre><code class="json">{
+    "bindings": [{
+            "authLevel": "anonymous",
+            "type": "httpTrigger",
+            "direction": "in",
+            "name": "req",
+            "methods": [
+                "post"
+            ]
+        },
+        {
+            "type": "sendGrid",
+            "name": "message",
+            "apiKey": "SENDGRID_API_KEY",
+            "direction": "out",
+            "to": "YOUR_EMAIL_GOES_HERE"
+        }
+    ],
+    "disabled": false
+}</code></pre><figure>
+
+While the bundle decalaration (below) was added when the project was instantiated, the "sendGrid" extension call-out was __not__ there by default.
+
+<figure><figcaption class="caption">host.json from Azure Function App project</figcaption><pre><code class="json">{
     "version": "2.0",
     "extensionBundle": {
         "id": "Microsoft.Azure.Functions.ExtensionBundle",
@@ -181,32 +203,42 @@ The first thing that tripped me up was an output binding error message I was see
     "extensions": {
         "sendGrid": {}
     }
-}</code></pre>
+}</code></pre><figure>
 
 Fortunately a quick reply on Twitter had me back on track.
 
 `r blogdown::shortcode("tweet", "1182465920930701312")`
 
+So the course correction was relatively quick, but it definitely goes to show that there are gaps in online help (as I'm sure there are gaps in what I present here). My guess was that the helpful folks that posted their own method for handling SendGrid were conversant enough that it was barely worth mentioning. I've built a wide swatch of serverless apps in AWS and Azure, but this is the first time I've worked with SendGrid. So if anything I should have tempered my expectations that this would be another fire-and-forget exercise.
+
 ### ...But in ourselves, that we are underlings
 
-I was in a hurry. That was my first mistake. My machine is _still_ relatively new and I hadn't bothered changing my default browser from Microsoft Edge. I would open Firefox or Chrome manually and paste in the local URL when I need to check the local build on those browsers. In this case that was a strategic mistake. The messages coming back in Edge didn't give me the detail to show me the *other* mistake I had made - that is - to make sure my CORS settings would allow my localhost as an origin. Once I popped over to Chrome I nearly blew a gasket - both at the lack of verbosity in Edge and in my own impatience for missing this.
+I was in a hurry. That was my first mistake. There were other problems I encountered in troubleshooting that were largely of my own making. My machine is _still_ relatively new and I hadn't bothered changing my default browser from Microsoft Edge. I would open Firefox or Chrome manually and paste in the local URL when I needed to check the local build on those browsers. In this case that was a strategic mistake. The messages coming back in Edge didn't give me the detail to show the *other* mistake I had made - that is - to make sure my CORS settings would allow my localhost as an origin. Once I popped over to Chrome I nearly blew a gasket - both at the lack of verbosity in Edge and in my own impatience for missing this.
 
 `r blogdown::shortcode("fancybox", "/img", "FunctionAppDebugging.png")`
 
 When running the test in portal, everything worked fine. The browser is on my desktop so there's no problem, right? But the origin header for the request from the test in portal is already _pre-cleared_ by the function app defaults.
 
-I had already set up my production and staging endpoints to pass through, but simply forgot to add the localhost origin. And of course I paid almost no attention to the origins that were alreaady listed - which I assume allow the tests in the Funtion App portal to process without issue. I lost more than an hour beating myself up trying to get this to work. Eventually I gave up and simply deployed into my staging instance to run the tests, which was fine - but the find/fix cycle is not nearly as quick as running locally. I suppose if I had configured VSCode for remote debugging I would have found this earlier. That's what _"being in a hurry"_ gets me...
+I had already set up my production and staging endpoints to pass through, but simply forgot to add the localhost origin. And of course I paid almost no attention to the origins that were already listed - which I assume allow the tests in the Funtion App portal to process without issue. I lost more than an hour beating myself up trying to get this to work. Eventually I gave up and simply deployed into my staging instance to run the tests, which was fine - but the find/fix cycle is not nearly as quick as running locally. I suppose if I had configured VSCode for remote debugging I would have found this earlier. That's what _"being in a hurry"_ gets me...
 
 So now I have Firefox set as my default browser, which is a real acid test for a variety of reasons I'll delve into with another post.
 
 `r blogdown::shortcode("fancybox", "/img", "FunctionAppNodeCORS.png")`
 
-Above are the settings that allow my localhost to work - your mileage (and localhost declaration pattern/port) may vary. If you're familiar with serving locally in RStudio/Hugo you'll know about how ports will change if you happen to be accidentally running more than one server instance. Port 4321 is the intial default - CTRL/CMD+Alt+F10 is your friend here.
+Above are the settings that allow my localhost to work - your mileage (and localhost declaration pattern/port) may vary. If you're familiar with serving locally in RStudio/Hugo you'll know about how ports will change if you happen to be accidentally running more than one server instance. Port 4321 is the intial default - Ctrl/Cmd+Alt+F10 is your friend here.
 
 # Finishing touches
 
 I really had fun placing the `r blogdown::shortcode("url-link", "Azure Function App logo", "https://www.microsoft.com/en-us/download/details.aspx?id=41937")` into the form as a spinner. That plus the gray overlay give the page a guided feel that an empty "static" form simly doesn't convey. That said, there are still some wrinkles to iron out. The shadow that covers the entire page *should* only cover the email form itself. I'm certain it's something I'm missing in my CSS or other markup, but I'll save that for later when I do a deeper dive into responsive grid design.
 
-I'm a huge fan of serverless, and am really glad to have this as a resource. It's essentially free - as the basic SendGrid account allows 25,000 free messages per month. I doubt I see 25 messages per month from my site - outside of my own testing. Of course the first paid tier for Azure Function App in the Consumption plan is after 1 million runs, so again it feels like you're getting free money. And as I mentioned at the outset, this will also come in handy for processing notifications out of my GitHub Actions pipelines. 
+I'm a huge fan of serverless, and am really glad to have this as a resource. It's essentially free - as the basic SendGrid account allows 25,000 free messages per month. I doubt I see 25 messages per month from my site - outside of my own testing. Of course the first paid tier for Azure Function App in the Consumption plan is after 1 million runs, so again it feels like you're getting free money. And this will also come in handy for processing notifications out of my GitHub Actions pipelines, which is a subject for a later post. 
 
 If you're intersted in trying something similar, feel free to `r blogdown::shortcode("url-link", "fork the repo", "https://github.com/houstonhaynes/ContactFunction")` and give it a try!
+
+# Reception
+
+As usual, there's *one* more thing... the email. In my case, I'm routing to a Gmail account. Since this is coming from SendGrid the messages were automatically flagged as possible SPAM. The answer in my case was to create a filter that ensured it wouldn't get routed to the SPAM folder.
+
+`r blogdown::shortcode("fancybox", "/img", "SendGridRoutingRule.png")`
+
+Note that I used my domain name in the subject line as a flag - which is set in the bindings of the index.js of the Function App. The rule *both* set the message to always be flagged as important *and* never marked as SPAM. That way the message is always routed appropriately. So now messages from your site will route to the top of your inbox and all you have to do is click on the "reply" button and type away. Happy emailing!
