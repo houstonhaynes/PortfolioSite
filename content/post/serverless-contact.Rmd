@@ -102,7 +102,7 @@ In the HTML below form you'll see there are several placeholder elements - waiti
         </form>
   </div></code></pre></figure>
 
-I've read several posts from prima facea front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty. It may be something I refactor at a later date.
+I've read several posts from first-order front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty. It may be something I refactor at a later date.
 
 <figure><figcaption class="caption">JavaScript that manages SendGrid request/response and HTML form state</figcaption><pre><code class="javascript">// waits for the button to be clicked on Contact form
 document.getElementById('submitMessage').addEventListener('submit', submitMessage);
@@ -209,7 +209,7 @@ Fortunately a quick reply on Twitter had me back on track.
 
 `r blogdown::shortcode("tweet", "1182465920930701312")`
 
-So the course correction was relatively quick, but it definitely goes to show that there are gaps in online help (as I'm sure there are gaps in what I present here). My guess was that the helpful folks that posted their own method for handling SendGrid were conversant enough that it was barely worth mentioning. I've built a wide swatch of serverless apps in AWS and Azure, but this is the first time I've worked with SendGrid. So if anything I should have tempered my expectations that this would be another fire-and-forget exercise.
+So the course correction was relatively quick, but it definitely goes to show that there are gaps in online help (as I'm sure there are gaps in what I present here). My guess was that the helpful folks that posted their own method for handling SendGrid were conversant enough that it was barely worth mentioning. I've built a wide swath of serverless apps in AWS and Azure, but this is the first time I've worked with SendGrid. So if anything I should have tempered my expectations that this would be another fire-and-forget exercise.
 
 ### ...But in ourselves, that we are underlings
 
@@ -233,7 +233,7 @@ I really had fun placing the `r blogdown::shortcode("url-link", "Azure Function 
 
 I'm a huge fan of serverless, and am really glad to have this as a resource. It's essentially free - as the basic SendGrid account allows 25,000 free messages per month. I doubt I see 25 messages per month from my site - outside of my own testing. Of course the first paid tier for Azure Function App in the Consumption plan is after 1 million runs, so again it feels like you're getting free money. And this will also come in handy for processing notifications out of my GitHub Actions pipelines, which is a subject for a later post. 
 
-If you're intersted in trying something similar, feel free to `r blogdown::shortcode("url-link", "fork the repo", "https://github.com/houstonhaynes/ContactFunction")` and give it a try!
+If you're interested in trying something similar, feel free to `r blogdown::shortcode("url-link", "fork the repo", "https://github.com/houstonhaynes/ContactFunction")` and give it a try!
 
 # Reception
 
