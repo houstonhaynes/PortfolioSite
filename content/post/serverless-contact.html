@@ -39,7 +39,7 @@ editor_options:
 </div>
 <div id="the-code" class="section level1">
 <h1>The Code</h1>
-<p>While I provided inline comments for some of the code blocks, there’s still a few bits of context worth mentioning here. Below is the Function App message binding, key being the nested <em>from</em> element that contains both the name and email of the submitted form. There are several alternatives to this using “personalization” but it’s really unnecessary with the latest API.</p>
+<p>While I provided inline comments for some of the code blocks, there’s still a few bits of context worth mentioning here. Below is the Node-based Function App message binding, key being the nested <em>from</em> element that contains both the name and email of the submitted form. There are several alternatives to this using “personalization” but it’s really unnecessary with the latest API.</p>
 <figure>
 <figcaption class="caption">
 index.js from Azure Function App project
@@ -72,7 +72,7 @@ index.js from Azure Function App project
 };</code></pre>
 </figure>
 <p>There were no examples online that showed this specific binding pattern. So I cobbled this together by looking at SendGrid’s API docs plus the sample message binding in a SendGrid-native template that Microsoft makes available in the Function Apps portal.</p>
-<p>In the HTML below form you’ll see there are several placeholder elements - waiting for actions based the javascript listener and promise response.</p>
+<p>In the HTML form below you’ll see there are several placeholder elements - waiting for actions based the javascript listener and promise response.</p>
 <figure>
 <figcaption class="caption">
 HTML form in Contact page
@@ -82,20 +82,23 @@ HTML form in Contact page
     <!-- output initially empty by design - waits for contact.js response from Azure Function -->
         <form id="submitMessage" method="post" style="visibility:visible;"> 
         <!-- form initially visible but to be hidden by contact.js after response is processed -->
-          <div class="form-group"> 
+<div id="container" class="ld-over">
+  <div id="output"></div> 
+    <form id="submitMessage" method="post" style="visibility:visible;"> 
+        <div class="form-group"> 
             <input type="text" id="name" class="form-control" placeholder="Your name" required>
-          </div>
-          <div class="form-group">
+        </div>
+        <div class="form-group">
             <input type="email" id="email" class="form-control" placeholder="Your email" required>
-          </div>
-          <div class="form-group">
+        </div>
+        <div class="form-group">
             <textarea id="message" class="form-control" placeholder="Type your message..." required></textarea>
-          </div>
-          <input class="button-primary" type="submit" value="Submit">&nbsp;&nbsp;&nbsp;&nbsp;
-          <img id="AzureFunctionHeartbeat" class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/></img>
-          <!-- inline style set to hide at page load, then is shown by contact.js when submitMessage event is triggered, then hidden again after response is processed -->
-        </form>
-  </div></code></pre>
+        </div>
+        <input class="button-primary" type="submit" value="Submit">
+        <!-- inline style set to hide at page load, then is shown by contact.js when submitMessage event is triggered, then hidden again after response is processed -->
+    </form>
+</div>
+<div id="AzureFunctionHeartbeat" ><img class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/></div></code></pre>
 </figure>
 <p>I’ve read several posts from first-order front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty. It may be something I refactor at a later date.</p>
 <figure>
@@ -208,7 +211,7 @@ host.json from Azure Function App project
 <figure>
 <p>Fortunately a quick reply on Twitter had me back on track.</p>
 {{% tweet "1182465920930701312" %}}
-<p>So the course correction was relatively quick, but it definitely goes to show that there are gaps in online help (as I’m sure there are gaps in what I present here). My guess was that the helpful folks that posted their own method for handling SendGrid were conversant enough that it was barely worth mentioning. I’ve built a wide swath of serverless apps in AWS and Azure, but this is the first time I’ve worked with SendGrid. So if anything I should have tempered my expectations that this would be another fire-and-forget exercise.</p>
+<p>So the course correction was relatively quick, but it definitely goes to show that there are gaps in online help (as I’m sure there are gaps in what I present here). My guess was that the helpful folks that posted their own method for handling SendGrid were conversant enough that it was barely worth mentioning the bundle/hosts adds. I’ve built a wide swath of serverless apps in AWS and Azure, but this is the first time I’ve worked with SendGrid. So if anything I should have tempered my expectations that this would <em>not</em> just be another fire-and-forget exercise.</p>
 </div>
 <div id="but-in-ourselves-that-we-are-underlings" class="section level3">
 <h3>…But in ourselves, that we are underlings</h3>
@@ -218,18 +221,18 @@ host.json from Azure Function App project
 <p>I had already set up my production and staging endpoints to pass through, but simply forgot to add the localhost origin. And of course I paid almost no attention to the origins that were already listed - which I assume allow the tests in the Funtion App portal to process without issue. I lost more than an hour beating myself up trying to get this to work. Eventually I gave up and simply deployed into my staging instance to run the tests, which was fine - but the find/fix cycle is not nearly as quick as running locally. I suppose if I had configured VSCode for remote debugging I would have found this earlier. That’s what <em>“being in a hurry”</em> gets me…</p>
 <p>So now I have Firefox set as my default browser, which is a real acid test for a variety of reasons I’ll delve into with another post.</p>
 {{% fancybox "/img" "FunctionAppNodeCORS.png" %}}
-<p>Above are the settings that allow my localhost to work - your mileage (and localhost declaration pattern/port) may vary. If you’re familiar with serving locally in RStudio/Hugo you’ll know about how ports will change if you happen to be accidentally running more than one server instance. Port 4321 is the intial default - Ctrl/Cmd+Alt+F10 is your friend here.</p>
+<p>Above are the settings that allow my localhost to work - your mileage (and localhost declaration pattern/port) may vary. If you’re familiar with serving locally in RStudio/Hugo you’ll know about how ports will change if you happen to trigger more than one server instance. Port 4321 is the intial default - Ctrl/Cmd+Alt+F10 is your friend here.</p>
 </div>
 </div>
 <div id="finishing-touches" class="section level1">
 <h1>Finishing touches</h1>
-<p>I really had fun placing the {{% url-link "Azure Function App logo" "https://www.microsoft.com/en-us/download/details.aspx?id=41937" %}} into the form as a spinner. That plus the gray overlay gives the page a guided feel that an empty “static” form simly doesn’t convey. That said, there are still some wrinkles to iron out. The shadow that covers the entire page <em>should</em> only cover the email form itself. I’m certain it’s something I’m missing in my CSS or other markup, but I’ll save that for later when I do a deeper dive into responsive grid design.</p>
-<p>I’m a huge fan of serverless, and am really glad to have this as a resource. It’s essentially free - as the basic SendGrid account allows 25,000 free messages per month. I doubt I see 25 messages per month from my site - outside of my own testing. Of course the first paid tier for Azure Function App in the Consumption plan is after 1 million runs, so again it feels like you’re getting free money. And this will also come in handy for processing notifications out of my GitHub Actions pipelines, which is a subject for a later post.</p>
+<p>I really had fun placing the {{% url-link "Azure Function App logo" "https://www.microsoft.com/en-us/download/details.aspx?id=41937" %}} into the form as a spinner. That plus the gray overlay gives the page a guided feel that an empty “static” form simly doesn’t convey. The overlay also acts as a mask to prevent multiple clicks of the submit button, which isn’t a real risk but stil nice to keep the interaction model relatively tidy.</p>
+<p>I’m a huge fan of serverless, and am really glad to have this as a resource. It’s essentially free - as the basic SendGrid account allows 25,000 free messages per month. I doubt I see 25 messages per month from my site - outside of my own testing. Of course the first paid tier for Azure Function App in the Consumption plan is after 1 million runs, so again it feels like you’re receiving free enterprise-grade resources. And this will also come in handy for processing notifications out of my GitHub Actions pipelines, which is a subject for a later post.</p>
 <p>If you’re interested in trying something similar, feel free to {{% url-link "fork the repo" "https://github.com/houstonhaynes/ContactFunction" %}} and give it a try!</p>
 </div>
 <div id="coda---reception" class="section level1">
 <h1>Coda - Reception</h1>
 <p>As usual, there’s <em>one</em> more thing… the email. In my case, I’m routing to a Gmail account. Since this is coming from SendGrid the messages were automatically flagged as possible SPAM. The answer in my case was to create a filter that ensured it wouldn’t get routed to the SPAM folder.</p>
 {{% fancybox "/img" "SendGridRoutingRule.png" %}}
-<p>Note that I used my domain name in the subject line as a flag - which is set in the bindings of the index.js of the Function App. The rule <em>both</em> set the message to always be flagged as important <em>and</em> never marked as SPAM. That way the message is always routed appropriately. So now messages from your site will route to the top of your inbox and all you have to do is click on the “reply” button and type away. Happy emailing!</p>
+<p>Note that I used my domain name in the subject line as a flag - which is set in the bindings of the index.js of the Function App. The rule <em>both</em> sets the message to always be flagged as important <em>and</em> never marked as SPAM. That way the message is always routed appropriately. So now messages from your site will route to the top of your inbox and all you have to do is click on the “reply” button and type away. Happy emailing!</p>
 </div>
