@@ -82,13 +82,11 @@ There were no examples online that showed this specific binding pattern. So I co
 
 In the HTML form below you'll see there are several placeholder elements - waiting for actions based the javascript listener and promise response.
 
-<figure><figcaption class="caption">HTML form in Contact page</figcaption><pre><code class="html"><div id="container" class="ld-over-full-inverse"><div id="output"></div> 
+<figure><figcaption class="caption">HTML form in Contact page</figcaption><pre><code class="html"><div id="container" class="ld-over">
+    <div id="output"></div> 
     <!-- output initially empty by design - waits for contact.js response from Azure Function -->
-        <form id="submitMessage" method="post" style="visibility:visible;"> 
-        <!-- form initially visible but to be hidden by contact.js after response is processed -->
-<div id="container" class="ld-over">
-  <div id="output"></div> 
     <form id="submitMessage" method="post" style="visibility:visible;"> 
+    <!-- form initially visible but to be hidden by contact.js after response is processed -->
         <div class="form-group"> 
             <input type="text" id="name" class="form-control" placeholder="Your name" required>
         </div>
