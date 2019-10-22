@@ -77,8 +77,7 @@ index.js from Azure Function App project
 <figcaption class="caption">
 HTML form in Contact page
 </figcaption>
-<pre><code class="html"><div id="container" class="ld-over-full-inverse">
-    <div id="output"></div> 
+<pre><code class="html"><div id="container" class="ld-over-full-inverse"><div id="output"></div> 
     <!-- output initially empty by design - waits for contact.js response from Azure Function -->
         <form id="submitMessage" method="post" style="visibility:visible;"> 
         <!-- form initially visible but to be hidden by contact.js after response is processed -->
@@ -98,7 +97,9 @@ HTML form in Contact page
         <!-- inline style set to hide at page load, then is shown by contact.js when submitMessage event is triggered, then hidden again after response is processed -->
     </form>
 </div>
-<div id="AzureFunctionHeartbeat" ><img class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/></div></code></pre>
+<div>
+    <img  id="AzureFunctionHeartbeat" class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/>
+</div></code></pre>
 </figure>
 <p>I’ve read several posts from first-order front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty. It may be something I refactor at a later date.</p>
 <figure>
