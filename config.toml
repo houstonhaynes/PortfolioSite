@@ -1,6 +1,6 @@
 baseurl = "/"
 languageCode = "en-us"
-title = "H3 Tech Portfolio"
+title = "H3 Tech Hub"
 theme = "hugo-future-imperfect"
 preserveTaxonomyNames = true
 paginate = 5
@@ -89,7 +89,7 @@ enableGitInfo = true
   # These are optional params related to the sidebar. They are recommended, but not
   # required for proper functionality. HTML is supported within the params.
 [params.intro]
-  header    = "Technology Portfolio"
+  header    = "Tech Hub"
 
   paragraph = "Sidebars & Deep Dives<br>in Software &amp; Hardware<br><i class='fas fa-brain'></i> Cognitive Computing <i class='fas fa-brain'></i><br><i class='fas fa-microchip'></i> IoT &amp; Cloud <i class='fas fa-cloud'></i>"
 
