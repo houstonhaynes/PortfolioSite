@@ -97,10 +97,10 @@ In the HTML form below you'll see there are several placeholder elements - waiti
             <textarea id="message" class="form-control" placeholder="Type your message..." required></textarea>
         </div>
         <input class="button-primary" type="submit" value="Submit">
-        <!-- inline style set to hide at page load, then is shown by contact.js when submitMessage event is triggered, then hidden again after response is processed -->
-    </form>
+   </form>
 </div>
 <div>
+    <!-- inline style set to hide at page load, then is shown by contact.js when submitMessage event is triggered, then hidden again after response is processed -->
     <img  id="AzureFunctionHeartbeat" class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/>
 </div></code></pre></figure>
 
