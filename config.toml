@@ -166,7 +166,7 @@ enableGitInfo = true
   # Publishing Communities
   wordpress        = ""
   medium           = "HoustonHHaynes"
-  devto           = "houstonhhaynes"
+  devto            = "houstonhhaynes"
   # Professional/Business Oriented Communities
   linkedin         = "houstonhaynes"
   linkedin_company = ""

@@ -2,7 +2,7 @@
 title: "Near-Real-Time Hyperion Analysis"
 output:
   blogdown::html_page:
-    toc: true
+    toc: false
     fig_width: 6
     dev: "svg"
 author: "Houston Haynes"
@@ -29,31 +29,10 @@ editor_options:
 <script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
 <script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
 
-<div id="TOC">
-<ul>
-<li><a href="#tldr">tl;dr</a></li>
-<li><a href="#beginning-with-the-end-in-mind">Beginning With The End In Mind</a></li>
-<li><a href="#accelatis-pitfalls">Accelatis Pitfalls</a><ul>
-<li><a href="#challenge-1-csv-extracts-from-accelatis">Challenge 1: CSV Extracts from Accelatis</a></li>
-<li><a href="#challenge-2-direct-query-of-accelatis-data">Challenge 2: Direct Query of Accelatis Data</a></li>
-<li><a href="#challenge-3-accelatis-time-stamps-.net-and-unix-issues">Challenge 3: Accelatis time stamps (.NET and Unix issues)</a></li>
-</ul></li>
-<li><a href="#data-enrichment">Data Enrichment</a><ul>
-<li><a href="#staging-tables-agent-data">Staging tables – Agent data</a></li>
-<li><a href="#data-tables-consolidations">Data Tables – Consolidations</a></li>
-<li><a href="#data-tables-hfm-and-db-cpu">Data Tables – HFM and DB CPU</a></li>
-</ul></li>
-<li><a href="#visualization-part-1">Visualization, Part 1</a><ul>
-<li><a href="#derivation-of-maximum-reasonable-response-times-for-slas">Derivation of maximum reasonable response times for SLAs</a></li>
-<li><a href="#analysis-using-powerbi-to-review-error-incident-rates-by-location-and-type">Analysis – using PowerBI to review error incident rates by location and type</a></li>
-</ul></li>
-<li><a href="#visualization-full-circle">Visualization, Full Circle</a></li>
-</ul>
-</div>
 
 <div id="tldr" class="section level2">
 <h2>tl;dr</h2>
-<p>The term “performance” can mean different things within a given corporate context. In financial firms it most often refers to profit or loss. In tech companies, it can refer to throughput of an application or service. In this case, the term “performance” shares both of those connotations. The company was upgrading their Oracle Hyperion Financial Management installation, which is used to measure the company’s financial performance (and supports other tasks, such as forecasting). And because of the global nature of the company, and reliance on detailed ledger data ETL’d in from remote manufacturing locations, there was also a system-level performance aspect to the assignment. Due of the critical nature of close period reporting, there was a high degree of sensitivity around timely submission of data. This entry in my portfolio will focus on that latter portion of the “performance” equation, though the implications to the former will become clear as this entry progresses.</p>
+<p>The term “performance” can have different connotations. In financial firms it most often refers to profit or loss. In tech companies, it can refer to throughput of an application or service. In this case, the term “performance” shares both of those connotations. The company was upgrading their Oracle Hyperion Financial Management installation, which is used to measure the company’s financial performance (and supports other tasks, such as forecasting). And because of the global nature of the company, and reliance on detailed ledger data ETL’d in from remote manufacturing locations, there was also a system-level performance aspect to the assignment. Due of the critical nature of close period reporting, there was a high degree of sensitivity around timely submission of data. This entry in my portfolio will focus on that latter portion of the “performance” equation, though the implications to the former will become clear as this entry progresses.</p>
 </div>
 <div id="beginning-with-the-end-in-mind" class="section level1">
 <h1>Beginning With The End In Mind</h1>
@@ -153,11 +132,11 @@ ORDER  BY starttime ASC </code></pre>
 {{% fancybox "/img" "image013.png" %}}
 <p>Note that the “SERVER” column has a somewhat-human-readable “HFMxxx” indicator for each entry. This is another substring function based on the actual server name as recorded in the database, shortened here to simplify the presentation of the CPU legend in PowerBI. (Like previous examples, the highlighted datetime values are substituted as part of the SSIS process, read in from the project-level parameters that are set before run-time)</p>
 <div id="htmlwidget-1" style="width:100%;height:50%;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/hyperion-lambda_files/figure-html/widgets/widget_Concurrency of Hyperion Processes.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/hyperion-lambda_files/figure-html//widgets/widget_Concurrency of Hyperion Processes.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <p>This is the portion of the process which has the most technical “inner workings”. Up to this point SSIS has been used mainly for parameter substitution to collect data through queries. This section will show how C# scripting is used to construct the concurrency table.</p>
 <center>
 <div id="htmlwidget-2" style="width:100%;height:480px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/hyperion-lambda_files/figure-html/widgets/widget_Data Table for Hyperion Concurrency.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/hyperion-lambda_files/figure-html//widgets/widget_Data Table for Hyperion Concurrency.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 </center>
 <p>Here is an example of the final result with calculated values. From that, a stepped area can be plotted. This supports analysis of user activity against server demand. To produce the table with various integer counts at each second, we must first know when each event starts and completes. We already have this data collected in the LIST_CONS table, so the process here derives the data from that table.</p>
 <pre><code class="cs">for (DateTime date = CurrentRow; CurrentRow <= PeriodEnd; CurrentRow = CurrentRow.AddSeconds(1.0)) {
