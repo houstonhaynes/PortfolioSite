@@ -19,7 +19,7 @@ tags:
 - RStudio
 - Azure
 categories: 
-- web
+- sidebar
 editor_options: 
   chunk_output_type: inline
 ---

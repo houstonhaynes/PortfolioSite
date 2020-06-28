@@ -93,7 +93,7 @@ enableGitInfo = true
 
   paragraph = "Sidebars & Deep Dives<br>in Software &amp; Hardware<br><i class='fas fa-brain'></i> Cognitive Computing <i class='fas fa-brain'></i><br><i class='fas fa-microchip'></i> IoT &amp; Cloud <i class='fas fa-cloud'></i>"
 
-  about     = "My roles have ranged from solder jockey to managing data architect. This site covers some highlights and lowlights from those travels, and a bit about the future too."
+  about     = "My roles have ranged from solder jockey to CTO. This site covers some highlights and lowlights from those travels, and a bit about my view of the future too."
   # This appears at the top of the sidebar above params.intro.header.
   # A width of less than 100px is recommended from a design perspective.
   [params.intro.pic]
@@ -120,38 +120,38 @@ enableGitInfo = true
 [[menu.main]]
   name = "About"
   url = "/about/"
-  identifier = "far fa-compass"
+  identifier = "fas fa-compass"
   weight = 2
   
 [[menu.main]]
   name = "Vitae"
   url = "/vitae/"
-  identifier = "far fa-folder-open"
-  weight = 3
+  identifier = "fas fa-folder-open"
+  weight = 6
 
 [[menu.main]]
   name = "Side Bars"
-  url = "/sidebar/"
+  url = "/categories/sidebar/"
   identifier = "fas fa-feather-alt"
-  weight = 4
+  weight = 3
 
 [[menu.main]]
   name = "Deep Dives"
-  url = "/post/"
-  identifier = "fas fa-feather-alt"
+  url = "/categories/deepdive/"
+  identifier = "fas fa-keynote"
   weight = 4
   
 [[menu.main]]
   name = "Contact"
   url = "/contact/"
   identifier = "fas fa-envelope"
-  weight = 5
+  weight = 98
 
 [[menu.main]]
-  name = "Categories"
-  url = "/categories/"
-  identifier = "fa fa-sitemap"
-  weight = 6
+  name = "Tags"
+  url = "/tags/"
+  identifier = "fas fa-tags"
+  weight = 5
 
 # Sets Social Media icons to appear and link to your account. Value should be your
 # username unless otherwise noted. These are the icons affected by socialAppearAtTop

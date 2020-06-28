@@ -17,7 +17,7 @@ tags:
 - API
 - Bluetooth
 categories: 
-- IoT
+- sidebar
 editor_options: 
   chunk_output_type: inline
 ---
