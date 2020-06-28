@@ -64,11 +64,11 @@ enableGitInfo = true
 
   # options for highlight.js (version, additional languages, and theme)
   disable_highlight = false # set to true to disable Highlight
-  highlightjsVersion = "9.11.0"
-  highlightjsCDN = "//cdn.bootcss.com"
+  highlightjsVersion = "10.1.1"
+  highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
   highlightjsLang = ["r", "yaml", "html", "ini", "http", "javascript", "css", "apache", "sql", "groovy", "java", "cs", "rust", "ruby"]
   highlightjsTheme = "docco"
-  MathJaxCDN = "//cdn.bootcss.com"
+  MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs/"
   MathJaxVersion = "2.7.1"
 
 # Disqus will take priority over Staticman (github.com/eduardoboucas/staticman)
@@ -130,7 +130,13 @@ enableGitInfo = true
   weight = 3
 
 [[menu.main]]
-  name = "Posts"
+  name = "Side Bars"
+  url = "/sidebar/"
+  identifier = "fas fa-feather-alt"
+  weight = 4
+
+[[menu.main]]
+  name = "Deep Dives"
   url = "/post/"
   identifier = "fas fa-feather-alt"
   weight = 4
@@ -196,4 +202,4 @@ enableGitInfo = true
   orcid            = ""
   researchgate     = ""
   # Email
-  email            = "h3techsme@gmail.com"
+  email            = "ds@h3tech.io"
