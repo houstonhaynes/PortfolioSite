@@ -89,11 +89,11 @@ enableGitInfo = true
   # These are optional params related to the sidebar. They are recommended, but not
   # required for proper functionality. HTML is supported within the params.
 [params.intro]
-  header    = "Tech Hub"
+  header    = "Tech Blog"
 
-  paragraph = "Sidebars & Deep Dives<br>in Software &amp; Hardware<br><i class='fas fa-brain'></i> Cognitive Computing <i class='fas fa-brain'></i><br><i class='fas fa-microchip'></i> IoT &amp; Cloud <i class='fas fa-cloud'></i>"
+  paragraph = "Sidebars & Deep Dives<br>in Software &amp; Hardware<br><i class='fas fa-brain'></i> Big Data, ML, Music <i class='fas fa-music'></i><br><i class='fas fa-camera-movie'></i> Media, IoT &amp; Cloud <i class='fas fa-cloud'></i>"
 
-  about     = "My roles have ranged from solder jockey to CTO. This site covers some highlights and lowlights from those travels, and a bit about my view of the future too."
+  about     = "My roles have ranged from solder jockey to CTO. This site touches on the highs and lows from those travels but focuses on my current areas of tech interest. While this is primarily a software development blog I will lapse occasionally into digressions on art, music and culture. You've been warned."
   # This appears at the top of the sidebar above params.intro.header.
   # A width of less than 100px is recommended from a design perspective.
   [params.intro.pic]
@@ -120,26 +120,26 @@ enableGitInfo = true
 [[menu.main]]
   name = "About"
   url = "/about/"
-  identifier = "fas fa-compass"
-  weight = 2
+  identifier = "fas fa-browser"
+  weight = 6
   
 [[menu.main]]
   name = "Vitae"
   url = "/vitae/"
-  identifier = "fas fa-folder-open"
-  weight = 6
+  identifier = "fas fa-file-user"
+  weight = 7
 
 [[menu.main]]
   name = "Side Bars"
   url = "/categories/sidebar/"
-  identifier = "fas fa-feather-alt"
-  weight = 3
+  identifier = "fal fa-head-side-brain"
+  weight = 2
 
 [[menu.main]]
   name = "Deep Dives"
   url = "/categories/deepdive/"
-  identifier = "fas fa-keynote"
-  weight = 4
+  identifier = "fas fa-chalkboard-teacher"
+  weight = 3
   
 [[menu.main]]
   name = "Contact"

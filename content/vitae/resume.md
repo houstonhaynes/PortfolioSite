@@ -2,7 +2,7 @@
 type = "itemized"
 author = "Houston Haynes"
 date = "2019-10-07"
-title = "01. Resume"
+title = "Resume"
 description = "Houston's latest resume in Word/PDF format"
 featured = ""
 featuredpath = ""
@@ -11,6 +11,8 @@ categories = [""]
 linktitle = ""
 format = ""
 link = ""
+weight = "01"
+icon = "fas fa-address-card"
 +++
 
 # Shared via OneDrive

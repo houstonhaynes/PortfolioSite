@@ -2,7 +2,7 @@
 type = "itemized"
 author = "Houston Haynes"
 date = "2019-10-07"
-title = "03. Early Data Science Experiments"
+title = "Early Data Science Experiments"
 description = "Academic adventures combining music and machine learning"
 featured = ""
 featuredpath = ""
@@ -11,6 +11,8 @@ categories = [""]
 linktitle = ""
 format = ""
 link = ""
+weight = "03"
+icon = "fas fa-analytics"
 +++
 
 In the early aughts I worked on the TherapyEdge®¹ application suite. By that time in my career I had already held several positions in development and project management. Having just completed a lead data analysis and compliance position at IBM, I was hired as the Manager of Verification and Validation at TherapyEdge – my first formal role in the quality assurance domain. The application was revolutionary in that it could provide an HIV patient’s medication regime recommendation in a few minutes of processing. Previously, an HIV specialist would take days or weeks to factor in all of the variables with test results and come up with an individual management program. One key to this system was a newly approved method for comparing genotype to phenotype testing – and deriving a “virtual phenotype” model that allowed a regimen to be calculated from the less time-consuming and less expensive genotype test. The other breakthrough was the system’s ability to assimilate and analyze large numbers of patient records to find the most fitting care recommendation for a given patient. The ultimate goal was to create a predictive construct that would help clinicians avoid medication resistance, conserve treatment options and by extension improve individual patient outcomes. This was my first encounter with “N-of-1” clinical trials and related fields of medical care and treatment. And from a technical view it was also a new perspective – this was big data aimed at making a big difference in people’s lives.

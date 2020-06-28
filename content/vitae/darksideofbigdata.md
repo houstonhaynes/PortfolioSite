@@ -2,8 +2,8 @@
 type = "itemized"
 author = "Houston Haynes"
 date = "2019-10-07"
-title = "04. The Dark Side of Big Data"
-description = "[Placeholder for some clever quip about how AI can suck]"
+title = "The Dark Side of Big Data"
+description = "How the refi bubble in the 2000s was my 'Cassandra moment' in tech"
 featured = ""
 featuredpath = ""
 featuredalt = ""
@@ -11,6 +11,8 @@ categories = [""]
 linktitle = ""
 format = ""
 link = ""
+weight = "04"
+icon = "fas fa-dumpster-fire"
 +++
 
 # The Dark Side of Big Data

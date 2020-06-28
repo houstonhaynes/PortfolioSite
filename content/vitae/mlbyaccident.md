@@ -2,7 +2,7 @@
 type = "itemized"
 author = "Houston Haynes"
 date = "2019-10-07"
-title = "02. My time with Moog"
+title = "My time with Moog"
 description = "Early Career with a titan of the synthesizer industry"
 featured = ""
 featuredpath = ""
@@ -11,6 +11,8 @@ categories = [""]
 linktitle = ""
 format = ""
 link = ""
+weight = "02"
+icon = "fas fa-music"
 +++
 
 My professional history begins at Big Briar, a company started by electronic music titan Bob Moog before he reclaimed the “Moog Music” company name several years later. But prior to that I was one of Bob’s university students, where I had my first brush with machine learning. Before I learned that Bob had joined the world of academia, I had spent two years studying composition and theory in a conservatory environment. But when I got wind that Bob (then “Dr. Moog”) had become the Research Professor of Music at the University of North Carolina, Asheville – practically in my back yard – I transferred to study electronic music “from the wires up” on a formal basis. At the time he joined the faculty there, the plan was to build a computer music research facility to rival those of nationally well-known programs. And more broadly, the audio engineering program at UNC-A was gaining a very good reputation, both in its creative and technical components to the curriculum. On the technical side there were hardware and software engineering requirements, and I took full advantage of both. Because of that I was always around the electronic music and computer science labs. When it came time to find an academic sponsor for my final project, I immediately thought of Bob as the perfect fit. Initially he declined, not only because of his other schedule demands, but also because of the nature of the project. 
