@@ -17,7 +17,7 @@ tags:
 - Arduino
 - Bluetooth
 categories: 
-- deepdive
+- Deep Dive
 editor_options: 
   chunk_output_type: inline
 ---

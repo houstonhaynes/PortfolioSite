@@ -17,7 +17,7 @@ tags:
 - SOLR/Lucene
 - Groovy
 categories: 
-- deepdive
+- Deep Dive
 editor_options: 
   chunk_output_type: inline
 ---

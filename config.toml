@@ -126,18 +126,18 @@ enableGitInfo = true
 [[menu.main]]
   name = "Vitae"
   url = "/vitae/"
-  identifier = "fas fa-file-user"
+  identifier = "fas fa-user-circle"
   weight = 7
 
 [[menu.main]]
-  name = "Side Bars"
+  name = "Sidebars"
   url = "/categories/sidebar/"
-  identifier = "fal fa-head-side-brain"
+  identifier = "fas fa-digital-tachograph"
   weight = 2
 
 [[menu.main]]
   name = "Deep Dives"
-  url = "/categories/deepdive/"
+  url = "/categories/deep dive/"
   identifier = "fas fa-chalkboard-teacher"
   weight = 3
   

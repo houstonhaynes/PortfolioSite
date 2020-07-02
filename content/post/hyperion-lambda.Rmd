@@ -20,7 +20,7 @@ tags:
 - PowerBI
 - SSIS
 categories: 
-- deepdive
+- Deep Dive
 editor_options: 
   chunk_output_type: inline
 ---
@@ -247,7 +247,7 @@ One of the initial motivations for using a tool like PowerBI was to calculate st
 
 As opposed to creating a calculated column of data, DAX calculates “on the fly” based on the scope of data selected. The data can be constrained by time interval, task type and as was the focus for our purposes – location.
 
-`r blogdown::shortcode("fancybox", "/img", "image021.jpg")`
+`r blogdown::shortcode("fancybox", "/img", "image021.png")`
 
 The chart above shows an example where the 95th percentile is calculated for each task type for all locations. The column presents the minimum, maximum and average using built-in PowerBI functions.
 
@@ -259,8 +259,6 @@ This is an example where PowerBI is used to analyze the duration for tasks on a 
 
 PowerBI was also used to troubleshoot error conditions during simulation runs, and would be later used as a tool for production support. Here we have pie charts that show errors which occurred by location and by task type. Because of the relationship between the various tables pulled from the data snapshot, selecting an area of a pie chart also auto-focuses the data set that is shown for all other charts on display. Below – if you select the “Amstelveen” portion of the pie chart that all other charts will follow that as an ersatz filter. To change all of those visual elements, simply select a different location or an error type from the other pie chart.
 
-<iframe rc="https://app.powerbi.com/view?r=eyJrIjoiMDI4MDdlNzktZTNmYi00ZWEwLWFiMjktM2IyMWQ1MmYyNTA0IiwidCI6Ijc4N2QxYzAwLTgyMjgtNDAzYy1iZjVmLTg1YjM3NzFmM2M0MiIsImMiOjZ9"  height="400" width="600"  frameborder="0" allowFullScreen="true"></iframe>
-
 Note that in all cases the highlighting/lowlighting of pie chart areas maintains the overall view of data. Simply selecting an alternate pie chart area updates the other respective areas of the displayed information.
 
 On a business note: In this case the 404 errors were caused by an EPM server using a different authority manager than other machines in the tier, and occasionally not authenticating sessions/connections made from the web server. This chart was used to isolate whether the errors were by location, request type, or user. It turned out to be none-of-the-above, and once all of the servers were pointing to the same grant authority the issue was resolved. As such, the report was kept as a tool for future troubleshooting tasks.
@@ -270,13 +268,9 @@ On a business note: In this case the 404 errors were caused by an EPM server usi
 
 For the purposes of the graph below the primary interest is viewing interaction between user Activities, Consolidations and HFM server demands. One of the early issues found regarded “sudden” inflation of response times for Activities where the database usage was otherwise low. The first chart in the visualization below is an example of what users observed. Note that when Activity times are longest that the database level is near nominal levels.
 
-<iframe src="https://app.powerbi.com/view?r=eyJrIjoiNTljZTM0ZGUtNTk4Ni00MjMxLWE1ZTYtYjJiODJiMWU4ODU5IiwidCI6Ijc4N2QxYzAwLTgyMjgtNDAzYy1iZjVmLTg1YjM3NzFmM2M0MiIsImMiOjZ9"  height="400" width="600" frameborder="0" allowFullScreen="true"></iframe>
-
 It was difficult to pinpoint the core issue using only the standard Accelatis performance views, but here, where the graphs are all charted together, the cause becomes more transparent. While it seems unlikely with low database CPU usage that user activities would be delayed, it can bee seen here the the HFM server – the home of the “cube” that resides over the datastore, continues to process data – with locks applied to various intersections of data while the processing is completed. Oracle does a good job of orchestrating and prioritizing these tasks, but there’s an inflection point unrelated to database usage where the queuing expands considerably. Without seeing this “confluence of events” the cause can be maddeningly elusive. With that “lurking observation” brought to the surface and correlated in the visualization, the relationship becomes obvious.
 
 Similar to visualizing overall request latency based on server load, its also possible to see what’s occurring on a per-location basis with the same corpus of data. Here you can see we’ve returned to the chart that served as introduction to this portfolio entry. While there are only 7 Agents listed for this period, there are as many as 10 running at any given time. Beyond that, when users are active in the system their location can be reverse mapped using the IP address of the requests they send. In all there are more than 50 discrete points that can be fixed to a point on this global location, and the chart can be further tailored to focus on a specific time period and Activity type.
-
-<iframe src="https://app.powerbi.com/view?r=eyJrIjoiNjAyZjYzYzctN2M2Ni00YTYxLTgwODktMjVjMmUxNzllZTMzIiwidCI6Ijc4N2QxYzAwLTgyMjgtNDAzYy1iZjVmLTg1YjM3NzFmM2M0MiIsImMiOjZ9" height="400" width="600" rameborder="0" allowFullScreen="true"></iframe>
 
 In one instance this data helped to isolate location-specific network issues impacting systems well beyond Hyperion. As is the case, locations that are close to each other geographically can be on completely different network “backbones”. Shenzhen and Hong Kong are one such example – the former always performing well over time, and the latter almost always an outlier – for all Activity types. It turned out that there wasn’t just an issue with the Hyperion configuration or the scope of consolidations or other requests performed – but a network routing error at the Hong Kong location that caused the issue. Once that was resolved, not only did that location fall back within the range of response times seen by Shenzhen and other global locations – but overall network latency improved for all users at the Hong Kong location. So, in that manner the detailed scrutiny of location-based client-side data led to an overall quality-of-work improvement for everyone in that office – not just the Hyperion users.
 
