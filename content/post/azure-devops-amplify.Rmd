@@ -1,5 +1,5 @@
 ---
-title: "Azure DevOps AWS Amplify"
+title: "Getting AWS Amplify to play well with Azure DevOps"
 output:
   blogdown::html_page:
     toc: true
@@ -7,17 +7,17 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2019-10-11T14:59:43+05:30'
+date: '2020-01-11T14:59:43+05:30'
 featuredpath: img
 featured: ado_amplify_thumb.png
-description: Getting AWS Amplify to play well with Azure DevOps
+description: Using Git mirror to feed Amplify CI/DC from Code Commit
 draft: false
 tags:
 - AWS
 - Amplify
 - Azure DevOps
 - Hugo
-- Azure
+- Git
 categories: 
 - Sidebar
 editor_options: 
@@ -35,3 +35,5 @@ library(highcharter)
 library(widgetframe)
 ```
 
+
+`r blogdown::shortcode("youtube", "V2_stXl4luc?rel=0")`

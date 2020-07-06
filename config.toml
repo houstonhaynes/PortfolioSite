@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://h3tech.dev"
 languageCode = "en-us"
 title = "H3 Tech Hub"
 theme = "hugo-future-imperfect"
