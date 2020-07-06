@@ -9,7 +9,7 @@ output:
 author: "Houston Haynes"
 date: '2020-01-11T14:59:43+05:30'
 featuredpath: img
-featured: ado_amplify_thumb.png
+featured: ADO_Amplify_thumb.png
 description: Using a simple Azure DevOps Build Pipeline to feed Amplify for Continuous Integration and Deployment
 draft: false
 tags:
@@ -30,7 +30,7 @@ editor_options:
 
 <div id="starting-with-github-private-repo-sync" class="section level1">
 <h1>Starting with GitHub Private Repo Sync</h1>
-<p>I will way (or write) right off the bat that integration between AWS Amplify and GitHub repos is really slick. I started with that as a crutch since it was so easy to configure. I figured that <em>if</em> the site matured from a proof-of-concept to a fully fledges product, I could just move it over from a private GitHub repo to my company’s Azure Dev Ops instance - update the endpoint and PAT - and that, as they say, would be that.</p>
+<p>This was a side project that turned into a work product. So the path to making this a reasonably secure, reliable process was not a first-class consideration it usually is in my work. That said, I found AWS Amplify and GitHub repo integration to be really slick. I started with a private GitHub repo as a crutch since it was so easy to configure with Amplify. I figured that <em>if</em> the site matured from a proof-of-concept to a fully fledges product, I could just move it over from a private GitHub repo to my company’s Azure Dev Ops instance - update the endpoint and PAT - and that, as they say, would be that.</p>
 <div id="not-so-fast" class="section level2">
 <h2>Not So Fast</h2>
 <p>The first thing you’ll notice in the Amplify page for selecting the Git provider that Azure DevOps is <em>not</em> listed. So I thought “No worries. I’ll just treat ADO like any other Git repo and we’ll be good to go.” That was wrong, too. So I spent some time looking into how to mirror my Azure DevOps repo into AWS CodeCommit, and let Amplify take things from there. Azure DevOps has a task for handling Git mirroring, so it was a matter of wiring things up and letting a simple build pipeline do the heavy lifting.</p>
