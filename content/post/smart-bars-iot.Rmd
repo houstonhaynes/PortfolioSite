@@ -1,0 +1,157 @@
+---
+title: "Toward Smarter Bicycle Handlebars"
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-05-15T14:59:43+05:30'
+featuredpath: img
+featured: HeliosBars.png
+description: Teasing features out of an Arduino embedded project using Android and Google Location Services APIs
+draft: true
+tags:
+- Android
+- Arduino
+- Bluetooth
+categories: 
+- Deep Dive
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	include=FALSE
+)
+
+library(jsonlite)
+library(highcharter)
+library(widgetframe)
+```
+# Building Intelligence into Bicycles
+`r blogdown::shortcode("fancybox-thumb", "/img", "heliosbars-1.jpg")`
+
+Helios Bars was a promising Kickstarter project that provided a unique aftermarket solution for the the cycling enthusiast. This was in the pre-scooter-rental days where "connected" devices was definitely not the norm. It provided a built-in LED headlamp and multi-color LEDs at the bar ends. The latter could be used in an “ambient mode” or as a speed indicator. And of course the bar end lights could be triggered to indicate turns.
+
+Based on those features alone the Helios Bars grabbed a great deal of attention. The feature that I really liked was a shortening of turn signal cadence as the cyclist nears the next turn. The closer you rode to your turn point, the faster that the bar end light would blink. It was this feature that made me curious to see how the Helios Bars dealt with changes in distance and speed – as that would have an effect on how each bar end LED was updated through the sequence. But there was an additional feature layer that made the design truly compelling. The housing included an embedded Arduino project board with GPS, motion sensors and a SIM controller piggy-backed to the processing unit. This meant that the Helios Bars could be programmed to communicate with the outside world through SMS. I would tackle those options (and issues) after I had solved the first problem, which was geting the bars to work with Android. Getting to that point also had its own series of fits and starts.
+
+Similar to other Kickstarter projects, production hit several setbacks. When the Helios Bars launched many months after the original promised date, an iOS companion app was released at the same time. However, the Android app was still “in the works”. After several more months it was apparent that the team who made the iOS app would not build the sibling companion app for Android. When their original vendor reneged on creating the Android app, I stepped in to fill in the gap.
+
+## Bluetooth LE and Android
+
+One of the (many) wrinkles in implementing Bluetooth LE connectivity for Android is the varying support of different Android API versions. There was some hand-wringing around how and whether to support “older” versions of Android. An informal survey of backers showed that most project backers that used Android phones had a more recent device. Even though the overall adoption of more recent Android OS versions is relatively small, people that support this type of Kickstarter project also tend to use up-to-date mobile devices. Since most of those devices supported the more recent implementation of Bluetooth, it was decided to move forward and leave the legacy implementation off the table.
+
+Because I had worked with Google APIs before, I decided to focus on the interactions with the Helios Bars BLE implementation. The reason for this surround a major “wrinkle” in developing interaction between BLE and Android. The topic is best described here, but boils down to confusion that developers have (myself included, initially) when looking at BLE specs for Android. The BLE API reads as though it’s a garden-variety asynchronous implementation, however, GATT endpoints are synchronous by nature. So, a command queue must be implemented in order to handle the transactions with GATT endpoints and notification services. This was the first task I had to tackle in order to understand two issues:
+
+1. The behavior of Android with multiple threads interacting between the BLE device and the app, and
+1. The response of the Helios Bars, which had both interactive and one-way notifications “up” to the device.
+
+The app I detail below is a preliminary step which simulates functions like location, speed and direction – sending that information as though it was coming from the Location Services API. The key was ensuring that the Helios Bars were responding to commands in a timely manner and not choking on the deluge of data streaming in from the command queue.
+
+## A Preliminary Step
+
+`r blogdown::shortcode("fancybox-thumb", "/img", "Helios_Companion_Preliminary.png")`
+
+This wasn’t my first time working with Google Location APIs, so I opted to focus on the “unknown unknowns” – interacting directly with the Helios Bars through Bluetooth LE. Between the interactivity and the “listening” portion of the app, there were enough variables to justify the effort. As you can see in the screen shot, there are both notification status indicators as well as UI elements that take user input. Some of the inputs, such as those in the “Headlamp” row, simply transmit commands directly to the device. Others, such as the Distance Simulator, simulate the action of location services sending updates on distance to the next turn. All of those out-bound commands are placed in the command queue and on the other end the Arduino processor handles them as they arrive through the Bluetooth assembly. The value of this preliminary app is in verifying that all commands are processed in a reasonable time frame – and this would be done by connecting to my Helios Bars and exercising the various options in real time.
+
+On the next page I show an excerpt from my code that simulates the Location Services updates, and will follow with a few video clips that show how the Helios Bars deal with the variety of inputs that are transmitted to it from the Android app’s command queue.
+
+# Distance Calculator
+
+While this code snippet will eventually be relegated to a “debug” Activity, it was a useful exercise as an initial “feeder” for the BLE command queue. It picks up values from the speed slider (which is directly indicating the LED color to the bars when in “Speed” mode) and uses that to adjust down the turn distance 10 times per second. In a separate process the distance to the next turn is picked up and sent to the command queue four times per second – along with the other commands, such as speed, headlamp changes, etc.
+
+<figure><figcaption class="caption">Turn simulator</figcaption><pre><code class="java">Button startTurn;
+startTurn = (Button) findViewById(R.id.startTurn);
+startTurn.setOnClickListener(new Button.OnClickListener() {
+   public void onClick(View view) {
+     new Thread(new Runnable() {
+      public double reservoir;                           // to carry small decimal values
+      public void run() {                                // this is where the fun begins
+       SeekBar activeBar;
+       if (leftBar.getProgress() > 0)                    // see which bar has a value
+       {
+        activeBar = (SeekBar) findViewById(R.id.leftDistance);
+       } else {
+        activeBar = (SeekBar) findViewById(R.id.rightDistance);
+       }
+       do {
+        try {
+         Thread.sleep(100);                              // sleep 100 milliseconds
+        } catch (InterruptedException e) {
+         e.printStackTrace();
+        }
+        double totalDistance;                            // set properties to use
+        double speed;                                    // this trip through the loop
+        double distanceReduced;
+        double shift;
+        int newDistance;
+        totalDistance = activeBar.getProgress();         // get value of Left/Right Bar
+        speed = speedValue.getProgress();                // get value of Speed Bar
+        distanceReduced = speed * .1467;                 // calculate distance in feet over 100 mils
+        if (distanceReduced < 1) {                       // set aside low values to accumulate
+         reservoir = distanceReduced + reservoir;
+         distanceReduced = 0.00;                         // make sure this is clear if not >1
+        }
+        if (reservoir > 1) {
+         distanceReduced = reservoir;                    // values over 1.00 are updated
+         reservoir = 0.00;                               // initialize the reservoir once assigned out
+        }
+        shift = totalDistance - distanceReduced;         // subtract ‘closed’ distance from total
+        newDistance = (int) Math.round(shift);           // TODO truncate instead of round
+        activeBar.setProgress(newDistance);              // set new value on screen as integer
+       }
+       while (activeBar.getProgress() > 0);              // stay in loop until distance to turn = 0
+      }
+     }).start(); </code></pre></figure>
+     
+The “fun” bit for this segment of code was deriving distance covered every 1/10th of a second – and working that into the calculation in a way that uses the ‘native’ speed indicator while preserving “below threshold” values for subsequent cycles. For that, the “reservoir” value is passed outside of the loop context but inside the thread. The goal was to be accurate with the countdown of distance and speed to emulate how location would be reported from the API. That way, the code that passes the values into the command queue would not have to be altered. The Helios Bars already “thinks” it’s receiving native location services instructions, as that’s the only syntax that it can process.
+
+# App Simulator Walkthrough
+
+This is the first set of commands implemented – to check that the device API was working. It simply controls the headlamp by putting commands directly in the queue. Note that the “high” headlamp setting had a noticeable delay. My thought is that this has to do with setting the power mode to a higher drain level – since the battery notification sends a reduced percentage value when the headlamp is on full power.
+
+## Headlamp Control
+
+This is the first set of commands implemented – to check that the device API was working. It simply controls the headlamp by putting commands directly in the queue. Note that the “high” headlamp setting had a noticeable delay. My thought is that this has to do with setting the power mode to a higher drain level – since the battery notification sends a reduced percentage value when the headlamp is on full power.
+
+## Ambient Light Mode
+
+The iOS app has a color wheel that allows the user to select a range of colors. In fact, there are 9 distinct values that the processor transitions through the color range on-device. So, in effect the user can select color “1” and then color “9” next to each other on the color wheel, and the bars will cycle through the color ranges 2-8 (as opposed to directly shifting to color 9 from color 1).
+
+There is also a “pulse” value that can be disabled in order to prevent the selected color from modulating. The pulse can be useful for daylight operation, but at night it can be a bit of a distraction. So there’s a possibility that I might set a context where pulse is always “off” based on the combination of time-of-day and light coming in through the phone.
+
+## Speedometer Mode
+
+In “Speed” mode, the ambient lights transition from red at 0-1mpg to yellow in the 3-7mph range, and green from 8-10mph. Beyond that range the colors smoothly transition through more nuanced colors of blue-green to a fuscia tone. (Insert red-shift joke here) Even though this wouldn’t necessarily be legal (in the sense that most US jurisdictions require rear-facing lights on a bike to be red) I really like this concept.
+
+## Turn Simulation
+
+Whether in “Ambient” or “Speed” mode, the turn controls operate in the same fashion. There are button actuators on the center post which can be used to trigger the respective turn signal for about 5-6 seconds at a constant rate. The unaffected LED continues to operate in the selected mode. But with triggering via BLE, both the turn direction and the distance to the next turn is transmitted using the location services pattern. The affected LED blinks at a higher rate as the location nears the turn.
+
+Here, both the turn information and the speed is updated into the command queue. And in the simulation above, I “roll through” the turn by slowing the speed to 1mph and then continuing to accelerate through the turn. In the app level I send a “turn completed” command when the distance to turn reaches “0”, which is the pattern that Location Services uses. Note that the LED in the turn direction clears and again tracks to the speed indicator.
+
+Although it’s not shown in these video clips, the notifications for battery level and media control (double-tapping the turn actuators will trigger a “next song” or “previous song” command to be sent to the phone’s media player) are also indicated on-screen. While this implementation is relatively perfunctory, it demonstrates that the command queue, callbacks and listeners are all functioning as expected. While the queue creates some delay between the transmission from the app/user, that delay is only noticeable in this controlled environment. Delays such as headlamp power level switching “disappear” when the rider is actively taking in the environment and using the Helios Bars in real time.
+
+# Theft & Recovery
+
+As I mentioned previously, there are several next-level features in the Helios Bars. The on-board GPS, motion sensors and SIM/3G radio mount provide a variety of stand-alone capability that Helios was just beginning to explore. One of the features described was the ability of the phone to turn on the front headlamp assembly as the owner approaches the bike. The user could also send a “locate” SMS message to the bike and get an exact GPS location. (The SMS contains a Google Maps link with the geo-coordinates of the bike embedded in the URL)
+
+Another promised security feature was enabling the bars to send its GPS location when movement is detected without the tethered bluetooth phone in range. This was an in-effect “silent alarm” that could be set to notify the owner that the bike is moving without them.
+
+While neither of those features were available when my bike was stolen, the Helios Bars still assisted in its safe return. If you look at the before and after photos you’ll see how thieves attempted to remove the processor assembly in the center post. While they managed to break the GPS antenna lead, and chewed up a bit of the silicon caulking I had applied to eliminate vibration the unit was otherwise unaffected. One of the things that they did inadvertently was switch the unit to the “OFF” position. So, even if the bars could achieve a good GPS lock, it wouldn’t be powered up to receive and respond to a “Locate” SMS request. However, things still worked out and my bike was returned to me. Aside from thwarting the thieves disassembly attempt, I had also placed “contact if found” labels on the bottom of the center post (and the down post of the bike itself). The day after I reported the bike as stolen, I received an anonymous call inquiring if there was a reward for a “found bike”. I offered them $100 and had the bike back within a day’s time.
+
+Although the Helios Bars didn’t have the security features enabled, the bars certainly contributed to helping me get my bike back. The person that returned the bike was a “fence” – someone who bought bikes from thieves and either resold them in another city or broke them down to sell individual parts. He copped to taking the bars apart “to see how it worked” – but eventually came around and admitted that seeing the tech inside the bars convinced him to get rid of the bike as soon as he could. That’s when he spotted my contact information and thought he’d get a “Samaritan’s bonus”. So – all’s well that ends well.
+
+# Ambitions on Hold
+
+I’d like to show more of this project, but I was asked to hold off until a new firmware was made available.
+
+Then… several months passed by…
+
+Later, I saw that Helios was going to create a new “V2” of their bars, with new capabilities and a ‘standard’ USB-micro recharging port. This is a good thing, because when my bike was stolen the recharging cable was tucked in the seat bag. That was stripped from my bike before it was returned, so I’m left with a dead set of handlebars, with no way to recharge it. That’s not completely true, as I could completely disassemble the unit and place it on a prototyping board, and hack my way into the charging connection. When I made that suggestion the folks at Helios suggested I wait for a new unit to be shipped out to me.
+
+Then… several months months passed by…
+
+So I continue to wait, for a bit more than a year now. Until I hear something more definitive from Helios, I’ve shifted my focus to developing for the Bragi Dash.

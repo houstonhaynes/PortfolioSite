@@ -125,7 +125,7 @@ hcWinLossInitial <- highchart() %>%
       borderRadius = 5,
       borderWidth = 1,
       marginBottom = '80',
-      marginTop = '60',
+      marginTop = '100',
       marginLeft = '80',
       marginRight = '60',
       style = list(fontFamily = 'Fira Code')) %>%
@@ -141,6 +141,49 @@ frameWidget(hcWinLossInitial)
 ```
 
 Bear in mind that the cart could have been lost at any point during the countdown period – up to 5 minutes after the item was initially added to the cart. The visualization here is designed to show correlation to the time slot where the cart was created versus the loss rate.
+
+### How this chart was made
+<figure><figcaption class="caption">Cart Summary Initial - Code Sample</figcaption><pre><code class="r">
+series = list(
+  list(
+    name = 'Added',
+    data = dfCartLossBefore$Added,
+  format = '{point.y} seconds'
+  ),
+  list(
+    name = 'Error',
+    data = dfCartLossBefore$Error
+  ),
+  list(
+    name = 'UserDeleted',
+    data = dfCartLossBefore$UserDeleted
+  ),
+  list(
+    name = 'Timeout',
+    data = dfCartLossBefore$Timeout
+  )
+)
+
+hcWinLossInitial <- highchart() %>%
+  hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) %>% 
+  hc_chart(
+      type = 'area',
+      borderRadius = 5,
+      borderWidth = 1,
+      marginBottom = '80',
+      marginTop = '100',
+      marginLeft = '80',
+      marginRight = '60',
+      style = list(fontFamily = 'Fira Code')) %>%
+  hc_yAxis(max = '60') %>% 
+  hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
+  hc_add_series_list(series) %>%
+  hc_plotOptions(
+    series = list(
+      stacking = 'normal', marker = 'none')) %>% 
+  hc_add_theme(hc_theme_gridlight())
+
+frameWidget(hcWinLossInitial)</code></pre></figure>
 
 From there I rolled up the summary wins/loss percentage for the period. A win rate of over 21% may seem like a non-controversial figure, the expectation for a period with an active campaign was expected to close at a 30% rate, even when factoring in baseline conversion of non-campaign items for the same period. With the added visibility into the types of attrition, the API team could make adjustments and monitor the results with a much more prismatic view of the data.
 
