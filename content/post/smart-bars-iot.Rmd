@@ -7,7 +7,7 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2018-05-15T14:59:43+05:30'
+date: '2019-05-15T14:59:43+05:30'
 featuredpath: img
 featured: HeliosBars.png
 description: Teasing features out of an Arduino embedded project using Android and Google Location Services APIs
@@ -114,11 +114,15 @@ This is the first set of commands implemented – to check that the device API w
 
 ## Headlamp Control
 
+`r blogdown::shortcode("vimeo", "439618016")`
+
 This is the first set of commands implemented – to check that the device API was working. It simply controls the headlamp by putting commands directly in the queue. Note that the “high” headlamp setting had a noticeable delay. My thought is that this has to do with setting the power mode to a higher drain level – since the battery notification sends a reduced percentage value when the headlamp is on full power.
 
 ## Ambient Light Mode
 
 The iOS app has a color wheel that allows the user to select a range of colors. In fact, there are 9 distinct values that the processor transitions through the color range on-device. So, in effect the user can select color “1” and then color “9” next to each other on the color wheel, and the bars will cycle through the color ranges 2-8 (as opposed to directly shifting to color 9 from color 1).
+
+`r blogdown::shortcode("vimeo", "439618010")`
 
 There is also a “pulse” value that can be disabled in order to prevent the selected color from modulating. The pulse can be useful for daylight operation, but at night it can be a bit of a distraction. So there’s a possibility that I might set a context where pulse is always “off” based on the combination of time-of-day and light coming in through the phone.
 
@@ -126,9 +130,13 @@ There is also a “pulse” value that can be disabled in order to prevent the s
 
 In “Speed” mode, the ambient lights transition from red at 0-1mpg to yellow in the 3-7mph range, and green from 8-10mph. Beyond that range the colors smoothly transition through more nuanced colors of blue-green to a fuscia tone. (Insert red-shift joke here) Even though this wouldn’t necessarily be legal (in the sense that most US jurisdictions require rear-facing lights on a bike to be red) I really like this concept.
 
+`r blogdown::shortcode("vimeo", "439618020")`
+
 ## Turn Simulation
 
 Whether in “Ambient” or “Speed” mode, the turn controls operate in the same fashion. There are button actuators on the center post which can be used to trigger the respective turn signal for about 5-6 seconds at a constant rate. The unaffected LED continues to operate in the selected mode. But with triggering via BLE, both the turn direction and the distance to the next turn is transmitted using the location services pattern. The affected LED blinks at a higher rate as the location nears the turn.
+
+`r blogdown::shortcode("vimeo", "439618024")`
 
 Here, both the turn information and the speed is updated into the command queue. And in the simulation above, I “roll through” the turn by slowing the speed to 1mph and then continuing to accelerate through the turn. In the app level I send a “turn completed” command when the distance to turn reaches “0”, which is the pattern that Location Services uses. Note that the LED in the turn direction clears and again tracks to the speed indicator.
 
