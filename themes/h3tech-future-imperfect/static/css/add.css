@@ -122,9 +122,9 @@ textarea {
 }
 
 #content a[target="_blank"]:after {
-    font-family: "Font Awesome 5 Free";
+    font-family: "FontAwesome";
     font-weight: 900;
-    content: " \f35d";
+    content: " \f08e";
     font-size: .8em;
     padding-left: .2em;
 }

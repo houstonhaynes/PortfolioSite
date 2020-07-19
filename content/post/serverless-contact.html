@@ -44,7 +44,7 @@ editor_options:
 <figcaption class="caption">
 index.js from Azure Function App project
 </figcaption>
-<pre><code class="node">module.exports = async function (context, req) {
+<pre><code class="js">module.exports = async function (context, req) {
     if (req.body.email) {
         context.bindings.message = {
             subject: 'Message from ' + req.body.name + ' via YOUR_SITE_HERE', //fix this line!
@@ -104,7 +104,7 @@ HTML form in Contact page
 <figcaption class="caption">
 JavaScript that manages SendGrid request/response and HTML form state
 </figcaption>
-<pre><code class="javascript">// waits for the button to be clicked on Contact form
+<pre><code class="js">// waits for the button to be clicked on Contact form
 document.getElementById('submitMessage').addEventListener('submit', submitMessage);
 
 // this transitions the UI, processes the form input then submits to SendGrid via Azure Function

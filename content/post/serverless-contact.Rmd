@@ -51,7 +51,7 @@ The Function can take up to 20 seconds to respond when initiating from a cold st
 
 While I provided inline comments for some of the code blocks, there's still a few bits of context worth mentioning here. Below is the Node-based Function App message binding, key being the nested _from_ element that contains both the name and email of the submitted form. There are several alternatives to this using "personalization" but it's really unnecessary with the latest API.
 
-<figure><figcaption class="caption">index.js from Azure Function App project</figcaption><pre><code class="node">module.exports = async function (context, req) {
+<figure><figcaption class="caption">index.js from Azure Function App project</figcaption><pre><code class="js">module.exports = async function (context, req) {
     if (req.body.email) {
         context.bindings.message = {
             subject: 'Message from ' + req.body.name + ' via YOUR_SITE_HERE', //fix this line!
@@ -106,7 +106,7 @@ In the HTML form below you'll see there are several placeholder elements - waiti
 
 I've read several posts from first-order front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty. It may be something I refactor at a later date.
 
-<figure><figcaption class="caption">JavaScript that manages SendGrid request/response and HTML form state</figcaption><pre><code class="javascript">// waits for the button to be clicked on Contact form
+<figure><figcaption class="caption">JavaScript that manages SendGrid request/response and HTML form state</figcaption><pre><code class="js">// waits for the button to be clicked on Contact form
 document.getElementById('submitMessage').addEventListener('submit', submitMessage);
 
 // this transitions the UI, processes the form input then submits to SendGrid via Azure Function
