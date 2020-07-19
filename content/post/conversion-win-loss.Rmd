@@ -147,13 +147,13 @@ frameWidget(hcWinLossInitial, width = "100%", height = "100%")
 library(highcharter)
 library(widgetframe)
 # Initial Win/Loss Over Time 
-cartLossTableBefore <- fromJSON("../../data/Minute1_Attrition_Example1a.json")
-dfCartLossBefore <- as.data.frame(do.call("cbind", cartLossTableBefore))
+cartLossTableBefore &lt;- fromJSON(&quot;../../data/Minute1_Attrition_Example1a.json&quot;)
+dfCartLossBefore &lt;- as.data.frame(do.call(&quot;cbind&quot;, cartLossTableBefore))
 dfCartLossBefore$Timeout = as.numeric(dfCartLossBefore$Timeout)
 dfCartLossBefore$UserDeleted = as.numeric(dfCartLossBefore$UserDeleted)
 dfCartLossBefore$Error = as.numeric(dfCartLossBefore$Error)
 dfCartLossBefore$Added = as.numeric(dfCartLossBefore$Added)
-dfCartLossBefore$DateTime = paste(dfCartLossBefore$TimeStamp, "s", sep = "")
+dfCartLossBefore$DateTime = paste(dfCartLossBefore$TimeStamp, &quot;s&quot;, sep = &quot;&quot;)
 series = list(
   list(
     name = 'Added',
@@ -173,8 +173,8 @@ series = list(
     data = dfCartLossBefore$Timeout
   )
 )
-hcWinLossInitial <- highchart() %>%
-  hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) %>% 
+hcWinLossInitial &lt;- highchart() % &gt; %
+  hc_title(text = paste(&quot;Cart Win/Loss by Category Initial Findings&quot;)) % &gt; % 
   hc_chart(
       type = 'area',
       borderRadius = 5,
@@ -183,15 +183,15 @@ hcWinLossInitial <- highchart() %>%
       marginTop = '60',
       marginLeft = '60',
       marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '80') %>% 
-  hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
-  hc_add_series_list(series) %>%
+      style = list(fontFamily = 'Fira Code')) % &gt; %
+  hc_yAxis(max = '80') % &gt; % 
+  hc_xAxis(categories = dfCartLossBefore$DateTime) % &gt; % 
+  hc_add_series_list(series) % &gt; %
   hc_plotOptions(
     series = list(
-      stacking = 'normal', marker = 'none')) %>% 
+      stacking = 'normal', marker = 'none')) % &gt; % 
   hc_add_theme(hc_theme_gridlight())
-frameWidget(hcWinLossInitial, width = "100%", height = "100%")</code></pre>
+frameWidget(hcWinLossInitial, width = &quot;100%&quot;, height = &quot;100%&quot;)</code></pre>
 
 Bear in mind that the cart could have been lost at any point during the countdown period – up to 5 minutes after the item was initially added to the cart. The visualization here is designed to show correlation to the time slot where the cart was created versus the loss rate.
 
