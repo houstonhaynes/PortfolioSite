@@ -140,9 +140,10 @@ hcWinLossInitial <- highchart() %>%
 frameWidget(hcWinLossInitial, width = "100%", height = "100%")
 ```
 
-`r blogdown::shortcode("alert", "success", "Note!", "The legend in these charts can also be used to show or hide series.")`
+`r blogdown::shortcode("alert", "success", "Note!", "Click on legend above to show or hide a series.")`
 
 <button class="btn btn-outline-dark btn-sm ml-2 mb-3" data-toggle="collapse" data-target="#code">View the Code behind the Chart</button>
+
 <pre id="code" class="collapse"><code class="r">library(jsonlite)
 library(highcharter)
 library(widgetframe)

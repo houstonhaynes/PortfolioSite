@@ -1,0 +1,37 @@
+---
+title: "Crafting this Site"
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2019-10-11T14:59:43+05:30'
+featuredpath: img
+featured: h3sitehex.png
+description: Using Rmarkdown, blogdown, Hugo and Azure Infrastructure to build a responsive static site
+draft: true
+tags:
+- R
+- blogdown
+- Hugo
+- RStudio
+- Azure
+categories: 
+- Deep Dive
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+library(jsonlite)
+library(highcharter)
+library(widgetframe)
+```
+
