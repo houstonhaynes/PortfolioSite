@@ -1,5 +1,5 @@
 ---
-title: "Conversion Win-Loss Tracking in Global E-Commerce Platform"
+title: "Conversion Win-Loss in a Global E-Com Platform"
 output:
   blogdown::html_page:
     dev: "svg"
@@ -7,7 +7,7 @@ author: "Houston Haynes"
 date: '2018-07-24T14:59:43+05:30'
 featuredpath: img
 featured: Micro-services.png
-description: Increasing mobile sell-through by re-tooling the stack
+description: Increasing sell-through by re-tooling the stack
 draft: false
 tags:
 - AWS
@@ -125,11 +125,11 @@ hcWinLossInitial <- highchart() %>%
       borderRadius = 5,
       borderWidth = 1,
       marginBottom = '80',
-      marginTop = '100',
-      marginLeft = '80',
+      marginTop = '60',
+      marginLeft = '60',
       marginRight = '60',
       style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '60') %>% 
+  hc_yAxis(max = '80') %>% 
   hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
   hc_add_series_list(series) %>%
   hc_plotOptions(
@@ -137,13 +137,23 @@ hcWinLossInitial <- highchart() %>%
       stacking = 'normal', marker = 'none')) %>% 
   hc_add_theme(hc_theme_gridlight())
 
-frameWidget(hcWinLossInitial)
+frameWidget(hcWinLossInitial, width = "100%", height = "100%")
 ```
 
-Bear in mind that the cart could have been lost at any point during the countdown period – up to 5 minutes after the item was initially added to the cart. The visualization here is designed to show correlation to the time slot where the cart was created versus the loss rate.
+`r blogdown::shortcode("alert", "success", "Note!", "The legend in these charts can also be used to show or hide series.")`
 
-### How this chart was made
-<figure><figcaption class="caption">Cart Summary Initial - Code Sample</figcaption><pre><code class="r">
+<button class="btn btn-outline-dark btn-sm ml-2 mb-3" data-toggle="collapse" data-target="#code">View the Code behind the Chart</button>
+<pre id="code" class="collapse"><code class="r">library(jsonlite)
+library(highcharter)
+library(widgetframe)
+# Initial Win/Loss Over Time 
+cartLossTableBefore <- fromJSON("../../data/Minute1_Attrition_Example1a.json")
+dfCartLossBefore <- as.data.frame(do.call("cbind", cartLossTableBefore))
+dfCartLossBefore$Timeout = as.numeric(dfCartLossBefore$Timeout)
+dfCartLossBefore$UserDeleted = as.numeric(dfCartLossBefore$UserDeleted)
+dfCartLossBefore$Error = as.numeric(dfCartLossBefore$Error)
+dfCartLossBefore$Added = as.numeric(dfCartLossBefore$Added)
+dfCartLossBefore$DateTime = paste(dfCartLossBefore$TimeStamp, "s", sep = "")
 series = list(
   list(
     name = 'Added',
@@ -163,7 +173,6 @@ series = list(
     data = dfCartLossBefore$Timeout
   )
 )
-
 hcWinLossInitial <- highchart() %>%
   hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) %>% 
   hc_chart(
@@ -171,19 +180,20 @@ hcWinLossInitial <- highchart() %>%
       borderRadius = 5,
       borderWidth = 1,
       marginBottom = '80',
-      marginTop = '100',
-      marginLeft = '80',
+      marginTop = '60',
+      marginLeft = '60',
       marginRight = '60',
       style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '60') %>% 
+  hc_yAxis(max = '80') %>% 
   hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
   hc_add_series_list(series) %>%
   hc_plotOptions(
     series = list(
       stacking = 'normal', marker = 'none')) %>% 
   hc_add_theme(hc_theme_gridlight())
+frameWidget(hcWinLossInitial, width = "100%", height = "100%")</code></pre>
 
-frameWidget(hcWinLossInitial)</code></pre></figure>
+Bear in mind that the cart could have been lost at any point during the countdown period – up to 5 minutes after the item was initially added to the cart. The visualization here is designed to show correlation to the time slot where the cart was created versus the loss rate.
 
 From there I rolled up the summary wins/loss percentage for the period. A win rate of over 21% may seem like a non-controversial figure, the expectation for a period with an active campaign was expected to close at a 30% rate, even when factoring in baseline conversion of non-campaign items for the same period. With the added visibility into the types of attrition, the API team could make adjustments and monitor the results with a much more prismatic view of the data.
 
@@ -318,7 +328,7 @@ hcWinLossBefore <- highchart() %>%
       marginLeft = '80',
       marginRight = '60',
       style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '60') %>% 
+  hc_yAxis(max = '80') %>% 
   hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
   hc_add_series_list(series) %>%
   hc_plotOptions(
@@ -326,7 +336,7 @@ hcWinLossBefore <- highchart() %>%
       stacking = 'normal', marker = 'none')) %>% 
   hc_add_theme(hc_theme_gridlight())
 
-frameWidget(hcWinLossBefore)
+frameWidget(hcWinLossBefore, width = "100%", height = "100%")
 ```
 
 Early deployments of the API focused on delivery to in-house mobile applications, we later supported Apple, RIM, Facebook and other partners that would increase user activity by 40% overall and cart creation activity by 15%. As one might expect, executives were most encouraged by the conversion rate. While it still was not in the targeted 30%+ range, the findings were trending in the right direction.
@@ -358,19 +368,18 @@ hcWinLossAfter <- highchart() %>%
       marginRight = '60',
       style = list(fontFamily = 'Fira Code')) %>%
   hc_xAxis(categories = dfCartLossAfter$DateTime) %>% 
-  hc_yAxis(max = '60') %>% 
+  hc_yAxis(max = '100') %>% 
   hc_add_series_list(series) %>%
   hc_plotOptions(
     series = list(
       stacking = 'normal', marker = 'none')) %>% 
   hc_add_theme(hc_theme_gridlight())
 
-frameWidget(hcWinLossAfter)
+frameWidget(hcWinLossAfter, width = "100%", height = "100%")
 ```
 
 
 Through a deeper understanding of the legacy commerce systems the API team found optimizations that could be brought to bear which yielded sizable system and financial performance improvements. When these issues were originally brought to senior management, the initial response was to simply increase the horizontal scale of the server infrastructure. While in most companies that would not be the measure of first resort, the long-standing technology groups at the company had always brought this option to the table as a reflex.
-
 
 ```{r Final Result in Conversion Rate, echo=FALSE}
 series = list(
@@ -405,7 +414,7 @@ hcConversionRate <- highchart() %>%
       marker = 'none', stacking = 'normal')) %>% 
   hc_add_theme(hc_theme_gridlight())
 
-frameWidget(hcConversionRate)
+frameWidget(hcConversionRate, width = "100%", height = "100%")
 ```
 
 In that legacy context this is not a surprise, as some of the systems at that company date back to the late 1970s. Horizontal scaling was (and in this case – is) the only option for technology of that generation. In this case we found new and useful ways to “pierce the veil” and work more efficiently in and around the existing solution stack. From that point we continued to refine the API layer – and likewise – measured changes in system and user behavior in a way that provided new insight to IT and marketing executives.

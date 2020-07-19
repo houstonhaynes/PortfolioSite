@@ -67,7 +67,7 @@ enableGitInfo = true
   highlightjsVersion = "10.1.1"
   highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
   highlightjsLang = ["r", "yaml", "html", "ini", "http", "javascript", "css", "apache", "sql", "groovy", "java", "cs", "rust", "ruby"]
-  highlightjsTheme = "docco"
+  highlightjsTheme = "vs"
   MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs/"
   MathJaxVersion = "2.7.1"
 
@@ -117,12 +117,6 @@ enableGitInfo = true
   identifier = "fas fa-home"
   weight = 1
 
-[[menu.main]]
-  name = "About"
-  url = "/about/"
-  identifier = "fas fa-browser"
-  weight = 6
-  
 [[menu.main]]
   name = "Vitae"
   url = "/vitae/"

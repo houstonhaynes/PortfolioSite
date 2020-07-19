@@ -11,7 +11,7 @@ date: '2019-05-15T14:59:43+05:30'
 featuredpath: img
 featured: HeliosBars.png
 description: Teasing features out of an Arduino embedded project using Android and Google Location Services APIs
-draft: true
+draft: false
 tags:
 - Android
 - Arduino
@@ -33,11 +33,12 @@ library(widgetframe)
 # Building Intelligence into Bicycles
 `r blogdown::shortcode("fancybox-thumb", "/img", "heliosbars-1.jpg")`
 
-Helios Bars was a promising Kickstarter project that provided a unique aftermarket solution for the the cycling enthusiast. This was in the pre-scooter-rental days where "connected" devices was definitely not the norm. It provided a built-in LED headlamp and multi-color LEDs at the bar ends. The latter could be used in an “ambient mode” or as a speed indicator. And of course the bar end lights could be triggered to indicate turns.
+Helios Bars was a promising Kickstarter project that provided a unique aftermarket solution for the cycling enthusiast. This was in the pre-scooter-rental days where "connected" devices was definitely not the norm. It provided a built-in LED headlamp and multi-color LEDs at the bar ends. The latter could be used in an “ambient mode” or as a speed indicator. And of course the bar end lights could be triggered to indicate turns.
 
 Based on those features alone the Helios Bars grabbed a great deal of attention. The feature that I really liked was a shortening of turn signal cadence as the cyclist nears the next turn. The closer you rode to your turn point, the faster that the bar end light would blink. It was this feature that made me curious to see how the Helios Bars dealt with changes in distance and speed – as that would have an effect on how each bar end LED was updated through the sequence. But there was an additional feature layer that made the design truly compelling. The housing included an embedded Arduino project board with GPS, motion sensors and a SIM controller piggy-backed to the processing unit. This meant that the Helios Bars could be programmed to communicate with the outside world through SMS. I would tackle those options (and issues) after I had solved the first problem, which was geting the bars to work with Android. Getting to that point also had its own series of fits and starts.
 
-Similar to other Kickstarter projects, production hit several setbacks. When the Helios Bars launched many months after the original promised date, an iOS companion app was released at the same time. However, the Android app was still “in the works”. After several more months it was apparent that the team who made the iOS app would not build the sibling companion app for Android. When their original vendor reneged on creating the Android app, I stepped in to fill in the gap.
+`r blogdown::shortcode("fancybox-thumb-right", "/img", "Helios_red_wraps1.jpg")`
+Similar to other Kickstarter projects, production hit several setbacks. When the Helios Bars launched many months after the original promised date, an iOS companion app was released at the same time. However, the Android app was still “in the works”. After several more months it was apparent that the team who made the iOS app would not build the sibling companion app for Android. When their original vendor reneged on creating the Android app, I stepped in to fill in the gap. What follows is an exercise in reverse engineering.
 
 ## Bluetooth LE and Android
 
@@ -146,6 +147,8 @@ Although it’s not shown in these video clips, the notifications for battery le
 
 As I mentioned previously, there are several next-level features in the Helios Bars. The on-board GPS, motion sensors and SIM/3G radio mount provide a variety of stand-alone capability that Helios was just beginning to explore. One of the features described was the ability of the phone to turn on the front headlamp assembly as the owner approaches the bike. The user could also send a “locate” SMS message to the bike and get an exact GPS location. (The SMS contains a Google Maps link with the geo-coordinates of the bike embedded in the URL)
 
+`r blogdown::shortcode("fancybox", "/img", "Helios_Map.jpg")`
+
 Another promised security feature was enabling the bars to send its GPS location when movement is detected without the tethered bluetooth phone in range. This was an in-effect “silent alarm” that could be set to notify the owner that the bike is moving without them.
 
 While neither of those features were available when my bike was stolen, the Helios Bars still assisted in its safe return. If you look at the before and after photos you’ll see how thieves attempted to remove the processor assembly in the center post. While they managed to break the GPS antenna lead, and chewed up a bit of the silicon caulking I had applied to eliminate vibration the unit was otherwise unaffected. One of the things that they did inadvertently was switch the unit to the “OFF” position. So, even if the bars could achieve a good GPS lock, it wouldn’t be powered up to receive and respond to a “Locate” SMS request. However, things still worked out and my bike was returned to me. Aside from thwarting the thieves disassembly attempt, I had also placed “contact if found” labels on the bottom of the center post (and the down post of the bike itself). The day after I reported the bike as stolen, I received an anonymous call inquiring if there was a reward for a “found bike”. I offered them $100 and had the bike back within a day’s time.
@@ -163,3 +166,5 @@ Later, I saw that Helios was going to create a new “V2” of their bars, with 
 Then… several months months passed by…
 
 So I continue to wait, for a bit more than a year now. Until I hear something more definitive from Helios, I’ve shifted my focus to developing for the Bragi Dash.
+
+`r blogdown::shortcode("fancybox", "/img", "Helios_unwrapped.jpg")`
