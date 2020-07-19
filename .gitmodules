@@ -1,9 +1,0 @@
-[submodule "themes/--forcxe"]
-	path = themes/--forcxe
-	url = https://github.com/houstonhaynes/hugo-future-imperfect.git
-[submodule "themes/--force"]
-	path = themes/--force
-	url = https://github.com/houstonhaynes/hugo-future-imperfect.git
-[submodule "themes/hugo-future-imperfect"]
-	path = themes/hugo-future-imperfect
-	url = https://github.com/houstonhaynes/hugo-future-imperfect.git
