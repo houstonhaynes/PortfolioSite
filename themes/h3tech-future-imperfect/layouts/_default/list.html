@@ -1,0 +1,17 @@
+{{ if not .Params.hidden }}
+{{ partial "general-title" . }}
+
+{{ partial "header" . }}
+    {{ partial "navbar" . }}
+    <!-- Main -->
+    <div id="main">
+        {{ $paginator := .Paginate .Data.Pages }}
+        {{ range .Paginator.Pages }}
+            {{ .Render "content-list" }}
+        {{ end }}
+
+
+    </div>
+    {{ partial "sidebar" . }}
+{{ partial "footer" . }}
+{{ end }}

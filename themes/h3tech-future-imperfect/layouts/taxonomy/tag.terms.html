@@ -1,0 +1,35 @@
+{{ partial "general-title" . }}
+
+{{ partial "header" . }}
+    {{ partial "navbar" . }}
+    <!-- Main -->
+    <div id="main">
+        {{ if .Site.Params.categoriesByCount }}
+            {{ $.Scratch.Set "tags" .Data.Terms.ByCount }}
+        {{ else }}
+            {{ $.Scratch.Set "tags" .Data.Terms.Alphabetical }}
+        {{ end }}
+<h1 class="card-title">{{ .Data.Plural }}</h1>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                        {{ $data := .Data }}
+                        {{ range $key, $value := $.Scratch.Get "tags" }}
+                                {{ if ne $value.Name "" }}
+                                    <a href="{{ printf "/%s/%s" $data.Plural $value.Name | urlize | relLangURL }}" class="badge badge-pill badge-dark">{{ $value.Name }}: {{ $value.Count }}</a>
+                                {{ else }}
+                                    <a href="" class="badge badge-dark">{{ i18n "uncategorized" }}: {{ $value.Count }}</a>
+                                {{ end }}
+
+                        {{ end }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ partial "sidebar" . }}
+{{ partial "footer" . }}

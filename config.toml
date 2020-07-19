@@ -1,7 +1,7 @@
 baseurl = "/"
 languageCode = "en-us"
 title = "H3 Tech Hub"
-theme = "h3tech"
+theme = "h3tech-future-imperfect"
 preserveTaxonomyNames = true
 paginate = 5
 disqusShortname = ""

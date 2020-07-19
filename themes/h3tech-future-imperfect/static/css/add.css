@@ -1,0 +1,206 @@
+.badge {
+    padding: .5rem;
+    margin: .5rem;
+    font-size: 1rem;
+}
+
+.rounded {
+    border-radius: 8px;
+}
+
+.listdescription {
+    clear: both;
+}
+
+.thumbnail {
+    max-width: 20% !important;
+    width: auto;
+    height: auto;
+    float: left;
+    margin: 0 1.5em 1em 0;
+}
+
+.circular {
+    border-radius: 50%;
+}
+
+.bordered {
+    border: solid 2px rgba(160, 160, 160, 0.3);
+}
+
+.centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.twitter-tweet-rendered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#fancybox-wrap {
+    float: left;
+}
+
+.clearfix {
+    overflow: auto;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#header .darkMode {
+    font-size: 0.8em;
+    border-right: solid 1px rgba(160, 160, 160, 0.3);
+    width: 3.5em;
+    text-align: center;
+}
+
+.darkMode ul {
+    padding-left: 0 !important;
+}
+
+.darkMode ul li {
+    padding-left: 0 !important;
+    line-height: 1em;
+}
+
+#main .GitHub {
+    text-align: center;
+    color: #aaaaaa;
+    font-family: "Ubuntu", Helvetica, sans-serif;
+    font-size: 0.6em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+}
+
+#sidebar #intro a {
+    text-decoration: none !important;
+    outline: none;
+    border: 0px !important;
+    border-width: 0px;
+    outline-width: 0px;
+    border-bottom: none;
+}
+
+#main #intro a {
+    text-decoration: none !important;
+    outline: none;
+    border: 0px !important;
+    border-width: 0px;
+    outline-width: 0px;
+    border-bottom: none;
+}
+
+#header ul li a {
+    text-decoration: none !important;
+    outline: none;
+    border: 0px !important;
+    border-width: 0px;
+    outline-width: 0px;
+    border-bottom: none;
+}
+
+input[type="text"] {
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+}
+
+textarea {
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    resize: none;
+}
+
+.gist .blob-code-inner {
+    white-space: pre-wrap !important;
+}
+
+#content a[target="_blank"]:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: " \f35d";
+    font-size: .8em;
+    padding-left: .2em;
+}
+
+figcaption.caption {
+    margin: 0;
+    line-height: 1.2em;
+    color: #777;
+    text-align: center;
+    font-style: italic;
+}
+
+img.ld.ld-heartbeat {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div#container.ld-over.running:before {
+    border-radius: 8px !important;
+}
+
+.title .image {
+    -moz-transition: -moz-transform 0.2s ease-out;
+    -webkit-transition: -webkit-transform 0.2s ease-out;
+    -ms-transition: -ms-transform 0.2s ease-out;
+    transition: transform 0.2s ease-out;
+}
+
+.title .image:hover {
+    -moz-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+
+/* make cursor transition to pointer
+   for mouse-over of toggle (like menu items) */
+
+a#dark-mode-toggle {
+    cursor: pointer;
+}
+
+
+/* adding fancybox image overlay */
+
+.fancybox {
+    position: relative;
+}
+
+.fancybox a img {
+    display: block;
+}
+
+.fancybox .fa-search-plus {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 20pt;
+    z-index: 9999;
+}
+
+.card-horizontal {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.alert {
+    position: relative;
+}
+
+.close {
+    position: relative !important;
+    right: 10px;
+    top: 50%;
+    margin-top: -10px;
+}
