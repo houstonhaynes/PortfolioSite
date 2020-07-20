@@ -16,22 +16,22 @@ body * [style*="background-image"] {
     -webkit-filter: hue-rotate(180deg) contrast(100%) invert(100%);
 }
 
-img.centered {
+img.centered:not(.dark-theme-ok) {
     filter: invert(100%) hue-rotate(180deg) brightness(80%) contrast(85%);
     -webkit-filter: invert(100%) hue-rotate(180deg) brightness(80%) contrast(85%);
 }
 
-img.fancybox-image {
+img.fancybox-image:not(.dark-theme-ok) {
     filter: invert(100%) hue-rotate(180deg) brightness(80%) contrast(85%);
     -webkit-filter: invert(100%) hue-rotate(180deg) brightness(80%) contrast(85%);
 }
 
-img.small {
+img.small:not(.dark-theme-ok) {
     filter: invert(100%) hue-rotate(180deg) brightness(80%) contrast(85%);
     -webkit-filter: invert(100%) hue-rotate(180deg) brightness(80%) contrast(85%);
 }
 
-iframe {
+iframe[src^="https://player.vimeo.com/video"] {
     filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
     -webkit-filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
 }

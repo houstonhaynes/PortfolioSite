@@ -67,7 +67,7 @@ enableGitInfo = true
   highlightjsVersion = "10.1.1"
   highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
   highlightjsLang = ["r", "yaml", "html", "ini", "http", "js", "css", "apache", "sql", "groovy", "java", "cs", "rust", "ruby"]
-  highlightjsTheme = "vs"
+  highlightjsTheme = "foundation"
   MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs/"
   MathJaxVersion = "2.7.1"
 

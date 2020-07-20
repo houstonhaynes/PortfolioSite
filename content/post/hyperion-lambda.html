@@ -73,8 +73,7 @@ FROM   accelatis.metricsamples
 WHERE  To_date('12/30/1899', 'MM/DD/YYYY') 
        + datetime >= To_date('3/6/2016 11:12:00 AM', 'MM/DD/YYYY HH:MI:SS AM') 
        AND To_date('12/30/1899', 'MM/DD/YYYY') 
-           + datetime <= To_date('3/6/2016 1:12:00 PM', 'MM/DD/YYYY HH:MI:SS AM' 
-                         ) 
+           + datetime <= To_date('3/6/2016 1:12:00 PM', 'MM/DD/YYYY HH:MI:SS AM') 
        AND accelatis.metricdefs.metricname LIKE '%Processor Time' 
 ORDER  BY datetime ASC</code></pre>
 <p>To make the situation even more confusing – a bug was discovered in the timestamp code that Accelatis used to monitor Unix servers. The net result was that database CPU values were again mis-counted by one day after Febrary 29, 2016. So again, I had to split off the database CPU extraction because I had to then decide whether to use 30-Dec or 31-Dec as the epoch day-month in the calculation. This also meant that database CPU data overlapped on 29-February and 1-March, so data from that time period was nearly impossible to disambiguate. Needless to say, this was reported to Accelatis, and hopefully it will be resolved before Leap Year 2020.</p>

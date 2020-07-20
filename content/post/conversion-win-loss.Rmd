@@ -73,7 +73,7 @@ Conversion in e-commerce generally refers to a process where site visitors becom
 
 # Weblog Blind Spots
 
-`r blogdown::shortcode("fancybox", "/img", "web_v_mobile.png")`
+`r blogdown::shortcode("fancybox-thumb", "/img", "web_v_mobile.png")`
 Our working group created an array of federated micro-services that would serve as an interface between mobile users and the legacy commerce servers. This was new to the company, and so our baseline of information stemmed from web-only user activity. While there are many new wrinkles that are introduced in the API-building process, many of the assumptions about the conversion rate(s) originated from the up-to-then web-only data. And as our working group later found out, that “model” ended up being a collection of very old data and grossly inaccurate generalizations. The company's primary conversion marketing tactic was a timed cart, a function which served dual purposes in the legacy technology stack. Once the user had selected an item, they had a few minutes to complete the transaction or the cart would be discarded and the user would have to re-initiate the process. There were places in the cart workflow where time might be added to the cart, but there was an inflection point where the countdown was simply a means to release inventory back into general availability.
 
 
@@ -135,7 +135,7 @@ hcWinLossInitial <- highchart() %>%
   hc_plotOptions(
     series = list(
       stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_gridlight())
+  hc_add_theme(hc_theme_538())
 
 frameWidget(hcWinLossInitial, width = "100%", height = "100%")
 ```
@@ -174,8 +174,8 @@ series = list(
     data = dfCartLossBefore$Timeout
   )
 )
-hcWinLossInitial &lt;- highchart() % &gt; %
-  hc_title(text = paste(&quot;Cart Win/Loss by Category Initial Findings&quot;)) % &gt; % 
+hcWinLossInitial <- highchart() %>%
+  hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) %>% 
   hc_chart(
       type = 'area',
       borderRadius = 5,
@@ -184,15 +184,16 @@ hcWinLossInitial &lt;- highchart() % &gt; %
       marginTop = '60',
       marginLeft = '60',
       marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) % &gt; %
-  hc_yAxis(max = '80') % &gt; % 
-  hc_xAxis(categories = dfCartLossBefore$DateTime) % &gt; % 
-  hc_add_series_list(series) % &gt; %
+      style = list(fontFamily = 'Fira Code')) %>%
+  hc_yAxis(max = '80') %>% 
+  hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
+  hc_add_series_list(series) %>%
   hc_plotOptions(
     series = list(
-      stacking = 'normal', marker = 'none')) % &gt; % 
-  hc_add_theme(hc_theme_gridlight())
-frameWidget(hcWinLossInitial, width = &quot;100%&quot;, height = &quot;100%&quot;)</code></pre>
+      stacking = 'normal', marker = 'none')) %>% 
+  hc_add_theme(hc_theme_538())
+
+frameWidget(hcWinLossInitial, width = "100%", height = "100%")</code></pre>
 
 Bear in mind that the cart could have been lost at any point during the countdown period – up to 5 minutes after the item was initially added to the cart. The visualization here is designed to show correlation to the time slot where the cart was created versus the loss rate.
 
@@ -210,7 +211,7 @@ Because of the caching strategy in the partner API, the length of time for an in
 
 So we created a cache “warming” method to request sale events before they were generally available to potential customers. I created a user that was provisioned to have access to “sale” event information before the item was officially active. I then programmatically called into each specific application cache server directly to request that information just before the official start time of the sale event.
 
-`r blogdown::shortcode("fancybox", "/img", "SOLR_framework.png")`
+`r blogdown::shortcode("fancybox-dark-mode-ok", "/img", "SOLR_framework.png")`
 
 I created this process in the soapUI framework, as I was managing infrastructure for the partner API group at the time – and test management was part of the purview. The advantage of using soapUI was that the process could be compiled as a jar and run from any server. So the network operations group deployed the jar to a server that had access to the cache servers and set it to run just before the hour.
 
@@ -329,13 +330,13 @@ hcWinLossBefore <- highchart() %>%
       marginLeft = '80',
       marginRight = '60',
       style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '80') %>% 
+  hc_yAxis(max = '100') %>% 
   hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
   hc_add_series_list(series) %>%
   hc_plotOptions(
     series = list(
       stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_gridlight())
+  hc_add_theme(hc_theme_538())
 
 frameWidget(hcWinLossBefore, width = "100%", height = "100%")
 ```
@@ -374,7 +375,7 @@ hcWinLossAfter <- highchart() %>%
   hc_plotOptions(
     series = list(
       stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_gridlight())
+  hc_add_theme(hc_theme_538())
 
 frameWidget(hcWinLossAfter, width = "100%", height = "100%")
 ```
@@ -413,7 +414,7 @@ hcConversionRate <- highchart() %>%
   hc_plotOptions(
     series = list(
       marker = 'none', stacking = 'normal')) %>% 
-  hc_add_theme(hc_theme_gridlight())
+  hc_add_theme(hc_theme_538())
 
 frameWidget(hcConversionRate, width = "100%", height = "100%")
 ```

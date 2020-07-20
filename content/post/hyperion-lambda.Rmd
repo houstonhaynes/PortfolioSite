@@ -92,8 +92,7 @@ FROM   accelatis.metricsamples
 WHERE  To_date('12/30/1899', 'MM/DD/YYYY') 
        + datetime >= To_date('3/6/2016 11:12:00 AM', 'MM/DD/YYYY HH:MI:SS AM') 
        AND To_date('12/30/1899', 'MM/DD/YYYY') 
-           + datetime <= To_date('3/6/2016 1:12:00 PM', 'MM/DD/YYYY HH:MI:SS AM' 
-                         ) 
+           + datetime <= To_date('3/6/2016 1:12:00 PM', 'MM/DD/YYYY HH:MI:SS AM') 
        AND accelatis.metricdefs.metricname LIKE '%Processor Time' 
 ORDER  BY datetime ASC</code></pre>
 
