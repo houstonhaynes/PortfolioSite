@@ -69,11 +69,11 @@ dfConversionRate <- data.frame(Conversions, Lost, Won)
 
 Conversion in e-commerce generally refers to a process where site visitors become paying customers. This portfolio entry discusses some of the analysis conducted for the one of the largest e-commerce sites in the world. I also refer to some of the mobile device simulations and related functions used to verify (and in some cases, dismiss) the assumptions on which the company’s win-loss analytics was based. And finally, I show some of the tooling used to verify partner data feeds and how that became a central component to a new distributed conversion marketing strategy.
 
-`r blogdown::shortcode("fancybox", "/img", "Splunk-Chart.png")`
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "Splunk-Chart.png")`
 
 # Weblog Blind Spots
 
-`r blogdown::shortcode("fancybox-thumb", "/img", "web_v_mobile.png")`
+`r blogdown::shortcode("fancybox-thumb-dark-theme-ok", "/img", "web_v_mobile.png")`
 Our working group created an array of federated micro-services that would serve as an interface between mobile users and the legacy commerce servers. This was new to the company, and so our baseline of information stemmed from web-only user activity. While there are many new wrinkles that are introduced in the API-building process, many of the assumptions about the conversion rate(s) originated from the up-to-then web-only data. And as our working group later found out, that “model” ended up being a collection of very old data and grossly inaccurate generalizations. The company's primary conversion marketing tactic was a timed cart, a function which served dual purposes in the legacy technology stack. Once the user had selected an item, they had a few minutes to complete the transaction or the cart would be discarded and the user would have to re-initiate the process. There were places in the cart workflow where time might be added to the cart, but there was an inflection point where the countdown was simply a means to release inventory back into general availability.
 
 
@@ -83,7 +83,7 @@ When we reviewed the web logs in order to get an idea of the conversion rate, we
 
 Along with the new partner API layer created by the team, a new set of user activity logs were generated based on API activity. This provided the ability to create a more accurate reconstruction of user behavior and analyze system performance. This was useful in general – but especially when analyzing reaction to “sale” events. These marketing pushes were both regional and national, and due to the regional deployment of production servers we could look at comparative statistics for conversions that occurred by geography as well as time period. This is something that could be accomplished in the legacy and web server stacks, but only by inference. Because of the nature of the API server deployments we gained a much more articulated view into user activity.
 
-`r blogdown::shortcode("fancybox", "/img", "Splunk_chart.png")`
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "Splunk_chart.png")`
 
 This is the initial view into cart creation established a useful baseline for a national sale event. What I had been told was to expect 60-70 cart creations per second in the first hour of a sale across the API tier. That was based on their own informatics, which I never had the chance to scrutinize directly. As can be seen here from the API data, the situation is much more nuanced.
 
@@ -91,7 +91,7 @@ From that point, the gap between what I had been told in meetings and what the d
 
 Along those lines, it wasn’t the first hour that was important, it was the first minute of the first hour. And similarly, it wasn’t just the first minute of the first hour, but the first 10-15 seconds of the first minute.
 
-`r blogdown::shortcode("fancybox", "/img", "Splunk_perItem.png")`
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "Splunk_perItem.png")`
 
 This plot is a different view for the same time period, a stacked bar chart to review spread of products selected. It’s interesting that promotional products are placed in a user cart in the first few seconds, based on a national promotion that started on the hour. Then that product seems to disappear. In fact it continues to sell through, but in small numbers that don’t appear in the bar stack as easily as the first few seconds.
 
@@ -211,7 +211,7 @@ Because of the caching strategy in the partner API, the length of time for an in
 
 So we created a cache “warming” method to request sale events before they were generally available to potential customers. I created a user that was provisioned to have access to “sale” event information before the item was officially active. I then programmatically called into each specific application cache server directly to request that information just before the official start time of the sale event.
 
-`r blogdown::shortcode("fancybox-dark-mode-ok", "/img", "SOLR_framework.png")`
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "SOLR_framework.png")`
 
 I created this process in the soapUI framework, as I was managing infrastructure for the partner API group at the time – and test management was part of the purview. The advantage of using soapUI was that the process could be compiled as a jar and run from any server. So the network operations group deployed the jar to a server that had access to the cache servers and set it to run just before the hour.
 

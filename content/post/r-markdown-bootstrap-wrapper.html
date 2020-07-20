@@ -32,7 +32,7 @@ editor_options:
 <div id="getting-back-to-uh-basics" class="section level2">
 <h2>Getting back to… Uh… Basics?</h2>
 <p>R/blogdown aficianados who use this or a similar method to render in-page HTML will likely find this example to be rather primitive. But to those new to this area it’s a worthy exercise to peel back the layers of techology involved. In this case “simplicity” is in the eye of the beholder. It feels odd to write about the <em>basic</em> setup of a three-layer mapping to embed responsive HTML in a web page. But the goal here is to provide a straightforward example that puts all of the pieces together in a way that can be followed and repeated. To wit…</p>
-{{% fancybox "/img" "RBlogdown_shortcode_sample.png" %}}
+{{% fancybox-dark-theme-ok "/img" "RBlogdown_shortcode_sample.png" %}}
 <p>This is an example R/blogdown shortcode wrapper that places a Bootstrap alert inline on the page. These excerpts don’t have to reside on their own line in the markdown document, as with the example above. In fact, the first word of this page you’re reading uses an inline shortcode to produce the anchor that links out to the Blogdown site. Once everything is in place, shortcodes can make editing the .Rmd files seem more friendly - as there’s less “raw” HTML to clutter the editor. And of course re-use and extensibility are also key advantages.</p>
 </div>
 <div id="the-pattern---bootstrap-as-a-base" class="section level2">
@@ -50,14 +50,14 @@ editor_options:
 <div id="r-wrapper-breakout-session" class="section level2">
 <h2>R Wrapper Breakout Session</h2>
 <p>Looking at the R shortcode at the top of the page you’ll see that the first parameter is the declaration for the named shortcode itself (an “alert.html” in the “shortcodes” folder wihin the Hugo template structure). You can see that path to the shortcode partial in the top edge of the screenshot below.</p>
-{{% fancybox "/img" "RBlogdown_shortcode_form.png" %}}
+{{% fancybox-dark-theme-ok "/img" "RBlogdown_shortcode_form.png" %}}
 <p>After the shortcode itself is declared in the first parameter, the next three are passed into the shortcode context via the <em>.Get</em> placeholders. Those next three fields can be thought of as an array where “success” is position 0, “Note!” is position 1, and the 3rd parameter is filled by the sentence at the end. Hugo has a wide variety of options for handling very complex substitution and defaulting patters, but this sample was chosen for its direct mapping and simplicity of the result. At the time the site is generated, blogdown ‘tells’ Hugo to piece together the HTML using the shortcode as a boilerplate - passing in the parameters from the declaration to complete the markup and text within the element.</p>
 <p>There’s no specific requirement for the number of parameters you opt to pass into a shortcode. That’s the beauty <strong>and</strong> the burden of this appraoch. While you don’t have to be a Go expert to use shortcodes or Hugo in general, it helps to keep the blogdown and Hugo documentation handy for reference as you become more familiar and your appetite for more advanced shortcodes inevitably grows.</p>
 </div>
 <div id="user-guidance-suggested" class="section level2">
 <h2>User Guidance Suggested</h2>
 <p>As can be seen from the screen grab below, the desired result was a Bootstrap generated alert element to help guide the user through the page. It’s placed directly below the graph (and above a control that allows the R source code to be shown at the user’s option) to provide guidance on using the legend above as a display control for the plot.</p>
-{{% fancybox "/img" "RBlogdown_shortcode_render.png" %}}
+{{% fancybox-dark-theme-ok "/img" "RBlogdown_shortcode_render.png" %}}
 <p>And the user can simply click on the “X” to close the alert and continue reading the page. While it might be a small matter to place this simple block of HTML directly in the Rmarkdown page, reusability is as strong selling point. There are many places where dropping in this type of prompt with a single R callout would be useful.</p>
 </div>
 </div>

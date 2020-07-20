@@ -51,8 +51,8 @@
     {{ $caption  := $.Scratch.Get "caption" }}
     {{ $gallery := $.Scratch.Get "gallery" }}
 
-    <div class="fancybox thumbnail float-right dark-theme-ok">
-      <a data-fancybox="{{ $gallery }}" href="{{ $path }}/{{ $file }}" data-caption="{{ $caption }}"><img class="centered rounded bordered" src="{{ $path }}/{{ $file }}"><i class="fas fa-search-plus"></i></a>
+    <div class="fancybox thumbnail float-right>
+      <a data-fancybox="{{ $gallery }}" href="{{ $path }}/{{ $file }}" data-caption="{{ $caption }}"><img class="centered rounded bordered dark-theme-ok" src="{{ $path }}/{{ $file }}"><i class="fas fa-search-plus"></i></a>
       <!--<div class="caption">{{ $caption }}</div>-->
     </div>
   {{ end }}

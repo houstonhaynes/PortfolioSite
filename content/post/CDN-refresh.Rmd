@@ -49,7 +49,7 @@ It took a considerable amount of investigation to finally come back to something
 
 After some online spelunking I came to a discussion thread relating to a similar case, and the solution was to put a rule *on top of* each rule that essentially checked whether to skip processing. Basically _if_ there was a purge request _then_ skip the rule. This would in-effect put a bypass to the HTTP rules when a CDN cache invalidation request was coming in. 
 
-`r blogdown::shortcode("fancybox", "/img", "CDN_purge_check.png")`
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "CDN_purge_check.png")`
 
 <figure><figcaption class="caption">CDN rule in XML format</figcaption><pre><code class="xml"><rule>
     <description>Redirect HTTP to HTTPS</description>

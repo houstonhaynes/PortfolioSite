@@ -46,7 +46,7 @@ editor_options:
 <h2>The Root Cause, and The Cure</h2>
 <p>It took a considerable amount of investigation to finally come back to something in the CDN that was blocking the invalidation of certain assets in cache. The net effect was that new versions of certain site assets (such as my index page, of all things) would not update until the time-to-live had lapsed. This was incredibly frustrating, since it has been rock solid up to the point that the issue was discovered.</p>
 <p>After some online spelunking I came to a discussion thread relating to a similar case, and the solution was to put a rule <em>on top of</em> each rule that essentially checked whether to skip processing. Basically <em>if</em> there was a purge request <em>then</em> skip the rule. This would in-effect put a bypass to the HTTP rules when a CDN cache invalidation request was coming in.</p>
-{{% fancybox "/img" "CDN_purge_check.png" %}}
+{{% fancybox-dark-theme-ok "/img" "CDN_purge_check.png" %}}
 <figure>
 <figcaption class="caption">
 CDN rule in XML format
