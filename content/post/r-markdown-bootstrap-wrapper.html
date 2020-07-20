@@ -1,5 +1,5 @@
 ---
-title: "Creating Responsive Elements within an R Blogdown Site"
+title: "Embedding Responsive Elements in an R/Blogdown Web Page"
 output:
   blogdown::html_page:
     toc: false
@@ -9,7 +9,7 @@ output:
 author: "Houston Haynes"
 date: '2020-07-19T15:59:43+05:30'
 featuredpath: img
-featured: h3sitehex.png
+featured: h3site_stack.png
 description: Using Bootstrap and Hugo to build R-wrapped responsive page markup
 draft: false
 tags:
@@ -17,6 +17,7 @@ tags:
 - blogdown
 - Hugo
 - RStudio
+- Bootstrap
 categories: 
 - Sidebar
 editor_options: 
@@ -25,4 +26,42 @@ editor_options:
 
 
 
-
+<div id="giving-life-to-flat-html-pages" class="section level1">
+<h1>Giving Life to Flat HTML pages</h1>
+<p>{{% url-link "Blogdown" "https://bookdown.org/yihui/blogdown/" %}} is brilliant, and it offers multiple options for building a site from an R project. Jekyll and Rmarkdown’s default page generators do a fine job, but there are some advantages to using Hugo as the appetite for more dynamic pages grows. One such advantage is injecting Hugo shortcodes to bring life to the body of the page. Other frameworks can decorate around the markdown page, but with Hugo you don’t just have to settle for window dressing. Coupled with Bootstrap (or similar responsive framework) Hugo can make a blogdown-based site really come to life.</p>
+<div id="getting-back-to-uh-basics" class="section level2">
+<h2>Getting back to… Uh… Basics?</h2>
+<p>R/blogdown aficianados who use this or a similar method to render in-page HTML will likely find this example to be rather primitive. But to those new to this area it’s a worthy exercise to peel back the layers of techology involved. In this case “simplicity” is in the eye of the beholder. It feels odd to write about the <em>basic</em> setup of a three-layer mapping to embed responsive HTML in a web page. But the goal here is to provide a straightforward example that puts all of the pieces together in a way that can be followed and repeated. To wit…</p>
+{{% fancybox "/img" "RBlogdown_shortcode_sample.png" %}}
+<p>This is an example R/blogdown shortcode wrapper that places a Bootstrap alert inline on the page. These excerpts don’t have to reside on their own line in the markdown document, as with the example above. In fact, the first word of this page you’re reading uses an inline shortcode to produce the anchor that links out to the Blogdown site. Once everything is in place, shortcodes can make editing the .Rmd files seem more friendly - as there’s less “raw” HTML to clutter the editor. And of course re-use and extensibility are also key advantages.</p>
+</div>
+<div id="the-pattern---bootstrap-as-a-base" class="section level2">
+<h2>The Pattern - Bootstrap as a Base</h2>
+<p>If you look at {{% url-link "Hugo shortcode examples online" "https://gohugo.io/content-management/shortcodes/" %}}, you’ll find they can be used to generate just about any HTML you can imagine. Some of Hugo’s built-in shortcodes are remarkably complex (hello, Vimeo embeds!) In my case I want to use custom shortcodes to express Bootstrap markup. When I started this site I used a patchwork of JS and CSS libraries. My own refactoring effort sprang from the desire to have more consistency in the coding and behavior of the site. Because of my previous experience with Bootstrap I opted to stay with that framework here. So I’m going through and replacing the hodge podge of hand-coded HTML (and snippets of CSS and JS that go along with them) and replacing each with a Bootstrap equivalent. While there may be a marginal performance/asset load improvement due to fewer JavaScript and CSS files, I’m really just looking for consistency. That way, when I return to the site after looking away for a while I won’t have to do quite as much forensic investigation to recall what I did before.</p>
+<p>Here is the sample shortcode displayed inline.</p>
+<pre><code class="html"><div class="alert alert-{{ .Get 0 }} alert-dismissible fade show pb-4" role="alert">
+  <strong>{{ .Get 1 }}</strong> {{ .Get 2 }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div></code></pre>
+<p>As can be seen in the example above, it’s a garden-variety Bootstrap alert taken directly from their documentation. The only difference is the Hugo parameter injection that allows any type of alert to be displayed (primary, secondary, success, warning, etc). It also has placeholders for the text that is fed into the HTML. This is the key to understanding how Hugo shortcodes work, and how they are used in a blogdown/Rmarkdown document.</p>
+</div>
+<div id="r-wrapper-breakout-session" class="section level2">
+<h2>R Wrapper Breakout Session</h2>
+<p>Looking at the R shortcode at the top of the page you’ll see that the first parameter is the declaration for the named shortcode itself (an “alert.html” in the “shortcodes” folder wihin the Hugo template structure). You can see that path to the shortcode partial in the top edge of the screenshot below.</p>
+{{% fancybox "/img" "RBlogdown_shortcode_form.png" %}}
+<p>After the shortcode itself is declared in the first parameter, the next three are passed into the shortcode context via the <em>.Get</em> placeholders. Those next three fields can be thought of as an array where “success” is position 0, “Note!” is position 1, and the 3rd parameter is filled by the sentence at the end. Hugo has a wide variety of options for handling very complex substitution and defaulting patters, but this sample was chosen for its direct mapping and simplicity of the result. At the time the site is generated, blogdown ‘tells’ Hugo to piece together the HTML using the shortcode as a boilerplate - passing in the parameters from the declaration to complete the markup and text within the element.</p>
+<p>There’s no specific requirement for the number of parameters you opt to pass into a shortcode. That’s the beauty <strong>and</strong> the burden of this appraoch. While you don’t have to be a Go expert to use shortcodes or Hugo in general, it helps to keep the blogdown and Hugo documentation handy for reference as you become more familiar and your appetite for more advanced shortcodes inevitably grows.</p>
+</div>
+<div id="user-guidance-suggested" class="section level2">
+<h2>User Guidance Suggested</h2>
+<p>As can be seen from the screen grab below, the desired result was a Bootstrap generated alert element to help guide the user through the page. It’s placed directly below the graph (and above a control that allows the R source code to be shown at the user’s option) to provide guidance on using the legend above as a display control for the plot.</p>
+{{% fancybox "/img" "RBlogdown_shortcode_render.png" %}}
+<p>And the user can simply click on the “X” to close the alert and continue reading the page. While it might be a small matter to place this simple block of HTML directly in the Rmarkdown page, reusability is as strong selling point. There are many places where dropping in this type of prompt with a single R callout would be useful.</p>
+</div>
+</div>
+<div id="is-the-juice-worth-the-squeeze" class="section level1">
+<h1>Is the Juice Worth the Squeeze?</h1>
+<p>It’s really up to the R blogger (blogdowner?) whether going this route is worth the time and effort. If like me you’ve have had significant brushes with Bootstrap or a similar framework it could be worth the extra lift. I want to build a site that’s not just a worthy read, but also holds up well as a mobile experience. Using a “responsive theme” for a blogdown site is a great first step, but the extra touches to design a fully responsive page is worth it.</p>
+</div>
