@@ -181,7 +181,6 @@ hcConcurrency <- highchart() %>%
   hc_title(text = paste("Concurrency of Long-Running Hyperion Processes")) %>% 
   hc_chart(
       type = 'area',
-      backgroundColor = '#f8f8ff',
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
       borderWidth = 2,
@@ -196,7 +195,7 @@ hcConcurrency <- highchart() %>%
   hc_plotOptions(
     series = list(
       stacking = 'normal', marker = 'none', step = 'both')) %>% 
-  hc_add_theme(hc_theme_google())
+  hc_add_theme(hc_theme_538())
 
 frameWidget(hcConcurrency, height = "50%")
 ```
