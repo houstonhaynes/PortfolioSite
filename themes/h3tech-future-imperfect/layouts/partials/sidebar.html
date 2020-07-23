@@ -80,7 +80,7 @@
   {{ with .Site.Params.intro.about }}
     <section id="mini-bio">
       <h3>About</h3>
-      <p>{{ . | safeHTML }}</p>
+      <p>{{ . | safeHTML }} <i class="fal fa-smile-beam" aria-hidden="true"></i></p>
       <a href="/vitae/" class="button">Learn More</a>
     </section>
   {{ end }}
