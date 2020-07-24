@@ -1,5 +1,5 @@
 ---
-title: "Serverless message relay"
+title: "Highlighting (the Good, the Bad, and the Unencoded)"
 output:
   blogdown::html_page:
     toc: false
@@ -7,232 +7,130 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2019-10-19T14:59:43+05:30'
+date: '2020-07-19T14:59:43+05:30'
 featuredpath: img
 featured: highlightjs.png
 cover: \img\contact_image_large.png
-description: Using Azure Function Apps and SendGrid for email housekeeping
+description: An approach to dynamic code markup in HighlightJS with Fira Code ligatures for extra measure
 draft: false
 tags:
-- R
+- Rmarkdown
 - blogdown
-- Node
-- Azure Functions
-- SendGrid
+- Hugo
+- JavaScript
+- Fira Code
+- HighlightJS
 categories: 
 - Sidebar
-weight: 6
+weight: 7
 editor_options: 
   chunk_output_type: inline
 ---
 
 
 
-<div id="tldr" class="section level1">
-<h1>tl;dr</h1>
-<p>While it’s an elegant and inexpensive result, bringing this side project to a notch point was not exactly straightfoward. Once I determined how the message was to be constructed for the SendGrid v3 API, along with a few tweaks to {{% url-link "Function App bindings," "https://docs.microsoft.com/en-us/azure/store-sendgrid-nodejs-how-to-send-email" %}} it all came together. I added some JavaScript and CSS to animate the Function Apps logo, which provides a more active visual experience.</p>
-</div>
-<div id="a-well-intended-slightly-naive-adventure" class="section level1">
-<h1>A Well-Intended, Slightly Naive Adventure</h1>
-<p>This all started, like many tech digressions, with humble beginnings. I wanted to find if anyone else had used Azure Functions for handling messaging through their static site, and there were several examples. Unfortunately the information had grown stale by the time I found it. The core concept is out there in several repos/blog posts, but there have been changes since then which invalidates a straight fork-and-deploy approach. So I did a bit of my own homework and derived a workable solution. I’ll start with a brief walkthrough - a GIF of an early version of the form in action.</p>
-{{% fancybox-dark-theme-ok "/img" "ContactAzureFunction.gif" %}}
-<p>The Function can take up to 20 seconds to respond when initiating from a cold start. So this GIF has been edited as a courtesy. And as much as I’d like to think I’m popular, the likelihood of multiple people clicking “Submit” when a Function App instance is idling is - in a word - remote. Even while testing on an idling Function instance there’s still enough wait time to see the animation “pulse” on screen once or twice. So it’s more to the point that having a bit of <em>action</em> in the page to represent the request/response cycle can indicate to the user that things are happening behind the scenes.</p>
-</div>
-<div id="the-code" class="section level1">
-<h1>The Code</h1>
-<p>While I provided inline comments for some of the code blocks, there’s still a few bits of context worth mentioning here. Below is the Node-based Function App message binding, key being the nested <em>from</em> element that contains both the name and email of the submitted form. There are several alternatives to this using “personalization” but it’s really unnecessary with the latest API.</p>
+<div id="flexing-with-flexibility" class="section level1">
+<h1>Flexing with Flexibility</h1>
+<p>This site shows examples of my work in a variety of domains. Not only does “full stack engineering” require ventures into territories far and wide, my career has also migrated through several language <em>families</em> over the years. And as you see on this site I still return to them on occasion. So along with <em>insert “SQL + Data Science language of choice” here</em> the ability to display an array of formats is more than a nice-to-have. I started with {{% url-link "HighlightJS," "https://highlightjs.org/" %}} “out of the box” as it is part of the Hugo template I selected, but it still required some tweaks to encode HTML and related formats.</p>
+<div id="stage-one-encoding-on-the-fly" class="section level2">
+<h2>Stage One: Encoding on the Fly</h2>
+<p>It all started with wanting to have it <em>both</em> ways - meaning I wanted to be able to view/edit the code snippet in the editor <em>and</em> I wanted the markup to show up correctly on the page. A bit of research online revealed this gem in JavaScript:</p>
 <figure>
 <figcaption class="caption">
-index.js from Azure Function App project
+Encodes special characters within a code block
 </figcaption>
-<pre><code class="js">module.exports = async function (context, req) {
-    if (req.body.email) {
-        context.bindings.message = {
-            subject: 'Message from ' + req.body.name + ' via YOUR_SITE_HERE', //fix this line!
-            from: { 
-                name: req.body.name, 
-                email: req.body.email 
-            },
-            content: [{
-                type: 'text/plain',
-                value: req.body.message
-            }]
-        };
-    return {
-            res: {
-                status: 200
-            },
-        };
-    } else {
-        return {
-            res: {
-                status: 400
-            }
-        };
-    }
-};</code></pre>
+{{% fancybox-dark-theme-ok "/img" "HighlightJS-firstJS.png" %}}
 </figure>
-<p>There were no examples online that showed this specific binding pattern. So I cobbled this together by looking at SendGrid’s API docs plus the sample message binding in a SendGrid-native template that Microsoft makes available in the Function Apps portal.</p>
-<p>In the HTML form below you’ll see there are several placeholder elements - waiting for actions based the javascript listener and promise response.</p>
+This gave me the benefit of clarity during edit. Not every code block “lights up” in the editor like the sample below, but the formatting and general layout is preserved. If you’ve ever tried to edit encoded markup inline you know what a mess it can become if you miss just one encoding character.
 <figure>
 <figcaption class="caption">
-HTML form in Contact page
+VSCode screen grab of HTML from Serverless Contact Page Sidebar
 </figcaption>
-<pre><code class="html"><div id="container" class="ld-over">
-    <div id="output"></div> 
-    <!-- output initially empty by design - waits for contact.js response from Azure Function -->
-    <form id="submitMessage" method="post" style="visibility:visible;"> 
-    <!-- form initially visible but to be hidden by contact.js after response is processed -->
-        <div class="form-group"> 
-            <input type="text" id="name" class="form-control" placeholder="Your name" required>
-        </div>
-        <div class="form-group">
-            <input type="email" id="email" class="form-control" placeholder="Your email" required>
-        </div>
-        <div class="form-group">
-            <textarea id="message" class="form-control" placeholder="Type your message..." required></textarea>
-        </div>
-        <input class="button-primary" type="submit" value="Submit">
-   </form>
-</div>
-<div>
-    <!-- inline style set to hide at page load, then is shown by contact.js when submitMessage event is triggered, then hidden again after response is processed -->
-    <img  id="AzureFunctionHeartbeat" class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/>
-</div></code></pre>
+{{% fancybox-dark-theme-ok "/img" "HighlightJS-unencodedHTML.png" %}}
 </figure>
-<p>I’ve read several posts from first-order front-end developers disparaging inline styles, but in this case I kept it for - you guessed it - visibilty. It may be something I refactor at a later date.</p>
+<p>It wouldn’t be impossible to maintain that portion of the page “encoded” if it was the only one. But imagine a code-snippet-heavy site with those little “land mines” sprinkled throughout. Things become brittle, and issues become time consuming even when the change seems innocuous. So this approach gave some latitude in seeing code blocks in a form that’s very close to how they’d appear on the page, which makes maintenance more approachable.</p>
+</div>
+<div id="stage-two-little-bugs-everywhere" class="section level2">
+<h2>Stage Two: Little Bugs Everywhere</h2>
+<p>But as usual, there was a catch. Once a “quick fix” was in place it rippled out to adversely affect and other snippets. Honestly, I didn’t spot the issue as a <em>code issue</em> until I brought in {{% url-link "Fira Code," "https://github.com/tonsky/FiraCode" %}} to express ligatures.</p>
+<div class="row">
+<div class="col-md-6">
 <figure>
 <figcaption class="caption">
-JavaScript that manages SendGrid request/response and HTML form state
+This R snippet…
 </figcaption>
-<pre><code class="js">// waits for the button to be clicked on Contact form
-document.getElementById('submitMessage').addEventListener('submit', submitMessage);
-
-// this transitions the UI, processes the form input then submits to SendGrid via Azure Function
-function submitMessage(e) {
-    e.preventDefault();
-    document.getElementById('container').classList.add('running'); // run dark overlay
-    document.getElementById('AzureFunctionHeartbeat').style.visibility = "visible"; // make svg visible
-    let name = document.getElementById('name').value;
-    let email = document.getElementById('email').value;
-    let message = document.getElementById('message').value;
-    fetch(' YOUR_AZURE_FUNCTION_URL_GOES_HERE  ', { // fix this line!!
-            method: 'POST',
-            cache: 'no-cache',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                message: message
-            })
-        })
-        .then((res) => processResponse(res))
-}
-
-// this clears the on-submit dark gray overlay and heartbeat and then processes Azure Function response
-function processResponse(response) {
-    document.getElementById('container').classList.remove('running'); // remove gray form overlay
-    document.getElementById('AzureFunctionHeartbeat').style.visibility = "hidden"; // remove svg
-    if (response.status === 200) { // HTTP 200 is "OK"
-        output =
-            `
-        &lt;div class="alert alert-success" role="alert"&gt;
-          Thanks, ${document.getElementById('name').value}! We'll be in touch soon!
-        &lt;/div&gt;    
-        `;
-    } else { // anything else is "not OK"
-        output =
-            `
-        &lt;div class="alert alert-warning" role="alert"&gt;
-          Oh no! Something went wrong :(
-        &lt;/div&gt;       
-        `;
-    }
-    document.getElementById('output').innerHTML = output; // write to empty output div on page
-    document.getElementById('submitMessage').style.visibility = "hidden"; // hide form for clean UI
-}</code></pre>
+<pre><code class="r">hc <- highchart() %>%</code></pre>
 </figure>
-<p>The inline comments provide enough breadcrumbs to follow the logic. There’s a possibility for more verbose error messaging (see my caveat below) but this works well enough to get things moving along.</p>
 </div>
-<div id="styling" class="section level1">
-<h1>Styling</h1>
-<p>In the original Wordpress version of this site I used the Pagelines framework, which included SemanticUI. So I could drop in alerts with a class tag and everything just <em>lit up</em> as expected. But that came at a cost, which is as much on Wordpress - but the JS/CSS bulk certainly didn’t help. So while I didn’t want to hand-craft my own CSS I also didn’t want to deal with another bulky framework. So I found the {{% url-link "skeleton-alerts CSS library," "https://github.com/nathancahill/skeleton-alerts" %}} which fits the bill perfectly.</p>
-<p>The icon animation also came from an online resource. {{% url-link "Loading CSS" "https://loading.io/button/" %}} provides a concise library to handle a variety of behaviors. I auditioned the heartbeat behavior on a lark, and liked it so much that I decided that it was the keeper of the bunch.</p>
-</div>
-<div id="caveats" class="section level1">
-<h1>Caveats</h1>
-<p>So while I gloss over how well everything works when it’s working, there were a few stumbling blocks that was a mixture of my own cobwebs working with Node and some minor gaps in documentation here and there. Below are two examples of things that cost me a lot more time than they would have if I was a more seasoned front-end developer.</p>
-<div id="the-fault-dear-brutus-is-not-in-our-stars" class="section level3">
-<h3>The fault, dear Brutus, is not in our stars…</h3>
-<p>The first thing that tripped me up was an output binding error message I was seeing when testing in the portal. I had started with an HTTP triggered function template, and added the SendGrid output bindings afterward.</p>
+<div class="col-md-6">
 <figure>
 <figcaption class="caption">
-function.json from Azure Function App project
+…looked like this.
 </figcaption>
-<pre><code class="json">{
-    "bindings": [{
-            "authLevel": "anonymous",
-            "type": "httpTrigger",
-            "direction": "in",
-            "name": "req",
-            "methods": [
-                "post"
-            ]
-        },
-        {
-            "type": "sendGrid",
-            "name": "message",
-            "apiKey": "SENDGRID_API_KEY",
-            "direction": "out",
-            "to": "YOUR_EMAIL_GOES_HERE"
-        }
-    ],
-    "disabled": false
-}</code></pre>
-<figure>
-<p>While the bundle decalaration (below) was added when the project was instantiated, the “sendGrid” extension call-out was <strong>not</strong> there by default.</p>
+<pre><code class="html">hc &lt;- highchart() %&gt;%</code></pre>
+</figure>
+</div>
+<div class="col-md-6">
 <figure>
 <figcaption class="caption">
-host.json from Azure Function App project
+And that SQL snippet …
 </figcaption>
-<pre><code class="json">{
-    "version": "2.0",
-    "extensionBundle": {
-        "id": "Microsoft.Azure.Functions.ExtensionBundle",
-        "version": "[1.*, 2.0.0)"
-    },
-    "__comment": "the element below was added manually, and delete this!!",
-    "extensions": {
-        "sendGrid": {}
-    }
-}</code></pre>
+<pre><code class="sql">... + datetime >= to_date ...</code></pre>
+</figure>
+</div>
+<div class="col-md-6">
 <figure>
-<p>Fortunately a quick reply on Twitter had me back on track.</p>
-{{% tweet "1182465920930701312" %}}
-<p>So the course correction was relatively quick, but it definitely goes to show that there are gaps in online help (as I’m sure there are gaps in what I present here). My guess was that the helpful folks that posted their own method for handling SendGrid were conversant enough that it was barely worth mentioning the bundle/hosts adds. I’ve built a wide swath of serverless apps in AWS and Azure, but this is the first time I’ve worked with SendGrid. So if anything I should have tempered my expectations that this would <em>not</em> just be another fire-and-forget exercise.</p>
-</div>
-<div id="but-in-ourselves-that-we-are-underlings" class="section level3">
-<h3>…But in ourselves, that we are underlings</h3>
-<p>I was in a hurry. That was my first mistake. There were other problems I encountered in troubleshooting that were largely of my own making. My machine is <em>still</em> relatively new and I hadn’t bothered changing my default browser from Microsoft Edge. I would open Firefox or Chrome manually and paste in the local URL when I needed to check the local build on those browsers. In this case that was a strategic mistake. The messages coming back in Edge didn’t give me the detail to show the <em>other</em> mistake I had made - that is - to make sure my CORS settings would allow my localhost as an origin. Once I popped over to Chrome I nearly blew a gasket - both at the lack of verbosity in Edge and in my own impatience for missing this.</p>
-{{% fancybox-dark-theme-ok "/img" "FunctionAppDebugging.png" %}}
-<p>When running the test in portal, everything worked fine. The browser is on my desktop so there’s no problem, right? But the origin header for the request from the test in portal is already <em>pre-cleared</em> by the function app defaults.</p>
-<p>I had already set up my production and staging endpoints to pass through, but simply forgot to add the localhost origin. And of course I paid almost no attention to the origins that were already listed - which I assume allow the tests in the Funtion App portal to process without issue. I lost more than an hour beating myself up trying to get this to work. Eventually I gave up and simply deployed into my staging instance to run the tests, which was fine - but the find/fix cycle is not nearly as quick as running locally. I suppose if I had configured VSCode for remote debugging I would have found this earlier. That’s what <em>“being in a hurry”</em> gets me…</p>
-<p>So now I have Firefox set as my default browser, which is a real acid test for a variety of reasons I’ll delve into with another post.</p>
-{{% fancybox-dark-theme-ok "/img" "FunctionAppNodeCORS.png" %}}
-<p>Above are the settings that allow my localhost to work - your mileage (and localhost declaration pattern/port) may vary. If you’re familiar with serving locally in RStudio/Hugo you’ll know about how ports will change if you happen to trigger more than one server instance. Port 4321 is the intial default - Ctrl/Cmd+Alt+F10 is your friend here.</p>
+<figcaption class="caption">
+…looked like that.
+</figcaption>
+<pre><code class="html">... + datetime &gt;= to_date...</code></pre>
+</figure>
 </div>
 </div>
-<div id="finishing-touches" class="section level1">
-<h1>Finishing touches</h1>
-<p>I really had fun placing the {{% url-link "Azure Function App logo" "https://www.microsoft.com/en-us/download/details.aspx?id=41937" %}} into the form as a spinner. That plus the gray overlay gives the page a guided feel that an empty “static” form simly doesn’t convey. The overlay also acts as a mask to prevent multiple clicks of the submit button, which isn’t a real risk but stil nice to keep the interaction model relatively tidy.</p>
-<p>I’m a huge fan of serverless, and am really glad to have this as a resource. It’s essentially free - as the basic SendGrid account allows 25,000 free messages per month. I doubt I see 25 messages per month from my site - outside of my own testing. Of course the first paid tier for Azure Function App in the Consumption plan is after 1 million runs, so again it feels like you’re receiving free enterprise-grade resources. And this will also come in handy for processing notifications out of my GitHub Actions pipelines, which is a subject for a later post.</p>
-<p>If you’re interested in trying something similar, feel free to {{% url-link "fork the repo" "https://github.com/houstonhaynes/ContactFunction" %}} and give it a try!</p>
+<p>This wrinkle robbed Fira Code’s of its ability to make a nice, concise impression. At first I thought I had pasted in poorly marked-up code. But then I looked deeper to realize the inserted blocks were fine. After some head-scratching I checked the JavaScript doing the inline-encoding, and it began to dawn on me that it was “too broad” for what I needed.</p>
+<p>{{% fancybox-dark-theme-ok "/img" "HighlightJS-otherJS.png" %}}
+In the version above I set exclusions for the code classes that I <em>didn’t</em> want encoded. The “not” indicator seemed to do the trick, until I kept running into more and more exceptions. At that point there were more “not” clauses than actual code that required encoding. So I flipped the script and simply declared which classes I <em>wanted</em> to encode.</p>
+{{% fancybox-dark-theme-ok "/img" "HighlightJS-lastJS.png" %}}
+<p>This is both more logical and more maintainable. I only need to add a class to that list in the declaration if and when I have another language that requires markup. As a side note, I’ll say that I <em>don’t</em> use Django, but here it’s used to highlight the Hugo shortcodes, which use double-braces in the HTML. I spotted that VSCode auto-detected those files as Django - so I used that as a cheat code to highlight the double-braced parameters.</p>
+<figure>
+<figcaption class="caption">
+Final version of JavaScript - formatted as JavaScript
+</figcaption>
+<pre><code class="javascript">document.querySelectorAll("code.html, code.xml, code.django").forEach(function(element) {
+    element.innerHTML = element.innerHTML.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+});</code></pre>
+</figure>
+<p>HighlightJS is pretty great, but it does struggle with certain things. That’s why I used screen shots of the JavaScript code along with the embed, which tries to encode escaped characters. It just goes to show that even highly-regarded, long-lived OS projects like HighlightJS are also works in progress. But between the screen grabs and the embedded block above, anyone looking to lift this for their site should be able to piece it together.</p>
 </div>
-<div id="coda---reception" class="section level1">
-<h1>Coda - Reception</h1>
-<p>As usual, there’s <em>one</em> more thing… the email. In my case, I’m routing to a Gmail account. Since this is coming from SendGrid the messages were automatically flagged as possible SPAM. The answer in my case was to create a filter that ensured it wouldn’t get routed to the SPAM folder.</p>
-{{% fancybox-dark-theme-ok "/img" "SendGridRoutingRule.png" %}}
-<p>Note that I used my domain name in the subject line as a flag - which is set in the bindings of the index.js of the Function App. The rule <em>both</em> sets the message to always be flagged as important <em>and</em> never marked as SPAM. That way the message is always routed appropriately. So now messages from your site will route to the top of your inbox and all you have to do is click on the “reply” button and type away. Happy emailing!</p>
+<div id="stage-three-exceptions-to-the-rules" class="section level2">
+<h2>Stage Three: Exceptions to the Rules</h2>
+<p>So after that excursion I still found that certain things were not displaying correctly. It’s not that it looked <em>bad</em> per se, but it wasn’t the detailed code block that I wanted to show. If you look at the first image below, you’ll see that you can get the general idea of the HTML that’s returned by the JavaScript snippet. But like the rest of the code showcased on this site, specifics matter. So I made a compromise and simply hand-encoded the HTML blocks and pasted them into the JS to “just make it work” for this case.</p>
+<div class="row">
+<div class="col-md-4">
+<figure>
+<figcaption class="caption">
+JavaScript with inline HTML
+</figcaption>
+{{% fancybox-dark-theme-ok "/img" "HighlightJS-inlineHTML.png" %}}
+</figure>
+</div>
+<div class="col-md-4">
+<figure>
+<figcaption class="caption">
+Encoded HTML placed inline
+</figcaption>
+{{% fancybox-dark-theme-ok "/img" "HighlightJS-encodedHTML.png" %}}
+</figure>
+</div>
+<div class="col-md-4">
+<figure>
+<figcaption class="caption">
+Final view of corrected markup
+</figcaption>
+{{% fancybox-dark-theme-ok "/img" "HighlightJS-HTMLinJS.png" %}}
+</figure>
+</div>
+</div>
+<p>I can live with these small segments of encoded HTML inline within the sample. And honestly, I wouldn’t even know where to begin to make a programmatic solution work in this mixed case. Since the pieces of code are relatively small, and (so far) it’s the only one like this on my site, I’m pretty happy to let it go at that. But the bigger win here is the ability to work more quickly in dropping in code snippets un-doctored and continue working. That not only let’s me focus on “the fun part” of doing the actual work, but it also relieves some of the friction in considering <em>which</em> code samples I might present because of something being un-friendly when displayed in a code block. Now, pretty much everything is fair game.</p>
+</div>
 </div>
