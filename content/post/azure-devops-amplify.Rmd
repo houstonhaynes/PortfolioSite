@@ -22,7 +22,7 @@ tags:
 - Git
 categories: 
 - Sidebar
-weight: 5
+weight: 6
 editor_options: 
   chunk_output_type: inline
 ---
