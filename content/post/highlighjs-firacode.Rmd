@@ -7,7 +7,7 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2020-07-19T14:59:43+05:30'
+date: '2020-07-24T11:59:43+05:30'
 featuredpath: img
 featured: highlightjs.png
 cover: \img\contact_image_large.png
@@ -71,7 +71,7 @@ But as usual, there was a catch. Once a "quick fix" was in place it rippled out 
 </div>
 </div>
 
-This wrinkle robbed Fira Code's of its ability to make a nice, concise impression. At first I thought I had pasted in poorly marked-up code. But then I looked deeper to realize the inserted blocks were fine. After some head-scratching I checked the JavaScript doing the inline-encoding, and it began to dawn on me that it was "too broad" for what I needed.
+This wrinkle robbed Fira Code of its ability to make a nice, concise impression. At first I thought I had pasted in poorly marked-up code. But then I looked deeper to realize the inserted blocks were fine. After some head-scratching I checked the JavaScript doing the inline-encoding, and it began to dawn on me that it was "too broad" for what I needed.
 
 `r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "HighlightJS-otherJS.png")`
 In the version above I set exclusions for the code classes that I *didn't* want encoded. The "not" indicator seemed to do the trick, until I kept running into more and more exceptions. At that point there were more "not" clauses than actual code that required encoding. So I flipped the script and simply declared which classes I *wanted* to encode.
@@ -108,4 +108,4 @@ So after that excursion I still found that certain things were not displaying co
 </figure>
 </div>
 </div>
-I can live with these small segments of encoded HTML inline within the sample. And honestly, I wouldn't even know where to begin to make a programmatic solution work in this mixed case. Since the pieces of code are relatively small, and (so far) it's the only one like this on my site, I'm pretty happy to let it go at that. But the bigger win here is the ability to work more quickly in dropping in code snippets un-doctored and continue working. That not only let's me focus on "the fun part" of doing the actual work, but it also relieves some of the friction in considering *which* code samples I might present because of something being un-friendly when displayed in a code block. Now, pretty much everything is fair game.
+I can live with these small segments of encoded HTML inline within the sample. And honestly, I wouldn't even know where to begin to make a programmatic solution work in this mixed case. Since the pieces of code are relatively small, and (so far) it's the only one like this on my site, I'm pretty happy to let it go at that. But the bigger win here is the ability to work more quickly in dropping in code snippets un-doctored and continue working. That not only lets me focus on "the fun part" of doing the actual work, but it also relieves some of the friction in considering *which* code samples I might present because of something being un-friendly when displayed in a code block. Now, pretty much everything is fair game.
