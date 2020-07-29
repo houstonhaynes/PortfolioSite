@@ -25,7 +25,7 @@ editor_options:
 # Scatter Chart
 
 Some text trying to get a scatter chart to scatter
-```{r Catalog Mismathes, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Catalog Mismatches, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(jsonlite)
 library(highcharter)
 library(widgetframe)
@@ -78,16 +78,14 @@ hcCatalog <- highchart() %>%
   hc_plotOptions(
     series = list(
       stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_538())
+  hc_add_theme(hc_theme_flat())
 
 frameWidget(hcCatalog)
 ```
 
 Some other text to give some room 
 
-
-<div class="rows">
-<div class="col-md-6 pb-4">
+<div class="col-md-6 pt-3 pb-3 rounded float-left">
 
 ```{r Catalog Totals, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(jsonlite)
@@ -99,39 +97,26 @@ dfOutlierSum <- as.data.frame(do.call("cbind", outlierSumTable))
 
 dfOutlierSum$COUNT = (as.integer(dfOutlierSum$COUNT))
 
-
-series = list(
-  list(
-    name = 'Outlier',
-    data = dfOutlierSum$OUTLIER
-  ),
-    list(
-    name = 'Pct',
-    data = dfOutlierSum$COUNT
-  )
-)
-
 hcOutlierSum <- highchart() %>%
-  hc_title(text = paste("Total Outliers by Category")) %>% 
+  hc_title(text = paste("Matches vs Outlying Values by System")) %>% 
   hc_chart(
       type = 'pie',
+      backgroundColor = 'rgb(236, 240, 241)',
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
       borderWidth = 2,
       style = list(fontFamily = 'Fira Code')) %>%
-  hc_add_series_list(series) %>%
-  hc_tooltip(pointFormat = '{slice.name}: <b>{point.percentage:.1f}%</b>') %>%
+  hc_add_series_labels_values(dfOutlierSum$OUTLIER, dfOutlierSum$COUNT) %>%
   hc_plotOptions(
-    series = list(
-      stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_bloom())
+    series = list(dataLabels = list(enabled='true', format='{point.name}: <b>{point.percentage:.1f}%</b>'))) %>% 
+  hc_add_theme(hc_theme_smpl())
 
-frameWidget(hcOutlierSum, height=450)
+frameWidget(hcOutlierSum, height='12rem')
 ```
 </div>
-<div class="col-md-6 pb-4">
-Another bit of text to keep things from falling into each other
-</div>
-</div>
+
+The data and systems fragmentation from those historical mergers and acquisitions influence each company’s financial management process, and eventually that “informed” the depth and breadth of work that was required to deal with the numerous issues which emerged as a result. At first blush, things seemed to have a sense of order. From the top down Company A had a consistent entity hierarchy. As a publishing conglomerate, it has large “summary” entities that I will refer to as “Publishing Groups”. Each of those Publishing Groups have a number of individual publishing companies associated – and those publishers are only associated with one “PubGroup”. The entity relationship is similar all the way down to the individual income-bearing product, the “Article”.
+
+
 
 Even more text because that's just how we roll
