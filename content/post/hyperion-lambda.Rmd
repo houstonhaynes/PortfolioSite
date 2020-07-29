@@ -40,9 +40,9 @@ library(DT)
 concurrencyTable <- fromJSON("../../data/Concurrency.json")
 dfConcurrency <- as.data.frame(do.call("cbind", concurrencyTable))
 
-dfConcurrency$Consolidation = (as.integer(dfConcurrency$Consolidation) - 1)
-dfConcurrency$LargeSMV = (as.integer(dfConcurrency$LargeSMV) - 1)
-dfConcurrency$TBUploads = (as.integer(dfConcurrency$TBUploads) - 1)
+dfConcurrency$Consolidation = (as.integer(dfConcurrency$Consolidation))
+dfConcurrency$LargeSMV = (as.integer(dfConcurrency$LargeSMV))
+dfConcurrency$TBUploads = (as.integer(dfConcurrency$TBUploads))
 ```
 
 ##  tl;dr
@@ -201,25 +201,9 @@ hcConcurrency <- highchart() %>%
 frameWidget(hcConcurrency, height = "50%")
 ```
 
-This is the portion of the process which has the most technical “inner workings”. Up to this point SSIS has been used mainly for parameter substitution to collect data through queries. This section will show how C# scripting is used to construct the concurrency table.
+This is the portion of the process which has the most technical “inner workings”. Up to this point SSIS has been used mainly for parameter substitution to collect data through queries. This section will show how C# scripting is used to construct the concurrency table. Here is an example of the final result with calculated values. From that, a stepped area can be plotted. This supports analysis of user activity against server demand. To produce the table with various integer counts at each second, we must first know when each event starts and completes. We already have this data collected in the LIST_CONS table, so the process here derives the data from that table.
 
-<center>
-```{r "Data Table for Hyperion Concurrency"}
-dtConcurrency <- datatable(dfConcurrency, options = list(
-  initComplete = JS(
-    "function(settings, json) {",
-    "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
-    "$(this.api().table().row()).css({'background-color': '#000', 'color': '#fff'});",
-    "}")
-))
-
-frameWidget(dtConcurrency)
-```
-</center>
-
-Here is an example of the final result with calculated values. From that, a stepped area can be plotted. This supports analysis of user activity against server demand. To produce the table with various integer counts at each second, we must first know when each event starts and completes. We already have this data collected in the LIST_CONS table, so the process here derives the data from that table.
-
-<pre><code class="cs">for (DateTime date = CurrentRow; CurrentRow <= PeriodEnd; CurrentRow = CurrentRow.AddSeconds(1.0)) {
+<pre><code class="csharp">for (DateTime date = CurrentRow; CurrentRow <= PeriodEnd; CurrentRow = CurrentRow.AddSeconds(1.0)) {
  if ((CurrentRow >= CONS_StartTime) && (CurrentRow <= CONS_EndTime)) {
   comm = new SqlCommand("Select Consolidation FROM CONCURRENCY WHERE DateTime = ('" + CurrentRow.ToString(@ "MM-dd-yyyy hh:mm:ss tt", new CultureInfo("en-US")) + "')", conn);
   conn.CreateCommand();

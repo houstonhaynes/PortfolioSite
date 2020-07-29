@@ -2,7 +2,7 @@
 title: "Mega-Merger Meta-Data Remastering"
 output:
   blogdown::html_page:
-    toc: true
+    toc: false
     toc_depth: 1
     fig_width: 8
     dev: "svg"
@@ -10,12 +10,10 @@ author: "Houston Haynes"
 date: '2018-07-15T14:59:43+05:30'
 featuredpath: img
 featured: Meta-data.png
-description: Data forensics techniques to settle accounts and speed pay-outs
+description: Data forensics techniques to settle accounts and speed pay outs to authors
 draft: true
 tags:
 - SAP
-- Hyperion
-- Accelatis
 - SQL Server
 - SSIS
 categories: 
@@ -23,15 +21,117 @@ categories:
 editor_options: 
   chunk_output_type: inline
 ---
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-	echo = FALSE,
-	message = FALSE,
-	warning = FALSE
-)
 
+# Scatter Chart
+
+Some text trying to get a scatter chart to scatter
+```{r Catalog Mismathes, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(jsonlite)
 library(highcharter)
 library(widgetframe)
+
+catalogTable <- fromJSON("../../data/pub_YrOvrYr.json")
+dfCatalog <- as.data.frame(do.call("cbind", catalogTable))
+
+dfCatalog$LIB = (as.integer(dfCatalog$LIB))
+dfCatalog$PAYMT = (as.integer(dfCatalog$PAYMT))
+dfCatalog$MDW = (as.integer(dfCatalog$MDW))
+dfCatalog$ALL3 = (as.integer(dfCatalog$ALL3))
+
+series = list(
+  list(
+    name = 'Library',
+    data = dfCatalog$LIB
+  ),
+    list(
+    name = 'Payment',
+    data = dfCatalog$PAYMT
+  ),
+    list(
+    name = 'Data Warehouse',
+    data = dfCatalog$MDW
+  ),
+    list(
+    name = 'All 3',
+    data = dfCatalog$ALL3
+  )
+)
+
+hcCatalog <- highchart() %>%
+  hc_title(text = paste("Ten Year Plot")) %>% 
+  hc_chart(
+      type = 'column',
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2,
+      marginBottom = '200',
+      marginTop = '60',
+      marginLeft = '80',
+      marginRight = '60',
+      style = list(fontFamily = 'Fira Code')) %>%
+  hc_xAxis(categories = list(
+    list( name = dfCatalog$Year,
+    categories = dfCatalog$CATALOG))) %>%  
+  hc_yAxis(min = 0, title = list(text = "Total Mismatches")) %>%
+  hc_yAxis(allowDecimals = 'false') %>%
+  hc_add_series_list(series) %>%
+  hc_plotOptions(
+    series = list(
+      stacking = 'normal', marker = 'none')) %>% 
+  hc_add_theme(hc_theme_538())
+
+frameWidget(hcCatalog)
 ```
 
+Some other text to give some room 
+
+
+<div class="rows">
+<div class="col-md-6 pb-4">
+
+```{r Catalog Totals, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(jsonlite)
+library(highcharter)
+library(widgetframe)
+
+outlierSumTable <- fromJSON("../../data/OL_COUNT_BY_OUTLIER.json")
+dfOutlierSum <- as.data.frame(do.call("cbind", outlierSumTable))
+
+dfOutlierSum$COUNT = (as.integer(dfOutlierSum$COUNT))
+
+
+series = list(
+  list(
+    name = 'Outlier',
+    data = dfOutlierSum$OUTLIER
+  ),
+    list(
+    name = 'Pct',
+    data = dfOutlierSum$COUNT
+  )
+)
+
+hcOutlierSum <- highchart() %>%
+  hc_title(text = paste("Total Outliers by Category")) %>% 
+  hc_chart(
+      type = 'pie',
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2,
+      style = list(fontFamily = 'Fira Code')) %>%
+  hc_add_series_list(series) %>%
+  hc_tooltip(pointFormat = '{slice.name}: <b>{point.percentage:.1f}%</b>') %>%
+  hc_plotOptions(
+    series = list(
+      stacking = 'normal', marker = 'none')) %>% 
+  hc_add_theme(hc_theme_bloom())
+
+frameWidget(hcOutlierSum, height=450)
+```
+</div>
+<div class="col-md-6 pb-4">
+Another bit of text to keep things from falling into each other
+</div>
+</div>
+
+Even more text because that's just how we roll
