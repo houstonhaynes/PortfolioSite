@@ -71,10 +71,8 @@
 }
 
 #main .GitHub {
-    text-align: center;
-    color: #aaaaaa;
     font-family: "Ubuntu", Helvetica, sans-serif;
-    font-size: 0.6em;
+    font-size: 0.75em;
     font-weight: 400;
     letter-spacing: 0.1em;
 }

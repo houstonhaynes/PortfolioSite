@@ -3,7 +3,7 @@ type = "itemized"
 author = "Houston Haynes"
 date = "2019-10-07"
 title = "Recommendations"
-description = "LinkedIn references for Houston as an engineer and department lead"
+description = "Houston as an engineer and department lead"
 featured = ""
 featuredpath = ""
 featuredalt = ""
@@ -14,14 +14,14 @@ link = ""
 weight = "05"
 icon = "fas fa-check-square"
 +++
-
+{{< rawhtml >}}
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 mt-3">
             <div class="card">
                 <div class="card-horizontal">
-                    <div class="img-square-wrapper pl-4">
-                        <img class="float-left image centered rounded bordered mx-auto mt-4" src="/img/Anu_Narendran.jpg" alt="Card image cap">
+                    <div class="img-wrapper pl-4">
+                        <img class="float-left image centered rounded bordered mx-auto mt-4" src="/img/Anu_Narendran.jpg" alt="Anu Narendran">
                     </div>
                     <div class="card-body w-75">
                         <h3 class="card-title">Anu Narendran</h3>
@@ -30,6 +30,26 @@ icon = "fas fa-check-square"
                 </div>
                 <div class="card-footer">
                     <small class="text-muted">Data Scientist at XLFN Consulting, Seattle, WA</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 mt-3">
+            <div class="card">
+                <div class="card-horizontal">
+                    <div class="img-wrapper pl-4">
+                        <img class="float-left image centered rounded bordered mx-auto mt-4" src="/img/Chris_Anastas.jpg" alt="Chris Anastas">
+                    </div>
+                    <div class="card-body w-75">
+                        <h3 class="card-title">Chris Anastas</h3>
+                        <p class="card-text">The events that have taken place over the last six months, coupled with the pandemic have re-shaped the ethos.  As a founder of an entertainment tech company, I have been faced with the most challenging times.  Not only did we have to shift our business roadmap, reallocate funds but we also lost most of our dev team.  With limited resources and time I had to find the right engineer to step in and help us recover.  Houston was able to immediately assist and guide us through the most pressing times.  He was successful in re-defining our product roadmap and provided counsel for technical and business domains in equal measure. His insight into front-of-house and back office operational systems along with his analytics expertise helped us to season our approach as we worked closely with global media companies. I can recommend him both for his amazing engineering capability, unparalleled problem solving skills  and his ability to earn the trust of our global multi cultural business partners.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Founder & CEO of SoundFi</small>
                 </div>
             </div>
         </div>
@@ -50,9 +70,10 @@ icon = "fas fa-check-square"
                     </div>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted">Business Intelligence (BI) Developer / Data Engineer - Albany, NY</small>
+                    <small class="text-muted">Data Scientist / BI Engineer - Albany, NY</small>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{{< rawhtml >}}
