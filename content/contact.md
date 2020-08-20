@@ -18,7 +18,7 @@ author = "Houston Haynes"
         <input class="button-primary" type="submit" value="Submit">
       </form>
 </div>
-<div>
-  <img id="AzureFunctionHeartbeat" class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/>
+<div class="lds-heart centered">
+  <div><img id="AzureFunctionHeartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:visible;"/></div>
 </div>
 {{< rawhtml >}}
