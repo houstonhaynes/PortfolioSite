@@ -1,5 +1,5 @@
 ---
-title: "Read-ish permissions in AWS Elemental"
+title: "AWS IAM Giveth And Taketh Away"
 output:
   blogdown::html_page:
     toc: false
@@ -10,7 +10,7 @@ author: "Houston Haynes"
 date: '2020-08-11T15:59:43+05:30'
 featuredpath: img
 featured: AWS_Elemental.png
-description: The IAM Giveth And The IAM Taketh Away
+description: Tailoring permissions to Manage Elemental Media Channels
 draft: false
 tags:
 - AWS
@@ -23,51 +23,314 @@ weight: 1
 editor_options: 
   chunk_output_type: inline
 ---
-# Giving Life to Flat HTML pages
+# Who, What, Where, When & Why
 
-`r blogdown::shortcode("url-link", "Elemental", "https://www.elemental.com/")` is versitile as an AWS service, and it dovetails well to long-standing Amazon services. This sidebar is about how I configured a "viewer+" role with the correnct permissions from S3 to CloudFront. While the role is primarily provisioned as a read resource I also included the ability to edit the Channel Schedule. That created a few wrinkles to the process I detail below.
+`r blogdown::shortcode("url-link", "Elemental", "https://www.elemental.com/")` is a highly versatile media streaming platform, and it dovetails well to long-standing Amazon services. This sidebar is about how I configured a "viewer+" role for all resources in and around it. This would provide minimal permissions, from S3 to CloudFront, for behind-the-scenes visibility into how each channel is configured. And while the role is primarily considered a read resource I also included the ability to Start, Stop, edit Channel Schedules and Invalidate CloudFront caching, which became an interesting _coda_ to this process. 
 
-## Getting back to... Uh... Basics?
+The original intent was to set up a profile that could be used by a micro-service to expose the various elements in the "stack" within a custom admin panel. The developers used AWS Console initially, but I wanted to redirect everyone to a behind-the-scenes page to have a cleaner interface and also 'smooth wall' extraneous resources from view - to focus on the media delivery pipeline. So this set of policies would eventually land in production to provide a survey of AWS Elemental settings for a global "virtual cinema" delivery system run by support staff and used by developers for Level III support.
 
-R/blogdown aficianados who use this or a similar method to render in-page HTML will likely find this example to be rather primitive. But to those new to this area it's a worthy exercise to peel back the layers of techology involved. In this case "simplicity" is in the eye of the beholder. It feels odd to write about the *basic* setup of a three-layer mapping to embed responsive HTML in a web page. But the goal here is to provide a straightforward example that puts all of the pieces together in a way that can be followed and repeated. To wit...
+## Separation of Concerns
 
-`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "RBlogdown_shortcode_sample.png")`
+One of the primitives I wanted to address from the outset was the principal of least privilege. Since I come from a regulated systems background I have fairly conservative reflexes when outlining roles and responsibilities. And also with major studio partners and their security requirements, I wanted to be double-sure that the proper constraints were in place to assure partners that only the right individuals had access to media resources.
 
-This is an example R/blogdown shortcode wrapper that places a Bootstrap alert inline on the page. These excerpts don't have to reside on their own line in the markdown document, as with the example above. In fact, the first word of this page you're reading uses an inline shortcode to produce the anchor that links out to the Blogdown site. Once everything is in place, shortcodes can make editing the .Rmd files seem more friendly - as there's less "raw" HTML to clutter the editor. And of course re-use and extensibility are also key advantages.
+## Addition by Subtraction
 
-## The Pattern - Bootstrap as a Base
+The first iteration started with simply creating custom read permissions to the services (and in the case of S3, to specific buckets) and that *didn't work*. The user could log into the console but none of the resources could be viewed *even with view permissions in place*. So I went to an older permissions model used ages ago when I first started with AWS, which is to provision default **full** read and write permission and then _subtract_ write permissions out with separate **DENY** Policies... per below...
 
-If you look at `r blogdown::shortcode("url-link", "Hugo shortcode examples online", "https://gohugo.io/content-management/shortcodes/")`, you'll find they can be used to generate just about any HTML you can imagine. Some of Hugo's built-in shortcodes are remarkably complex (hello, Vimeo embeds!) In my case I want to use custom shortcodes to express Bootstrap markup. When I started this site I used a patchwork of JS and CSS libraries. My own refactoring effort sprang from the desire to have more consistency in the coding and behavior of the site. Because of my previous experience with Bootstrap I opted to stay with that framework here. So I'm going through and replacing the hodge podge of hand-coded HTML (and snippets of CSS and JS that go along with them) and replacing each with a Bootstrap equivalent. While there may be a marginal performance/asset load improvement due to fewer JavaScript and CSS files, I'm really just looking for consistency. That way, when I return to the site after looking away for a while I won't have to do quite as much forensic investigation to recall what I did before. 
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "AWS_Group_Permissions.png")`
 
-Here is the sample shortcode displayed inline.
+You'll see that the full ReadWrite is in place for all services except for CloudFront, which has a boilerplate ReadOnly permission. One wrinkle here is that they also needed the CreateInvalidation permission in case there was the need to clear the CloudFront cache at the restart of a channel.   
 
-<pre><code class="django"><div class="alert alert-{{ .Get 0 }} alert-dismissible fade show pb-4" role="alert">
-  <strong>{{ .Get 1 }}</strong> {{ .Get 2 }}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div></code></pre>
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "AWS_IAM_Deny.png")`
 
-As can be seen in the example above, it's a garden-variety Bootstrap alert taken directly from their documentation. The only difference is the Hugo parameter injection that allows any type of alert to be displayed (primary, secondary, success, warning, etc). It also has placeholders for the text that is fed into the HTML. This is the key to understanding how Hugo shortcodes work, and how they are used in a blogdown/Rmarkdown document.
+<button class="btn btn-outline-dark btn-sm ml-2 mb-3" data-toggle="collapse" data-target="#deny-code">View DENY JSON Settings</button>
 
-## R Wrapper Breakout Session
+<pre id="deny-code" class="collapse"><code class="json">{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Deny",
+            "Action": [
+                "cloudfront:CreatePublicKey",
+                "cloudfront:DeleteFieldLevelEncryptionConfig",
+                "cloudfront:UpdatePublicKey",
+                "cloudfront:TagResource",
+                "cloudfront:DeleteCloudFrontOriginAccessIdentity",
+                "cloudfront:CreateStreamingDistributionWithTags",
+                "cloudfront:CreateStreamingDistribution",
+                "cloudfront:CreateFieldLevelEncryptionProfile",
+                "cloudfront:CreateDistributionWithTags",
+                "cloudfront:UpdateStreamingDistribution",
+                "cloudfront:CreateDistribution",
+                "cloudfront:DeleteFieldLevelEncryptionProfile",
+                "cloudfront:UpdateFieldLevelEncryptionConfig",
+                "cloudfront:CreateInvalidation",
+                "cloudfront:DeletePublicKey",
+                "cloudfront:CreateCloudFrontOriginAccessIdentity",
+                "cloudfront:DeleteStreamingDistribution",
+                "cloudfront:UpdateFieldLevelEncryptionProfile",
+                "cloudfront:UpdateDistribution",
+                "cloudfront:UpdateCloudFrontOriginAccessIdentity",
+                "cloudfront:DeleteDistribution",
+                "cloudfront:CreateFieldLevelEncryptionConfig",
+                "cloudfront:UntagResource"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "BoolIfExists": {
+                    "aws:MultiFactorAuthPresent": "true"
+                }
+            }
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Deny",
+            "Action": [
+                "medialive:StartMultiplex",
+                "medialive:UpdateInput",
+                "medialive:DeleteChannel",
+                "medialive:UpdateChannel",
+                "medialive:UpdateReservation",
+                "medialive:UpdateMultiplex",
+                "medialive:PurchaseOffering",
+                "medialive:CreateMultiplex",
+                "medialive:UpdateInputDevice",
+                "medialive:CreateTags",
+                "medialive:DeleteTags",
+                "medialive:CreateInput",
+                "medialive:UpdateChannelClass",
+                "medialive:DeleteMultiplex",
+                "medialive:UpdateInputSecurityGroup",
+                "medialive:DeleteReservation",
+                "medialive:StopMultiplex",
+                "medialive:DeleteInput",
+                "medialive:DeleteInputSecurityGroup",
+                "medialive:CreateChannel",
+                "medialive:CreateInputSecurityGroup"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "BoolIfExists": {
+                    "aws:MultiFactorAuthPresent": "true"
+                }
+            }
+        },
+        {
+            "Sid": "VisualEditor2",
+            "Effect": "Deny",
+            "Action": [
+                "mediapackage-vod:DeleteAsset",
+                "mediapackage-vod:CreatePackagingGroup",
+                "mediapackage-vod:DeletePackagingConfiguration",
+                "mediapackage-vod:CreateAsset",
+                "mediapackage-vod:CreatePackagingConfiguration",
+                "mediapackage-vod:DeletePackagingGroup"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "BoolIfExists": {
+                    "aws:MultiFactorAuthPresent": "true"
+                }
+            }
+        },
+        {
+            "Sid": "VisualEditor3",
+            "Effect": "Deny",
+            "Action": [
+                "s3:CreateAccessPoint",
+                "s3:PutAnalyticsConfiguration",
+                "s3:PutAccelerateConfiguration",
+                "s3:DeleteObjectVersion",
+                "s3:ReplicateTags",
+                "s3:RestoreObject",
+                "s3:DeleteAccessPoint",
+                "s3:CreateBucket",
+                "s3:ReplicateObject",
+                "s3:PutEncryptionConfiguration",
+                "s3:DeleteBucketWebsite",
+                "s3:AbortMultipartUpload",
+                "s3:PutBucketTagging",
+                "s3:PutLifecycleConfiguration",
+                "s3:UpdateJobPriority",
+                "s3:PutBucketAcl",
+                "s3:PutObjectTagging",
+                "s3:DeleteObject",
+                "s3:DeleteBucket",
+                "s3:PutBucketVersioning",
+                "s3:PutObjectAcl",
+                "s3:DeleteObjectTagging",
+                "s3:PutBucketPublicAccessBlock",
+                "s3:PutAccountPublicAccessBlock",
+                "s3:PutMetricsConfiguration",
+                "s3:PutReplicationConfiguration",
+                "s3:PutObjectVersionTagging",
+                "s3:PutObjectLegalHold",
+                "s3:UpdateJobStatus",
+                "s3:DeleteObjectVersionTagging",
+                "s3:PutBucketCORS",
+                "s3:DeleteBucketPolicy",
+                "s3:BypassGovernanceRetention",
+                "s3:PutInventoryConfiguration",
+                "s3:PutObject",
+                "s3:PutBucketNotification",
+                "s3:ObjectOwnerOverrideToBucketOwner",
+                "s3:PutBucketWebsite",
+                "s3:PutBucketRequestPayment",
+                "s3:PutObjectRetention",
+                "s3:PutBucketLogging",
+                "s3:PutObjectVersionAcl",
+                "s3:PutBucketPolicy",
+                "s3:DeleteAccessPointPolicy",
+                "s3:PutBucketObjectLockConfiguration",
+                "s3:CreateJob",
+                "s3:PutAccessPointPolicy",
+                "s3:ReplicateDelete"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "BoolIfExists": {
+                    "aws:MultiFactorAuthPresent": "true"
+                }
+            }
+        }
+    ]
+}</code></pre>
 
-Looking at the R shortcode at the top of the page you'll see that the first parameter is the declaration for the named shortcode itself (an "alert.html" in the "shortcodes" folder wihin the Hugo template structure). You can see that path to the shortcode partial in the top edge of the screenshot below.
+I also still put in DENY Write permissions for CloudFront in case a "real" user is mistakenly assigned into a group that gave more permissions to them than simply CreateInvalidation. Again, this is just a reflexive abundance of caution. There is three other "write" permission that we needed within MediaLive, which are:
 
-`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "RBlogdown_shortcode_form.png")`
+1. StopChannel,
+1. StartChannel, and
+1. BatchUpdateSchedule 
 
-After the shortcode itself is declared in the first parameter, the next three are passed into the shortcode context via the *.Get* placeholders. Those next three fields can be thought of as an array where "success" is position 0, "Note!" is position 1, and the 3rd parameter is filled by the sentence at the end. Hugo has a wide variety of options for handling very complex substitution and defaulting patters, but this sample was chosen for its direct mapping and simplicity of the result. At the time the site is generated, blogdown 'tells' Hugo to piece together the HTML using the shortcode as a boilerplate - passing in the parameters from the declaration to complete the markup and text within the element.
+These are "write" permissions, but all of these fall within the "good faith actor" purview of the role, allowing media managers to do general house-keeping of channels without direct access to (or ability to remove/delete/download) partner-provided media resources.
 
-There's no specific requirement for the number of parameters you opt to pass into a shortcode. That's the beauty __and__ the burden of this appraoch. While you don't have to be a Go expert to use shortcodes or Hugo in general, it helps to keep the blogdown and Hugo documentation handy for reference as you become more familiar and your appetite for more advanced shortcodes inevitably grows.
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "AWS_IAM_MediaLiveWrite.png")`
 
-## User Guidance Suggested
+## Multi-Factor Authentication
 
-As can be seen from the screen grab below, the desired result was a Bootstrap generated alert element to help guide the user through the page. It's placed directly below the graph (and above a control that allows the R source code to be shown at the user's option) to provide guidance on using the legend above as a display control for the plot. 
+Along those lines MFA is used for all Groups in any AWS account I build. We also implemented CloudTrail to monitor which user was accessing various resources. Because of that, we also had to provision the ability for users to manage their password and MFA device pairing in the AWS Console.
 
-`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "RBlogdown_shortcode_render.png")`
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "AWS_IAM_Deny2.png")`
 
-And the user can simply click on the "X" to close the alert and continue reading the page. While it might be a small matter to place this simple block of HTML directly in the Rmarkdown page, reusability is as strong selling point. There are many places where dropping in this type of prompt with a single R callout would be useful.
+Below is the "AllowMFAManagement" Policy which actually covers password and MFA management.
 
-# Is the Juice Worth the Squeeze?
+<button class="btn btn-outline-dark btn-sm ml-2 mb-3" data-toggle="collapse" data-target="#mfa-code">View MFA JSON Settings</button>
 
-It's really up to the R blogger (blogdowner?) whether going this route is worth the time and effort. If like me you've have had significant brushes with Bootstrap or a similar framework it could be worth the extra lift. I want to build a site that's not just a worthy read, but also holds up well as a mobile experience. Using a "responsive theme" for a blogdown site is a great first step, but the extra touches to design a fully responsive page is worth it, at least for my purposes. But don't take my word for it. Check out `r blogdown::shortcode("url-link", "the page where the code resides", "https://h3tech.dev/post/conversion-win-loss/", "_self")` and judge for yourself.
+<pre id="mfa-code" class="collapse"><code class="json">{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowViewAccountInfo",
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetAccountPasswordPolicy",
+                "iam:GetAccountSummary",
+                "iam:ListVirtualMFADevices"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowManageOwnPasswords",
+            "Effect": "Allow",
+            "Action": [
+                "iam:ChangePassword",
+                "iam:GetUser"
+            ],
+            "Resource": "arn:aws:iam::*:user/${aws:username}"
+        },
+        {
+            "Sid": "AllowManageOwnAccessKeys",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateAccessKey",
+                "iam:DeleteAccessKey",
+                "iam:ListAccessKeys",
+                "iam:UpdateAccessKey"
+            ],
+            "Resource": "arn:aws:iam::*:user/${aws:username}"
+        },
+        {
+            "Sid": "AllowManageOwnSigningCertificates",
+            "Effect": "Allow",
+            "Action": [
+                "iam:DeleteSigningCertificate",
+                "iam:ListSigningCertificates",
+                "iam:UpdateSigningCertificate",
+                "iam:UploadSigningCertificate"
+            ],
+            "Resource": "arn:aws:iam::*:user/${aws:username}"
+        },
+        {
+            "Sid": "AllowManageOwnSSHPublicKeys",
+            "Effect": "Allow",
+            "Action": [
+                "iam:DeleteSSHPublicKey",
+                "iam:GetSSHPublicKey",
+                "iam:ListSSHPublicKeys",
+                "iam:UpdateSSHPublicKey",
+                "iam:UploadSSHPublicKey"
+            ],
+            "Resource": "arn:aws:iam::*:user/${aws:username}"
+        },
+        {
+            "Sid": "AllowManageOwnGitCredentials",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateServiceSpecificCredential",
+                "iam:DeleteServiceSpecificCredential",
+                "iam:ListServiceSpecificCredentials",
+                "iam:ResetServiceSpecificCredential",
+                "iam:UpdateServiceSpecificCredential"
+            ],
+            "Resource": "arn:aws:iam::*:user/${aws:username}"
+        },
+        {
+            "Sid": "AllowManageOwnVirtualMFADevice",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateVirtualMFADevice",
+                "iam:DeleteVirtualMFADevice"
+            ],
+            "Resource": "arn:aws:iam::*:mfa/${aws:username}"
+        },
+        {
+            "Sid": "AllowManageOwnUserMFA",
+            "Effect": "Allow",
+            "Action": [
+                "iam:DeactivateMFADevice",
+                "iam:EnableMFADevice",
+                "iam:ListMFADevices",
+                "iam:ResyncMFADevice"
+            ],
+            "Resource": "arn:aws:iam::*:user/${aws:username}"
+        },
+        {
+            "Sid": "DenyAllExceptListedIfNoMFA",
+            "Effect": "Deny",
+            "NotAction": [
+                "iam:CreateVirtualMFADevice",
+                "iam:EnableMFADevice",
+                "iam:GetUser",
+                "iam:ListMFADevices",
+                "iam:ListVirtualMFADevices",
+                "iam:ResyncMFADevice",
+                "sts:GetSessionToken"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "BoolIfExists": {
+                    "aws:MultiFactorAuthPresent": "false"
+                }
+            }
+        }
+    ]
+}</code></pre>
+
+If the user logs in before/without setting MFA then they won't see any resources, and AWS Console has a prompt to that effect. Again, this is to satisfy partner security requirements for access to studio film assets, but I also believe that it's a good general habit.
+
+# Next Steps: CloudTrail and Service Logging
+
+As the astute viewer might have caught in one of the screen grabs, the DENY Policy is labeled as "staging" which means it's designed for access to pre-production resources. While that policy is currently in place for all tiers, eventually there will be a separate "production" instance of this Group, using Tags to differentiate which resource is visible to which User/Group. 
+
+And while CloudTrail tracks individual users as they work within the AWS account, when a service account is used some visibility into individual user access is lost. That has put some work on the road map to enhance the logging within the buffering service that the assigned Group would use, in order to track which user performed an action through the micro-service. This is all part of a strategy to create a proper "walled garden" in which actors can operate and their actions can remain within agreed-to guidelines with media partners. As it stands here, this is good starting point for working well within the AWS IAM harness.

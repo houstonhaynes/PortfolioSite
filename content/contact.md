@@ -2,7 +2,7 @@
 title = "Contact"
 author = "Houston Haynes"
 +++ 
-
+{{< rawhtml >}}
 <div id="container" class="ld-over">
   <div id="output"></div> 
       <form id="submitMessage" method="post" style="visibility:visible;"> 
@@ -21,3 +21,4 @@ author = "Houston Haynes"
 <div>
   <img id="AzureFunctionHeartbeat" class="ld ld-heartbeat" src="/img/Function Apps.svg" height="50" width="50" style="vertical-align:middle;visibility:hidden;"/>
 </div>
+{{< rawhtml >}}
