@@ -15,6 +15,5 @@
     ],
     "theme_color": "#4d6278",
     "background_color": "#4d6278",
-    "start_url": "https://h3tech.dev",
     "display": "standalone"
 }
