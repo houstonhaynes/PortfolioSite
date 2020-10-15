@@ -102,7 +102,7 @@ enableGitInfo = true
     circle    = false
     # Sets Image to be Future Imperfect's hexagon
     imperfect = false
-    width     = "96"
+    width     = "168"
     alt       = "H3"
 
 [params.postAmount]
