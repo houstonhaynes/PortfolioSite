@@ -280,11 +280,11 @@ a:before {
 
 a:hover {
     border-bottom-color: transparent;
-    color: #0000A0 !important;
+    color: #00419C !important;
 }
 
 a:hover:before {
-    color: #0000A0 !important;
+    color: #00419C !important;
 }
 
 strong,
@@ -540,8 +540,8 @@ input[type="submit"]:hover,
 input[type="reset"]:hover,
 input[type="button"]:hover,
 .button:hover {
-    border: solid 1px #0000A0;
-    color: #0000A0 !important;
+    border: solid 1px #00419C;
+    color: #00419C !important;
 }
 
 input[type="submit"]:hover:active,
@@ -707,7 +707,7 @@ textarea:hover {
     -webkit-transition: border-color 0.3s ease-in-out;
     -moz-transition: border-color 0.3s ease-in-out;
     transition: border-color 0.3s ease-in-out;
-    border-color: #0000A0;
+    border-color: #00419C;
 }
 
 input[type="text"]:focus,
@@ -722,7 +722,7 @@ select:focus,
 select:active,
 textarea:focus,
 textarea:active {
-    border: solid 1px #0000A0;
+    border: solid 1px #00419C;
 }
 
 .select-wrapper {
@@ -819,7 +819,7 @@ input[type="radio"]:checked+label:before {
 }
 
 input[type="radio"]:focus+label:before {
-    border: solid 1px #0000A0;
+    border: solid 1px #00419C;
 }
 
 input[type="radio"]+label:before {
@@ -2825,7 +2825,7 @@ body.is-menu-visible #wrapper {
 }
 
 #menu .links>li a:hover h3 {
-    color: #0000A0;
+    color: #00419C;
 }
 
 #menu .links>li:first-child {

@@ -5,7 +5,9 @@
             <li>    
                 <a id="dark-mode-toggle" class="fas fa-moon" title="Dark Mode Toggle"></a>
             </li>
-        </ul> 
+            <li>
+                <a id="clear-dark-mode" class=" fas fa-angle-up vertical" title="Reset Dark Mode to OS Perference">&nbsp;clear</a>
+            </li>
     </nav>
     {{ if or .IsHome (not .Site.Params.DynamicTitles) }}
       <h1><a href="{{ "/" | relURL }}">{{ .Site.Params.navbarTitle }}</a></h1>

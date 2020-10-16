@@ -57,17 +57,28 @@
 #header .darkMode {
     font-size: 0.8em;
     border-right: solid 1px rgba(160, 160, 160, 0.3);
-    width: 3.5em;
+    width: 5rem;
     text-align: center;
 }
 
 .darkMode ul {
     padding-left: 0 !important;
+    display: inline;
+}
+
+#header ul li {
+    margin: 0 !important;
+    border-left: none !important;
 }
 
 .darkMode ul li {
     padding-left: 0 !important;
     line-height: 1em;
+    display: inline;
+}
+
+.darkMode ul li:nth-child(2) {
+    width: .5em;
 }
 
 #main .GitHub {
@@ -168,6 +179,10 @@ a#dark-mode-toggle {
     cursor: pointer;
 }
 
+a#clear-dark-mode {
+    cursor: pointer;
+}
+
 
 /* adding fancybox image overlay */
 
@@ -185,6 +200,23 @@ a#dark-mode-toggle {
     right: 20px;
     font-size: 20pt;
     z-index: 9999;
+}
+
+.fancybox-bg {
+    background: #FFF !important;
+}
+
+.modal-backdrop {
+    background: #FFF !important;
+    opacity: 95% !important;
+}
+
+.vertical {
+    -ms-transform: rotate(270deg);
+    /* IE 9 */
+    -webkit-transform: rotate(270deg);
+    /* Chrome, Safari, Opera */
+    transform: rotate(270deg);
 }
 
 .card-horizontal {
