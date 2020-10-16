@@ -57,7 +57,7 @@
 #header .darkMode {
     font-size: 0.8em;
     border-right: solid 1px rgba(160, 160, 160, 0.3);
-    width: 5rem;
+    width: 4rem;
     text-align: center;
 }
 
@@ -79,6 +79,7 @@
 
 .darkMode ul li:nth-child(2) {
     width: .5em;
+    border-left: 1px;
 }
 
 #main .GitHub {
