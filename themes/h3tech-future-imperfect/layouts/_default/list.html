@@ -5,7 +5,7 @@
     {{ partial "navbar" . }}
     <!-- Main -->
     <div id="main">
-        {{ $paginator := .Paginate .Data.Pages }}
+        {{ $paginator := .Vitae .Data.Pages }}
         {{ range .Paginator.Pages }}
             {{ .Render "content-list" }}
         {{ end }}

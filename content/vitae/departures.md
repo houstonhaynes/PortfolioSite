@@ -3,7 +3,7 @@ type = "itemized"
 author = "Houston Haynes"
 date = "2019-10-07"
 title = "Departures"
-description = "Exit Interview "
+description = "Understanding Houston's recent work history"
 featured = ""
 featuredpath = ""
 featuredalt = ""
@@ -12,7 +12,7 @@ linktitle = ""
 format = ""
 link = ""
 weight = "06"
-icon = "fas fa-check-square"
+icon = "fas fa-door-open"
 +++
 {{< rawhtml >}}
 <div class="container-fluid">
