@@ -121,14 +121,28 @@
       </div>
 
       <!-- Modal body -->
-      <div class="modal-body text-center">
-        Local value has been removed.<br> 
-        The site now uses the OS default.
+    <div class="row align-middle">
+      <div class="modal-body col-xs-4">
+        {{ $pic := .Site.Params.intro.pic }}
+        {{ with $pic.src }}
+          {{ if $pic.circle }}
+            <img src="{{ . | relURL }}" class="mx-auto d-block intro-circle" width="96px" alt="{{ $pic.alt }}" />
+          {{ else if $pic.imperfect }}
+            <img class="mx-auto d-block" src="{{ . | relURL }}" width="96px" alt="{{ $pic.alt }}" />
+          {{ else }}
+            <img class="mx-auto d-block" src="{{ . | relURL }}" width="96px" alt="{{ $pic.alt }}" />
+          {{ end }}
+        {{ end }}
       </div>
+      <div class="modal-body col-xs-8 align-middle">
+        Local view mode setting has been removed.<br> 
+        The site now uses your OS default.
+      </div>
+    </div>
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">Close</button>
       </div>
 
     </div>

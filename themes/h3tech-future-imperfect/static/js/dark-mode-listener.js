@@ -1,5 +1,6 @@
 const toggle = document.getElementById("dark-mode-toggle");
 const clear = document.getElementById("clear-dark-mode");
+const modal = document.getElementById("myModal");
 let darkTheme = document.getElementById("dark-mode-theme");
 
 let timer = 0;
@@ -15,8 +16,8 @@ toggle.addEventListener("click", toggleSwitch, false);
 clear.addEventListener("click", resetLocalStorage, false);
 
 function resetLocalStorage() {
-    localStorage.removeItem('dark-mode-storage');
     $('#myModal').modal('show');
+    localStorage.removeItem('dark-mode-storage');
     setDefaultMode();
 }
 
