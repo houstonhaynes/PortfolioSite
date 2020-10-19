@@ -10,7 +10,10 @@
             <p>{{ . }}</p>
         {{ end }}
     </div>
-    <div class="meta text-center">
-        <button class="button big" onclick="window.location.href='/vitae';">Vitae</button>
+    <div class="meta">
+        <div class="btn-group-vertical">
+            <button class="button large btn-block mb-2 fa fa-arrow-up" onclick="window.location.href='/vitae';">&nbsp;Vitae</button>
+            <button class="button large btn-block fa fa-arrow-left" onclick="location.href = document.referrer; return false;">&nbsp;Back</button>
+        </div>
     </div>
 </header>

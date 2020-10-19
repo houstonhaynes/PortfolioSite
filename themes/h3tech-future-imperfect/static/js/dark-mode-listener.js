@@ -11,6 +11,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     setDefaultMode();
 });
 
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    setDefaultMode();
+});
+
+
 toggle.addEventListener("click", toggleSwitch, false);
 
 clear.addEventListener("click", resetLocalStorage, false);
@@ -46,17 +51,18 @@ function setTheme(mode) {
 function setDefaultMode() {
     if (localStorage.getItem('dark-mode-storage')) {
         // get the value and set the theme
+        console.log("localStorage value used to set light/dark")
         let savedTheme = localStorage.getItem("dark-mode-storage");
         setTheme(savedTheme);
     } else {
         //check user preferences for browser scheme
-        if (window.matchMedia('(prefers-color-scheme: dark)')) {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             // set dark theme
             darkTheme.disabled = false;
             toggle.className = "fas fa-sun";
             console.log('dark mode is enabled by OS preference');
         } else {
-            // set light theme
+            // set light theme            
             darkTheme.disabled = true;
             toggle.className = "fas fa-moon";
             console.log('light mode is enabled by OS preference');
