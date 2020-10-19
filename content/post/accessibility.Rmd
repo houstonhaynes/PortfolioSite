@@ -1,5 +1,5 @@
 ---
-title: "AWS IAM Giveth And Taketh Away"
+title: "Flexing Accessibility"
 output:
   blogdown::html_page:
     toc: false
@@ -7,27 +7,27 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2020-08-11T15:59:43+05:30'
+date: '2020-10-11T15:59:43+05:30'
 featuredpath: img
-featured: AWS_Elemental.png
-description: Tailoring permissions to Manage Elemental Media Channels
-draft: false
+featured: accessibility.svg
+description: Creating an adaptive "dark mode" using JavaScript and Bootstrap
+draft: true
 tags:
-- AWS
-- Elemental
-- Media
-- Streaming
+- blogdown
+- JavaScript
+- Bootstrap
+- Accessibility
+- Dark Mode
 categories: 
 - Sidebar
-weight: 2
+weight: 1
 editor_options: 
   chunk_output_type: inline
 ---
-# Who, What, Where, When & Why
+# CSS Sleight of Hand
 
-`r blogdown::shortcode("url-link", "Elemental", "https://www.elemental.com/")` is a highly versatile media streaming platform, and it dovetails well to long-standing Amazon services. This sidebar is about how I configured a "viewer+" role for all resources in and around it. This would provide minimal permissions, from S3 to CloudFront, for behind-the-scenes visibility into how each channel is configured. And while the role is primarily considered a read resource I also included the ability to Start, Stop, edit Channel Schedules and Invalidate CloudFront caching, which became an interesting _coda_ to this process. 
+The dark mode control I've implemented here came from a fellow cloud architect who used a CSS "trick" to pivot their light color scheme. I'm accustomed to using SASS to build separate themes and load them directly, so this seemed like an interesting shortcut. As "dark mode" and related accessibility features have standardized across browsers, 
 
-The original intent was to set up a profile that could be used by a micro-service to expose the various elements in the "stack" within a custom admin panel. The developers used AWS Console initially, but I wanted to redirect everyone to a behind-the-scenes page to have a cleaner interface and also 'smooth wall' extraneous resources from view - to focus on the media delivery pipeline. So this set of policies would eventually land in production to provide a survey of AWS Elemental settings for a global "virtual cinema" delivery system run by support staff and used by developers for Level III support.
 
 ## Separation of Concerns
 

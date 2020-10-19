@@ -559,7 +559,7 @@ input[type="button"]:before,
 input[type="button"]:after,
 .button:before,
 .button:after {
-    color: #aaaaaa;
+    color: #4D6278;
     position: relative;
 }
 
@@ -650,7 +650,7 @@ form.contact:before {
     font-weight: 400;
     font-style: normal;
     text-transform: none !important;
-    color: #aaaaaa;
+    color: #4D6278;
     content: '\f002';
     display: block;
     height: 2.75em;
@@ -827,27 +827,27 @@ input[type="radio"]+label:before {
 }
 
 ::-webkit-input-placeholder {
-    color: #aaaaaa !important;
+    color: #4D6278 !important;
     opacity: 1.0;
 }
 
 :-moz-placeholder {
-    color: #aaaaaa !important;
+    color: #4D6278 !important;
     opacity: 1.0;
 }
 
 ::-moz-placeholder {
-    color: #aaaaaa !important;
+    color: #4D6278 !important;
     opacity: 1.0;
 }
 
 :-ms-input-placeholder {
-    color: #aaaaaa !important;
+    color: #4D6278 !important;
     opacity: 1.0;
 }
 
 .formerize-placeholder {
-    color: #aaaaaa !important;
+    color: #4D6278 !important;
     opacity: 1.0;
 }
 
@@ -2398,7 +2398,7 @@ body {
 #header .main ul li>a {
     text-decoration: none;
     border-bottom: 0;
-    color: #aaaaaa;
+    color: #4D6278;
     overflow: hidden;
     position: relative;
     text-indent: 4em;
@@ -2711,7 +2711,7 @@ body.is-menu-visible #wrapper {
 /* Footer */
 
 #footer .icons {
-    color: #aaaaaa;
+    color: #4D6278;
     text-align: center;
     margin-top: 0;
     padding-top: 0
@@ -2719,7 +2719,7 @@ body.is-menu-visible #wrapper {
 
 #footer .copyright {
     text-align: center;
-    color: #aaaaaa;
+    color: #4D6278;
     font-family: "Ubuntu", Helvetica, sans-serif;
     font-size: 0.5em;
     font-weight: 400;
@@ -2733,7 +2733,7 @@ body.is-menu-visible #wrapper {
 #back-to-top {
     background-color: white;
     bottom: 5px;
-    color: #aaaaaa;
+    color: #4D6278;
     display: none;
     position: fixed;
     right: 5px;
