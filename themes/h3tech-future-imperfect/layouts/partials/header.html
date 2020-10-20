@@ -1,10 +1,5 @@
-<!DOCTYPE HTML>
-<!--
-    Future Imperfect by HTML5 UP
-    html5up.net | @n33co
-    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         {{ partial "seo_schema" . }}
         {{ with $.Scratch.Get "generalTitle" }}
@@ -53,19 +48,19 @@
         {{ template "_internal/schema.html" . }}
         {{ template "_internal/google_news.html" . }}
 
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
         {{ if isset .Site.Params "customcss" }}
             {{ $.Scratch.Set "cssFiles" .Site.Params.customCSS }}
         {{ else }}
             {{ $.Scratch.Set "cssFiles" false }}
         {{ end }}
-
         <!-- If the value "default" is passed into the param then we will first
              load the standard css files associated with the theme -->
         {{ if or (in ($.Scratch.Get "cssFiles") "default") (eq ($.Scratch.Get "cssFiles") false) }}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
             <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,800,900|Source+Sans+Pro:400,700">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.css">
             <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
             <link disabled id="dark-mode-theme" rel="stylesheet" href="/css/dark.css">
         {{ end }}

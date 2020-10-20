@@ -28,7 +28,6 @@ editor_options:
 
 The dark mode control I've implemented here came from a fellow cloud architect who used a CSS "trick" to pivot their light color scheme. I'm accustomed to using SASS to build separate themes and load them directly, so this seemed like an interesting shortcut. As "dark mode" and related accessibility features have standardized across browsers, 
 
-
 ## Separation of Concerns
 
 One of the primitives I wanted to address from the outset was the principal of least privilege. Since I come from a regulated systems background I have fairly conservative reflexes when outlining roles and responsibilities. And also with major studio partners and their security requirements, I wanted to be double-sure that the proper constraints were in place to assure partners that only the right individuals had access to media resources.

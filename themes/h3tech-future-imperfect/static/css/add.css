@@ -54,6 +54,16 @@
     display: table;
 }
 
+#header ul li {
+    margin: 0 !important;
+    border-left: none !important;
+}
+
+#header nav.menu {
+    padding-right: 1.25em;
+    padding-top: 1.25em;
+}
+
 #header .darkMode {
     font-size: 0.8em;
     border-right: solid 1px rgba(160, 160, 160, 0.3);
@@ -64,11 +74,6 @@
 .darkMode ul {
     padding-left: 0 !important;
     display: inline;
-}
-
-#header ul li {
-    margin: 0 !important;
-    border-left: none !important;
 }
 
 .darkMode ul li {
@@ -210,6 +215,11 @@ a#clear-dark-mode {
 .modal-backdrop {
     background: #FFF !important;
     opacity: 95% !important;
+    z-index: 10000;
+}
+
+.modal.show {
+    z-index: 10001;
 }
 
 .vertical {
@@ -294,4 +304,20 @@ a#clear-dark-mode {
     100% {
         transform: scale(0.9);
     }
+}
+
+button.button.btn-block.vitae-up:before {
+    font-family: "FontAwesome";
+    font-weight: 900;
+    content: '\f062';
+}
+
+button.button.btn-block.vitae-back:before {
+    font-family: "FontAwesome";
+    font-weight: 900;
+    content: '\f060';
+}
+
+a#back-to-top:hover {
+    text-decoration: none !important;
 }

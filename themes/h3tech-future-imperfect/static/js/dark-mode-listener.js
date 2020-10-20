@@ -3,21 +3,32 @@ const clear = document.getElementById("clear-dark-mode");
 const modal = document.getElementById("myModal");
 let darkTheme = document.getElementById("dark-mode-theme");
 
-let timer = 0;
-const delay = 250;
-let prevent = false;
+// set mode on page load
+document.addEventListener("DOMContentLoaded", setDefaultMode, false);
 
-document.addEventListener("DOMContentLoaded", function(event) {
-    setDefaultMode();
-});
+// Checks for value pushed "up" from OS or browser settings
+const darkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+// this try/catch only exists because of Safari being weird
+try {
+    // Chrome & Firefox
+    darkMediaQuery.addEventListener('change', (e) => {
+        setDefaultMode();
+    });
+} catch (e1) {
+    try {
+        // Safari
+        darkMediaQuery.addListener((e) => {
+            setDefaultMode();
+        });
+    } catch (e2) {
+        console.error(e2);
+    }
+}
 
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    setDefaultMode();
-});
-
-
+// flip the dark mode icon and change theme when sun/moon clicked
 toggle.addEventListener("click", toggleSwitch, false);
 
+// pop modal and clear localStorage when 'reset' clicked
 clear.addEventListener("click", resetLocalStorage, false);
 
 function resetLocalStorage() {
@@ -60,12 +71,12 @@ function setDefaultMode() {
             // set dark theme
             darkTheme.disabled = false;
             toggle.className = "fas fa-sun";
-            console.log('dark mode is enabled by OS preference');
+            console.log('dark mode is enabled by browser/OS preference');
         } else {
             // set light theme            
             darkTheme.disabled = true;
             toggle.className = "fas fa-moon";
-            console.log('light mode is enabled by OS preference');
+            console.log('light mode is enabled by browser/OS preference');
         }
     }
 }

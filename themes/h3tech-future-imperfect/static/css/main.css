@@ -600,7 +600,8 @@ input[type="submit"].small,
 input[type="reset"].small,
 input[type="button"].small,
 .button.small {
-    font-size: 0.5em;
+    font-size: 0.6em;
+    padding: 2em;
 }
 
 input[type="submit"].disabled,
