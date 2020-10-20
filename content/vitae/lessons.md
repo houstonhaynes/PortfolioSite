@@ -2,7 +2,7 @@
 type = "itemized"
 author = "Houston Haynes"
 date = "2019-10-07"
-title = "Exit Notes"
+title = "Lessons Learned"
 description = "On Houston's recent work assignments"
 featured = ""
 featuredpath = ""

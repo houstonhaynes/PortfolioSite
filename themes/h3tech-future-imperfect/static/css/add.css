@@ -60,8 +60,9 @@
 }
 
 #header nav.menu {
-    padding-right: 1.25em;
-    padding-top: 1.25em;
+    margin-right: 1em;
+    align-self: center;
+    vertical-align: middle;
 }
 
 #header .darkMode {
