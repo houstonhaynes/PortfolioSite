@@ -4,8 +4,8 @@ author = "Houston Haynes"
 date = "2019-10-07"
 title = "Lessons Learned"
 description = "On Houston's recent work assignments"
-featured = ""
-featuredpath = ""
+featured = "H3logo.png"
+featuredpath = "img"
 featuredalt = ""
 categories = [""]
 linktitle = ""
@@ -15,13 +15,10 @@ weight = "06"
 icon = "fas fa-door-open"
 +++
 {{< rawhtml >}}
-<h1>Not always the good kind</h1>
+<h1>On Advancing Technology and Professional Goals</h1>
 
-<p>I was fortunate to be part of several successful start-up "exits" early in my career, before the dot com crash in the late 90s. I opted to leave them out of my LinkedIn profile and resume because I found that showing that early history is often met with forms of age discrimination. I'm in the LA tech market after all, so it's practically expected. Either way this isn't about *that* kind of exit. This is about my recent consulting history, where some stints are quite short. In certain cases they were contract-to-hire opportunities, but in other cases they were fixed statements of work. In all cases I was evaluating those companies as carefully as they may have been evaluating my fit for their organization. Each entry below delves a bit into the context of the role and how the situation played out. Whether it's technology, management or culture <strong>it all comes back to <i>lessons learned.</i></strong></p>
-<br>
-<h2>Preamble: On Advancing Technology and Professional Goals</h2>
-
-<p>After moving to Southern California my roles were in large organizations, as can ben seen in my LinkedIn profile. And that experience had all the vestiges of the long-lamented pattern of senior management's tethers to antiquated patterns and systems. That experience caused me to rethink whether that was the correct career track for me. There were also <a href="/vitae/darksideofbigdata/">ethical issues</a> within certain organizations which spurred a form of professional reckoning. While considering my options, I went back to the early formative experiences <a href="/vitae/mlbyaccident/">with Moog</a> and <a href="/vitae/earlydatascience/">at TherapyEdge</a>. I've since returned to two of the most formative experiences of my career - and decided to re-focus on taking on the big problem and doing work of consequence. From 2012 onward I made the conscious decision to look for two things in a role: 1) to solve challenges with modern technology and 2) to be able to build diverse, high-performing teams. All of the jobs listed below started with some form of promise to fulfill those two goals. The listing below gives a highlight to companies, problems spaces encountered, and the outcome in each case.</p>
+<p>After moving to Southern California my roles were in large organizations, as can ben seen in my LinkedIn profile. And that experience had all the vestiges of the long-lamented pattern of senior management's tethers to antiquated patterns and systems. That experience caused me to rethink whether that was the correct career track for me. There were also <a href="/vitae/darksideofbigdata/">ethical issues</a> within certain organizations which spurred a form of professional reckoning. </p>
+<p>From 2012 onward I made the conscious decision to look for two things in a role: 1) to solve challenges with modern technology and 2) to be able to build diverse, high-performing teams. While considering my options, I went back to the early formative experiences <a href="/vitae/mlbyaccident/">with Moog</a> and <a href="/vitae/earlydatascience/">at TherapyEdge</a>. I've since returned to two of the most formative experiences of my career - and decided to re-focus on taking on the big problem and doing work of consequence. All of the jobs listed below started with some form of promise to fulfill those two goals. The listing below gives a highlight to companies, problems spaces encountered, and the outcome in each case.</p>
 <br class="SoundFi">
 <div class="container-fluid">
     <div class="row">
