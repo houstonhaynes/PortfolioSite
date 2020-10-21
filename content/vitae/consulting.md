@@ -5,6 +5,7 @@ date = "2019-10-07"
 title = "Consulting"
 description = "Lessons learned in recent work assignments"
 featured = "H3logo.png"
+ogfeatured = ""
 featuredpath = "img"
 featuredalt = ""
 categories = [""]

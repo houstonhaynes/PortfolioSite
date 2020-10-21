@@ -5,6 +5,7 @@ date = "2019-10-07"
 title = "About Houston"
 description = "Department Manager for operations and analytics - Media, E-commerce, Automotive, Healthcare"
 featured = "H3logo.png"
+ogfeatured = ""
 featuredpath = "img"
 featuredalt = ""
 categories = [""]

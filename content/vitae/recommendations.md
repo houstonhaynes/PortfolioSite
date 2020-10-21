@@ -6,6 +6,7 @@ title = "Recommendations"
 description = "Houston as an engineer and department lead"
 featured = "H3logo.png"
 featuredpath = "img"
+ogfeatured = ""
 featuredalt = ""
 categories = [""]
 linktitle = ""

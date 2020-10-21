@@ -5,6 +5,7 @@ date = "2019-10-07"
 title = "My time with Moog"
 description = "Early Career with a titan of the synthesizer industry"
 featured = "H3logo.png"
+ogfeatured = ""
 featuredpath = "img"
 featuredalt = ""
 categories = [""]

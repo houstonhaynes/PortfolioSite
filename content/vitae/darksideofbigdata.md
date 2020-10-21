@@ -5,6 +5,7 @@ date = "2019-10-07"
 title = "The Dark Side of Big Data"
 description = "How the 'refi bubble' in the 2000s was my Cassandra moment in finance"
 featured = "H3logo.png"
+ogfeatured = ""
 featuredpath = "img"
 featuredalt = ""
 categories = [""]

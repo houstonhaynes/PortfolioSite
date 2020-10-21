@@ -5,6 +5,7 @@ date = "2019-10-07"
 title = "Medical Software and the Primacy of Data"
 description = "Data Science in N-of-1 Health & Fitness Tracking"
 featured = "H3logo.png"
+ogfeatured = ""
 featuredpath = "img"
 featuredalt = ""
 categories = [""]

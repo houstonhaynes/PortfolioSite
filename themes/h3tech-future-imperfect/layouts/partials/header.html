@@ -28,13 +28,13 @@
             {{ end }}
         {{ end }}
 
-        {{ template "twitter_cards.html" . }}
+        {{ partial "twitter_cards.html" . }}
         {{ if .IsPage }}
         <meta property="twitter:image" content="{{ .Site.BaseURL }}/{{ .Params.featuredpath }}/{{ .Params.featured }}">
         {{ else }}
         <meta property="twitter:image" content="{{ .Site.BaseURL }}/favicon/favicon.png">
         {{ end }}
-        {{ template "opengraph.html" . }}
+        {{ partial "opengraph.html" . }}
         {{ if .IsPage }}
         <meta property="og:image" content="{{ .Site.BaseURL }}/{{ .Params.featuredpath }}/{{ .Params.featured }}">
             
