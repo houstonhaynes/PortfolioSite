@@ -1,5 +1,15 @@
 @import url("//fonts.googleapis.com/css?family=Ubuntu:400,700,800,900");
 @import url("//fonts.googleapis.com/css?family=Fira+Code");
+@font-face {
+    font-family: "FontAwesome 5 Pro";
+    src: url('/fonts/fa-regular-400.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: "FontAwesome 5 Pro Solid";
+    src: url('/fonts/fa-solid-900.ttf') format('truetype');
+}
+
 
 /*
 	Future Imperfect by HTML5 UP

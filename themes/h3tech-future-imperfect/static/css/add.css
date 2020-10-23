@@ -241,10 +241,9 @@ a#clear-dark-mode {
 }
 
 .close {
-    position: relative !important;
     right: 10px;
     top: 50%;
-    margin-top: -10px;
+    vertical-align: middle;
 }
 
 
@@ -317,6 +316,36 @@ button.button.btn-block.vitae-back:before {
     font-family: "FontAwesome";
     font-weight: 900;
     content: '\f060';
+}
+
+div.time-capsule {
+    display: table;
+}
+
+div.time-capsule:before {
+    font-family: "FontAwesome 5 Pro Solid";
+    font-weight: 900;
+    content: '\f723';
+    font-size: 2rem;
+    width: 4rem;
+    height: 4rem;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+div.alert-warning {
+    display: table;
+}
+
+div.alert-warning:before {
+    font-family: "FontAwesome 5 Pro Solid";
+    font-weight: 900;
+    content: '\f321';
+    font-size: 2rem;
+    width: 4rem;
+    height: 4rem;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 a#back-to-top:hover {

@@ -144,11 +144,11 @@ enableGitInfo = true
 #  identifier = "fas fa-telescope"
 #  weight = 4
   
-[[menu.main]]
-  name = "Contact"
-  url = "/contact/"
-  identifier = "fas fa-envelope"
-  weight = 98
+#[[menu.main]]
+#  name = "Contact"
+#  url = "/contact/"
+#  identifier = "fas fa-envelope"
+#  weight = 98
 
 [[menu.main]]
   name = "Tags"
