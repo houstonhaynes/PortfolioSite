@@ -127,16 +127,22 @@ enableGitInfo = true
   weight = 7
 
 [[menu.main]]
-  name = "Sidebars"
+  name = "Sidebar"
   url = "/categories/sidebar/"
   identifier = "fas fa-digital-tachograph"
   weight = 2
 
 [[menu.main]]
-  name = "Deep Dives"
+  name = "Deep Dive"
   url = "/categories/deep dive/"
   identifier = "fas fa-chalkboard-teacher"
   weight = 3
+
+#[[menu.main]]
+#  name = "Perspective"
+#  url = "/categories/perspective/"
+#  identifier = "fas fa-telescope"
+#  weight = 4
   
 [[menu.main]]
   name = "Contact"
@@ -148,7 +154,7 @@ enableGitInfo = true
   name = "Tags"
   url = "/tags/"
   identifier = "fas fa-tags"
-  weight = 5
+  weight = 97
 
 # Sets Social Media icons to appear and link to your account. Value should be your
 # username unless otherwise noted. These are the icons affected by socialAppearAtTop
