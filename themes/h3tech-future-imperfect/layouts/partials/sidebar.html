@@ -126,11 +126,11 @@
         {{ $pic := .Site.Params.intro.pic }}
         {{ with $pic.src }}
           {{ if $pic.circle }}
-            <img src="{{ . | relURL }}" class="mx-auto d-block intro-circle" width="96px" alt="{{ $pic.alt }}" />
+            <img src="{{ . | relURL }}" class="mx-auto d-block intro-circle dark-theme-ok" width="96px" alt="{{ $pic.alt }}" />
           {{ else if $pic.imperfect }}
-            <img class="mx-auto d-block" src="{{ . | relURL }}" width="96px" alt="{{ $pic.alt }}" />
+            <img class="filter-none mx-auto d-block dark-theme-ok" src="{{ . | relURL }}" width="96px" alt="{{ $pic.alt }}" />
           {{ else }}
-            <img class="mx-auto d-block" src="{{ . | relURL }}" width="96px" alt="{{ $pic.alt }}" />
+            <img class="filter-none mx-auto d-block dark-theme-ok" src="{{ . | relURL }}" width="96px" alt="{{ $pic.alt }}" />
           {{ end }}
         {{ end }}
       </div>
