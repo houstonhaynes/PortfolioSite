@@ -351,3 +351,9 @@ div.alert-warning:before {
 a#back-to-top:hover {
     text-decoration: none !important;
 }
+
+#content blockquote,
+#content p,
+#content ul {
+    margin-top: 0 !important;
+}

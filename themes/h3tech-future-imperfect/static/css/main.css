@@ -10,6 +10,21 @@
     src: url('/fonts/fa-solid-900.ttf') format('truetype');
 }
 
+@font-face {
+    font-family: "FontAwesome 5 Pro Duotone";
+    src: url('/fonts/fa-duotone-900.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: "FontAwesome 5 Pro Brands";
+    src: url('/fonts/fa-brands-900.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: "FontAwesome 5 Pro Light";
+    src: url('/fonts/fa-light-900.ttf') format('truetype');
+}
+
 
 /*
 	Future Imperfect by HTML5 UP
