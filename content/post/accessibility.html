@@ -9,7 +9,7 @@ output:
 author: "Houston Haynes"
 date: '2020-10-11T15:59:43+05:30'
 featuredpath: img
-featured: accessibility.svg
+featured: accessibility.png
 ogfeatured: H3_og_wide_accessibility.png
 description: Creating an adaptive "dark mode" switch using CSS, JavaScript and Bootstrap
 draft: false
@@ -31,7 +31,7 @@ editor_options:
 
 <div id="a-devils-in-the-details-bargain" class="section level1">
 <h1>A Devil’s (in the details) Bargain</h1>
-<p>I told myself I’d keep this simple. And even though I failed in that goal, the compromises taught me a few things along the way, and as usual those lessons started as roadblocks. Hopefully this entry will help others save some time and frustration when considering a similar path. As with anything web and JavaScript related - beyond here be dragons.</p>
+<p>I told myself I’d keep this simple. And even though I failed in that goal, the compromises yielded important lessons along the way. As usual those lessons started as roadblocks. Hopefully this entry will help others save some time and frustration when considering a similar path. As with anything web and JavaScript related - beyond here be dragons.</p>
 <div id="re-using-extending-code" class="section level2">
 <h2>Re-using &amp; extending code</h2>
 <p>I looked for a simple (there’s that word again) dark mode switch for my site that didn’t involve managing multiple themes. I had created SASS-based multi-theme frameworks for commercial sites, but for a personal site that felt like <em>a bridge too far</em>. I had been using a dark mode browser extension and after some research online <a href="https://radu-matei.com/blog/dark-mode/" target="_blank">found this article that borrowed CSS from a similar plugin</a>. As a bonus, the author also uses the same Hugo template that I had repurposed for my R/blogdown site. So I started with that as a boilerplate.</p>
@@ -167,11 +167,12 @@ function setDefaultMode() {
 </div>
 <div id="actions-overt-and-implied" class="section level2">
 <h2>Actions, overt and implied</h2>
-<p>On page load, the “setDefaultMode” function checks for an existing localStorage setting (ostensibility from a previous user action which set the value). If that’s not found then it bases the “disabled” true/false setting in the header on whether the browser or OS preference is present. That’s used by checking the darkMediaQuery constant. So where the user had set dark mode as the default for the browser or OS, then the page would simply follow suit without a direct action by the user. There’s also a listener that checks for changes to that setting, so that if the user switches between light and dark mode on their device that the page will continue to follow the default.</p>
+<p>On page load, the “setDefaultMode” function checks for an existing localStorage setting (ostensibility from a previous user action which set the value). If that’s not found then it bases the “disabled” true/false setting in the header on whether the browser or OS preference is present. That’s used by checking the darkMediaQuery constant. So where the user had set dark mode as the default for the browser or OS, then the page would simply follow suit without a direct action by the user. Unfortunately the code is a bit more convoluted than one might expect. There’s a listener that checks for changes to that top-level setting, so that if the user switches between light and dark mode on their device that the page will continue to follow the default. But it’s not quite that easy. As it turns out, Safari is behind the rest of the web world and continues to use a deprecated “addListener” method instead of the standard “addEventListener”. That’s the genesis of the <em>try-catch-catch</em> function, where when the first event “falls through” on Safair, the first catch enables the listener to function in that browser.</p>
+<p>I tested a version of this without the deprecated “addListener” against the latest version of Safari on iOS 14 and it worked. So I expect other versions of Safari to “catch up” eventually. In that case the “try” still applies and all will be well. Such as it is, this is an object lesson in how there’s still some fragmentation out there for support of accessibility features. And well - while it’s continue to get better - that’s just the nature of the web.</p>
 </div>
 <div id="late-additions" class="section level2">
 <h2>Late Additions</h2>
-<p>Because of wanting to allow for that “following the default setting” behavior I had to add a reset control of some sort. This clears any localStorage value and the listener takes whatever was set on the browser or OS level. As for how it’s displayed, there was a bit of arm-wrestling with Bootstrap to get the contol to appear in a way that was integral with the dark/light mode switch. The end result displays as part of the dark mode control without crowding the menu with yet another “button”.</p>
+<p>Because of wanting to allow for that “following the default setting” behavior I had to add a reset control. This clears any localStorage value and the listener takes whatever was set on the browser or OS level. As for how it’s displayed, there was a bit of arm-wrestling with Bootstrap to get the contol to appear in a way that was integral with the dark/light mode switch. The end result displays as part of the dark mode control without crowding the menu with yet another “button”.</p>
 {{% fancybox "/img" "reset-closeup.png" %}}
 </div>
 <div id="modal-behavior" class="section level2">
