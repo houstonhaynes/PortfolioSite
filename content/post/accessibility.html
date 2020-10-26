@@ -11,8 +11,8 @@ date: '2020-10-11T15:59:43+05:30'
 featuredpath: img
 featured: accessibility.svg
 ogfeatured: H3_og_wide_accessibility.png
-description: Creating an adaptive "dark mode" switch using JavaScript and Bootstrap
-draft: true
+description: Creating an adaptive "dark mode" switch using CSS, JavaScript and Bootstrap
+draft: false
 tags:
 - blogdown
 - JavaScript
@@ -29,23 +29,191 @@ editor_options:
 
 
 
-<div id="pick-your-positive" class="section level1">
-<h1>Pick Your Positive</h1>
-<div id="cheat-code-for-convenience" class="section level2">
-<h2>Cheat Code for Convenience</h2>
+<div id="a-devils-in-the-details-bargain" class="section level1">
+<h1>A Devil’s (in the details) Bargain</h1>
+<p>I told myself I’d keep this simple. And even though I failed in that goal, the compromises taught me a few things along the way, and as usual those lessons started as roadblocks. Hopefully this entry will help others save some time and frustration when considering a similar path. As with anything web and JavaScript related - beyond here be dragons.</p>
+<div id="re-using-extending-code" class="section level2">
+<h2>Re-using &amp; extending code</h2>
+<p>I looked for a simple (there’s that word again) dark mode switch for my site that didn’t involve managing multiple themes. I had created SASS-based multi-theme frameworks for commercial sites, but for a personal site that felt like <em>a bridge too far</em>. I had been using a dark mode browser extension and after some research online <a href="https://radu-matei.com/blog/dark-mode/" target="_blank">found this article that borrowed CSS from a similar plugin</a>. As a bonus, the author also uses the same Hugo template that I had repurposed for my R/blogdown site. So I started with that as a boilerplate.</p>
+<p>Aside from the clever use of CSS filtering for base elements, which I outline below with my own tweaks, I also shoe-horned some JavaScript together to cover a few extended scenarios. It not only manages the toggling for the button control on my site but also allows for a reset condition. While I was at it, I also included the ability for the site to pick up the OS or browser-level dark/light user defaults, where a “parent setting” could determine which mode is selected.</p>
 </div>
-<div id="crossing-the-rubicon" class="section level2">
-<h2>Crossing the Rubicon</h2>
-{{% fancybox-dark-theme-ok "/img" "AWS_IAM_MediaLiveWrite.png" %}}
+<div id="the-basics" class="section level2">
+<h2>The Basics</h2>
+<p>Here is the header embed for the CSS file - note that the entry is disabled by default. And of course it should be placed <em>after</em> your main theme CSS declaration in the header of your page. Note that even though it’s empty here, the value for ‘disabled’ is set within the dark-mode-listener JavaScript file.</p>
+<figure>
+<figcaption class="caption">
+Header declaration for dark mode CSS file
+</figcaption>
+<pre><code class="html"><link disabled="" id="dark-mode-theme" rel="stylesheet" href="/css/dark.css"></code></pre>
+</figure>
+<p>And below is the base CSS setup that changes the base elements. There are some exceptions to this that I’ll outline later.</p>
+<figure>
+<figcaption class="caption">
+Initial CSS declarations for dark mode (dark.css)
+</figcaption>
+<pre><code class="css">html {
+    background-color: #171717 !important;
+}
+
+html {
+    filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(85%);
+    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(85%);
+}
+
+body {
+    background-color: #FFF !important;
+}
+
+body * [style*="background-image"] {
+    filter: hue-rotate(180deg) contrast(100%) invert(100%);
+    -webkit-filter: hue-rotate(180deg) contrast(100%) invert(100%);
+}</code></pre>
+</figure>
+<div id="spoiler-alert" class="section level3">
+<h3>Spoiler Alert</h3>
+<p>And here is the final JavaScript which runs checks on page load and includes some event listeners. I’ll spell out some details in this entry but there are some spoilers in the inline comments. And if you want to start with the simplest version of this JS you can refer to the article where I started, which simply responds to the user action on the on-screen control.</p>
+<figure>
+<figcaption class="caption">
+dark-mode-listener.js
+</figcaption>
+<pre><code class="javascript">const toggle = document.getElementById("dark-mode-toggle");
+const clear = document.getElementById("clear-dark-mode");
+const modal = document.getElementById("myModal");
+let darkTheme = document.getElementById("dark-mode-theme");
+
+// set mode on page load
+document.addEventListener("DOMContentLoaded", setDefaultMode, false);
+
+// Checks for value pushed from OS or browser settings
+const darkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+// this try/catch only exists because of Safari being weird
+try {
+    // Chrome & Firefox
+    darkMediaQuery.addEventListener('change', (e) => {
+        setDefaultMode();
+    });
+} catch (e1) {
+    try {
+        // Safari
+        darkMediaQuery.addListener((e) => {
+            setDefaultMode();
+        });
+    } catch (e2) {
+        console.error(e2);
+    }
+}
+
+// changes theme when sun/moon clicked on the menu
+toggle.addEventListener("click", toggleSwitch, false);
+
+// pop modal and clear localStorage when 'reset' clicked
+clear.addEventListener("click", resetLocalStorage, false);
+
+function resetLocalStorage() {
+    $('#myModal').modal('show');
+    localStorage.removeItem('dark-mode-storage');
+    // rerun the default function to pick up browser/OS setting
+    setDefaultMode();
+}
+
+// changes the menu logo and triggers the theme change
+function toggleSwitch() {
+    if (toggle.className === "fas fa-moon") {
+        setTheme("dark");
+    } else if (toggle.className === "fas fa-sun") {
+        setTheme("light");
+    }
+}
+
+function setTheme(mode) {
+    localStorage.setItem("dark-mode-storage", mode);
+
+    if (mode === "dark") {
+        // set dark theme
+        darkTheme.disabled = false;
+        toggle.className = "fas fa-sun";
+    } else if (mode === "light") {
+        // set light theme
+        darkTheme.disabled = true;
+        toggle.className = "fas fa-moon";
+    }
+}
+
+function setDefaultMode() {
+    // check if localStorage value exists
+    if (localStorage.getItem('dark-mode-storage')) {
+        // get the value and set the theme
+        console.log("localStorage value used to set light/dark")
+        let savedTheme = localStorage.getItem("dark-mode-storage");
+        setTheme(savedTheme);
+    } else {
+        //check user preferences for browser scheme
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // set dark theme
+            darkTheme.disabled = false;
+            toggle.className = "fas fa-sun";
+            console.log('dark mode is enabled by browser/OS preference');
+        } else {
+            // set light theme            
+            darkTheme.disabled = true;
+            toggle.className = "fas fa-moon";
+            console.log('light mode is enabled by browser/OS preference');
+        }
+    }
+}</code></pre>
+</figure>
 </div>
-<div id="depressing-developments" class="section level2">
-<h2>Depressing Developments</h2>
-<p>[could not get long press to work]</p>
+</div>
+<div id="actions-overt-and-implied" class="section level2">
+<h2>Actions, overt and implied</h2>
+<p>On page load, the “setDefaultMode” function checks for an existing localStorage setting (ostensibility from a previous user action which set the value). If that’s not found then it bases the “disabled” true/false setting in the header on whether the browser or OS preference is present. That’s used by checking the darkMediaQuery constant. So where the user had set dark mode as the default for the browser or OS, then the page would simply follow suit without a direct action by the user. There’s also a listener that checks for changes to that setting, so that if the user switches between light and dark mode on their device that the page will continue to follow the default.</p>
+</div>
+<div id="late-additions" class="section level2">
+<h2>Late Additions</h2>
+<p>Because of wanting to allow for that “following the default setting” behavior I had to add a reset control of some sort. This clears any localStorage value and the listener takes whatever was set on the browser or OS level. As for how it’s displayed, there was a bit of arm-wrestling with Bootstrap to get the contol to appear in a way that was integral with the dark/light mode switch. The end result displays as part of the dark mode control without crowding the menu with yet another “button”.</p>
+{{% fancybox "/img" "reset-closeup.png" %}}
+</div>
+<div id="modal-behavior" class="section level2">
+<h2>Modal Behavior</h2>
+<p>Originally I had set the behavior to simply “flip the switch” when the reset control was activated. When the “reset” toggle was clicked the site would “snap” to that setting as quickly as the CSS changes could be rendered on the canvas. However the behavior in certain browsers is not exactly as expected, since it’s possible that the localStorage value and system-set value could match. Also, there are settings on the browser level that can sometimes conflict with the OS-level setting (which I found on mobile devices when testing) that meant the user could end up with a confusing end result. If the browser was still set to the same mode as the localStorage setting, and the OS was set to the opposite value, the user would see <em>no</em> change in the browser canvas. The prompt in the modal is there to add some context to this multi-tiered control.</p>
+{{% fancybox "/img" "reset-modal.png" %}}
+<p>While the standard “Close” and “times” buttons are on the modal, it’s also set to clear on any click within the desktop space. It’s not really dependent on the user confirming the modal for any behavior to change. I did that as a measure of convenience, but am also aware that it too might cause some confusion. Either way, once the top-level experience was in-hand I could deal with some unintended consequences with various elements inside the page. It can feel like a “game of whack-a-mole” but the end result was worth the effort.</p>
+</div>
+<div id="masking-dark-mode-in-media-embeds" class="section level2">
+<h2>Masking dark mode in media embeds</h2>
+<p>I take advantage of Hugo’s built-in templates for Vimeo and Twitter post embeds. But that has an unintended consequence of creating a “photo negative” effect for videos and image thumbnails in Twitter posts. I could have stayed with simply masking the changes for those embeds with a “not” clause in the CSS. But in this case I wanted to tweak things a bit by reducing the brightness and contrast for a truer “dark mode” experience.</p>
+<figure>
+<figcaption class="caption">
+Vimeo and Twitter ‘exclusion’ in dark.css
+</figcaption>
+<pre><code class="css">iframe[src^="https://player.vimeo.com/video"],
+iframe[src^="https://platform.twitter.com"] {
+    filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
+    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
+}</code></pre>
+</figure>
+<p>I was tempted to “surface” the internal Vimeo and Twitter embed templates in Hugo and modify them for my site. But again, I’m trying to split the difference between honoring the spirit of this browser feature set without overinvesting for what amounts to a personal tech vanity site. Considering usability issues like this have shifted “dark mode” from a convenience feature and more about how users who <em>need</em> this functionality can better interact with the site. This is still a burgeoning field within the web community, and I’ll continue to refactor to make the site better suited to <em>“a11y”</em> standards as I learn work more with Hugo. (or when I transition to another framework which makes this more manageable)</p>
+</div>
+<div id="desktop-versus-mobile-dark-mode-preferences" class="section level2">
+<h2>desktop versus mobile dark mode preferences</h2>
+<p>As mentioned above with the modal, I mistakenly believed that the OS-level listener was the only setting I had to account for. As it turns out there are also mobile settings in the browser and the device level settings.</p>
+{{% fancybox "/img" "reset-mobileOS.png" %}}
+<p>And here’s the setting in Chrome for my Samsung Note10+. I noticed that this is only available in the mobile app. No equivalent setting exists in Chrome desktop.</p>
+{{% fancybox "/img" "reset-mobileOSDefault.jpg" %}}
+<p>And beyond the device settings Samsung provides a control in their Bixby applet. I was able to put a widget that could flip the value manually without diving into device settings. And while this can be triggered based on a variety of conditions, here I’m simply using it for testing purposes.</p>
+{{% fancybox "/img" "reset-mobileLightDark.jpg" %}}
+<p>So while the solution makes a good-faith-effort to provide a smooth user experience, there’s still quite a bit of fragmentation in the marketplace. Different operating systems, browsers and devices approach accessibility their own way. And I expect that will continue to be the case as standards and practices are sorted out.</p>
+</div>
+<div id="future-tweaks-and-re-engineering" class="section level2">
+<h2>Future Tweaks and Re-Engineering</h2>
+<p>This has been a good start, but more work remains to be done. The gray background for charts and code blocks (that I thought would be “easy on the eyes”) actually creates a low contrast experience that’s antagonistic to certain conditions and communities. Fortunately some of these things can be adjusted by simply selected a new “theme” that has a better default accessibility posture. In other cases I’ll have to “get under the hood” and re-tool some of my R-based and Highcharts-rendered reports. That work is continuing now.</p>
 </div>
 </div>
-<div id="never-ending-safari" class="section level1">
-<h1>Never-ending Safari</h1>
-</div>
-<div id="future-tweaks-and-total-rework" class="section level1">
-<h1>Future Tweaks and Total Rework</h1>
+<div id="another-beginning" class="section level1">
+<h1>Another Beginning</h1>
+<p>As usual, what started as “simple” will require more thought and work, and fortunately there are quite a few tools online to help with that process. I’m a huge fan of <a href="http://paletton.com/" target="_blank">paletton</a> not only for evaluating color schemes, but also for its vision simulator.</p>
+{{% fancybox "/img" "reset-visionSimulator.png" %}}
+<p>If you’re looking at the low contrast between the menus and the text, the irony of that is not lost on me, either. Still it’s an invaluable tool for checking color choices against the ability for people with different conditions to pick up the nuances in your color palette. There’s also <a href="https://webaccessibility.com/" target="_blank">the webaccessibility site</a> also offers an initially free service which checks a wide variety of web settings.</p>
+<p>This will continue to be a developing topic and I’m looking forward to moving past the “convenience feature” of dark mode and make the site more accessible to everyone.</p>
 </div>

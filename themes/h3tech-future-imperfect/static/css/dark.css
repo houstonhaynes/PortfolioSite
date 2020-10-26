@@ -3,8 +3,8 @@ html {
 }
 
 html {
-    filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(85%);
-    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(85%);
+    filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(85%);
+    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(85%);
 }
 
 body {
