@@ -17,11 +17,10 @@ Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If
            {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ }
            }
 
-
 If ($environment -eq 'prd') {
-    az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $intString
-} else {
     az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $prdString
+} else {
+    az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $intString
 }
 
 az cdn endpoint purge -g h3tech -n h3techdevCDN$environment --profile-name h3tech --content-paths '/*'
