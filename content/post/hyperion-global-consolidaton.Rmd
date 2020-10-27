@@ -199,7 +199,7 @@ hcConcurrency <- highchart() %>%
   hc_plotOptions(
     series = list(
       stacking = 'normal', marker = 'none', step = 'both')) %>% 
-  hc_add_theme(hc_theme_538())
+  hc_add_theme(hc_theme_smpl())
 
 frameWidget(hcConcurrency, height = "50%")
 ```

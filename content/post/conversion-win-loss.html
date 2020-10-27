@@ -105,7 +105,7 @@ hcWinLossInitial <- highchart() %>%
   hc_plotOptions(
     series = list(
       stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_538())
+  hc_add_theme(hc_theme_smpl())
 
 frameWidget(hcWinLossInitial, width = "100%", height = "100%")</code></pre>
 <p>Bear in mind that the cart could have been lost at any point during the countdown period – up to 5 minutes after the item was initially added to the cart. The visualization here is designed to show correlation to the time slot where the cart was created versus the loss rate.</p>
