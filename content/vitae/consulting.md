@@ -12,7 +12,7 @@ categories = ["opinion"]
 linktitle = ""
 format = ""
 link = ""
-weight = "06"
+weight = "05"
 icon = "fas fa-door-open"
 +++
 {{< rawhtml >}}

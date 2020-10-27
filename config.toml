@@ -93,7 +93,7 @@ enableGitInfo = true
 
   paragraph = "Sidebars & Deep Dives<br>in Software &amp; Hardware<br><i class='fas fa-brain'></i> Big Data, ML, Music <i class='fas fa-music'></i><br><i class='fas fa-camera-movie'></i> Media, IoT &amp; Cloud <i class='fas fa-cloud'></i>"
 
-  about     = "My roles have ranged from solder jockey to CTO. This site touches on the highs and lows from those travels but focuses on my current areas of tech interest. While this is primarily a software development blog I will lapse occasionally into digressions on art, music and culture. You've been warned."
+  about     = "My roles have ranged from solder jockey to CTO. This site touches on those travels but focuses on current areas of interest. While this is primarily a development blog I will offer perspectives on management, leadership, diversity and reducing toxicity in tech culture. "
   # This appears at the top of the sidebar above params.intro.header.
   # A width of less than 100px is recommended from a design perspective.
   [params.intro.pic]
@@ -103,7 +103,7 @@ enableGitInfo = true
     # Sets Image to be Future Imperfect's hexagon
     imperfect = false
     width     = "168"
-    alt       = "H3"
+    alt       = "H3 Tech Hub"
 
 [params.postAmount]
 # Sets the number of recent posts to show in the sidebar. The default value is 5.
