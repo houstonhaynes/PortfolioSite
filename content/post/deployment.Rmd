@@ -15,13 +15,12 @@ description: Creating an adaptive "dark mode" switch using CSS, JavaScript and B
 draft: false
 tags:
 - blogdown
-- JavaScript
-- Bootstrap
-- Accessibility
-- a11y
-- Dark Mode
+- R
+- PowerShell
+- Azure DevOps
+- deployment
 categories: 
-- Deep Dive
+- Sidebar
 weight: 1
 editor_options: 
   chunk_output_type: inline
