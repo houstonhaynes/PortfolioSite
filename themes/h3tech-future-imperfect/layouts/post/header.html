@@ -20,6 +20,11 @@
         {{ if .Site.Params.includeReadingTime }}
             <p>{{ .ReadingTime }} minute read</p>
         {{ end }}
+        {{ if (isset .Params "emblem") }}
+            <img class="image w-50 opacity-3"  src="/img/emblems/{{ .Params.emblem }}" />
+        {{ else }}
+            <img class="image w-50 opacity-3"  src="/img/emblems/servers.png" />
+        {{ end }}
         <!--<a href="#" class="author"><span class="name">Jane Doe</span><img src="images/avatar.jpg" alt="" /></a>-->
     </div>
 </header>

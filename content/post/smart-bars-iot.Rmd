@@ -11,6 +11,7 @@ date: '2019-05-15T14:59:43+05:30'
 featuredpath: img
 featured: HeliosBars.png
 ogfeatured: H3_og_wide_HeliosBars.png
+emblem: iot.png
 description: Teasing features out of an Arduino embedded project using Android and Google Location Services APIs
 draft: false
 tags:

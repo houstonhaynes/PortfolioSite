@@ -1,5 +1,5 @@
 ---
-title: "Flexing Accessibility"
+title: "Local Deployment to Azure Static Site with GitHub Actions"
 output:
   blogdown::html_page:
     toc: false
@@ -9,15 +9,16 @@ output:
 author: "Houston Haynes"
 date: '2020-10-11T15:59:43+05:30'
 featuredpath: img
-featured: accessibility.png
-ogfeatured: H3_og_wide_accessibility.png
-description: Creating an adaptive "dark mode" switch using CSS, JavaScript and Bootstrap
+featured: deployment.png
+ogfeatured: H3_og_wide_deployment.png
+emblem: cloud.png
+description: Hacking my local R/blogdown deployment process with PowerShell
 draft: false
 tags:
-- blogdown
 - R
+- blogdown
 - PowerShell
-- Azure DevOps
+- GitHub Actions
 - deployment
 categories: 
 - Sidebar
@@ -28,141 +29,72 @@ editor_options:
 
 
 
-<div id="a-devils-in-the-details-bargain" class="section level1">
-<h1>A Devil’s (in the details) Bargain</h1>
-<p>I told myself I’d keep this simple. And even though I failed in that goal, the compromises yielded important lessons along the way. As usual those lessons started as roadblocks. Hopefully this entry will help others save some time and frustration when considering a similar path. As with anything web and JavaScript related - beyond here be dragons.</p>
-<div id="re-using-extending-code" class="section level2">
-<h2>Re-using &amp; extending code</h2>
-<p>I looked for a simple (there’s that word again) dark mode switch for my site that didn’t involve managing multiple themes. I had created SASS-based multi-theme frameworks for commercial sites, but for a personal site that felt like <em>a bridge too far</em>. I had been using a dark mode browser extension and after some research online <a href="https://radu-matei.com/blog/dark-mode/" target="_blank">found this article that borrowed CSS from a similar plugin</a>. As a bonus, the author also uses the same Hugo template that I had repurposed for my R/blogdown site. So I started with that as a boilerplate.</p>
-<p>Aside from the clever use of CSS filtering for base elements, which I outline below with my own tweaks, I also shoe-horned some JavaScript together to cover a few extended scenarios. It not only manages the toggling for the button control on my site but also allows for a reset condition. While I was at it, I also included the ability for the site to pick up the OS or browser-level dark/light user defaults, where a “parent setting” could determine which mode is selected.</p>
-</div>
-<div id="the-basics" class="section level2">
-<h2>The Basics</h2>
+<div id="in-search-of-repeatability" class="section level1">
+<h1>In Search of Repeatability</h1>
+<p>There are some trade-offs with a static site. It’s faster and has a lighter footprint.</p>
+<div id="groundwork" class="section level2">
+<h2>Groundwork</h2>
 <p>Here is the header embed for the CSS file - note that the entry is disabled by default. And of course it should be placed <em>after</em> your main theme CSS declaration in the header of your page. Note that even though it’s empty here, the value for ‘disabled’ is set within the dark-mode-listener JavaScript file.</p>
 <figure>
 <figcaption class="caption">
-Header declaration for dark mode CSS file
+.gitignore entry to exclude local properties file
 </figcaption>
-<pre><code class="html"><link disabled="" id="dark-mode-theme" rel="stylesheet" href="/css/dark.css"></code></pre>
+<pre><code class="">deploy/properties.json</code></pre>
+</figure>
+<p>This is some text</p>
+<figure>
+<figcaption class="caption">
+build-int.R - runs Rterm session to build blogdown site
+</figcaption>
+<pre><code class="r">setwd ("c:/repo/portfoliosite")
+blogdown::hugo_cmd(shQuote(c('-b', 'https://int.h3tech.dev')))
+q("no")</code></pre>
 </figure>
 <p>And below is the base CSS setup that changes the base elements. There are some exceptions to this that I’ll outline later.</p>
 <figure>
 <figcaption class="caption">
-Initial CSS declarations for dark mode (dark.css)
+push.ps1 - build and deployment script
 </figcaption>
-<pre><code class="css">html {
-    background-color: #171717 !important;
+<pre><code class="powershell">Param
+    (
+        # environment help description
+        [Parameter(Mandatory=$true)]   
+        [ValidateNotNull()]
+        [ValidateNotNullOrEmpty()]        
+        [string]$environment = $args[0]
+    )
+
+# get connection strings from local file
+$JSON = Get-Content -Path "C:\repo\PortfolioSite\deploy\properties.json" | ConvertFrom-JSON
+
+# populate connection strings for each environment
+$intString = $JSON.int
+$prdString = $JSON.prd
+
+# clear the files to ensure that a 'clean' build is generated for all files
+Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force
+
+# run R terminal to build blogdown site for specific URL pattern
+If ($environment -eq 'prd') {
+    cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-prd.R'
+} else {
+    cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-int.R'
 }
 
-html {
-    filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(85%);
-    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(85%);
+# correct iframe embed bug in the widgetframe R package - this is the workaround
+Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If (Get-Content $_.FullName | Select-String -Pattern '/figure-html//widgets/') 
+           {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ } }
+
+# do the file push using azcopy sync function
+If ($environment -eq 'prd') {
+    az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $prdString
+} else {
+    az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $intString
 }
 
-body {
-    background-color: #FFF !important;
-}
-
-body * [style*="background-image"] {
-    filter: hue-rotate(180deg) contrast(100%) invert(100%);
-    -webkit-filter: hue-rotate(180deg) contrast(100%) invert(100%);
-}</code></pre>
+# clear the CDN cache so that new files show on the site
+az cdn endpoint purge -g h3tech -n h3techdevCDN$environment --profile-name h3tech --content-paths '/*'</code></pre>
 </figure>
-<div id="spoiler-alert" class="section level3">
-<h3>Spoiler Alert</h3>
-<p>And here is the final JavaScript which runs checks on page load and includes some event listeners. I’ll spell out some details in this entry but there are some spoilers in the inline comments. And if you want to start with the simplest version of this JS you can refer to the article where I started, which simply responds to the user action on the on-screen control.</p>
-<figure>
-<figcaption class="caption">
-dark-mode-listener.js
-</figcaption>
-<pre><code class="javascript">const toggle = document.getElementById("dark-mode-toggle");
-const clear = document.getElementById("clear-dark-mode");
-const modal = document.getElementById("myModal");
-let darkTheme = document.getElementById("dark-mode-theme");
-
-// set mode on page load
-document.addEventListener("DOMContentLoaded", setDefaultMode, false);
-
-// Checks for value pushed from OS or browser settings
-const darkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-// this try/catch only exists because of Safari being weird
-try {
-    // Chrome & Firefox
-    darkMediaQuery.addEventListener('change', (e) => {
-        setDefaultMode();
-    });
-} catch (e1) {
-    try {
-        // Safari
-        darkMediaQuery.addListener((e) => {
-            setDefaultMode();
-        });
-    } catch (e2) {
-        console.error(e2);
-    }
-}
-
-// changes theme when sun/moon clicked on the menu
-toggle.addEventListener("click", toggleSwitch, false);
-
-// pop modal and clear localStorage when 'reset' clicked
-clear.addEventListener("click", resetLocalStorage, false);
-
-function resetLocalStorage() {
-    $('#myModal').modal('show');
-    localStorage.removeItem('dark-mode-storage');
-    // rerun the default function to pick up browser/OS setting
-    setDefaultMode();
-}
-
-// changes the menu logo and triggers the theme change
-function toggleSwitch() {
-    if (toggle.className === "fas fa-moon") {
-        setTheme("dark");
-    } else if (toggle.className === "fas fa-sun") {
-        setTheme("light");
-    }
-}
-
-function setTheme(mode) {
-    localStorage.setItem("dark-mode-storage", mode);
-
-    if (mode === "dark") {
-        // set dark theme
-        darkTheme.disabled = false;
-        toggle.className = "fas fa-sun";
-    } else if (mode === "light") {
-        // set light theme
-        darkTheme.disabled = true;
-        toggle.className = "fas fa-moon";
-    }
-}
-
-function setDefaultMode() {
-    // check if localStorage value exists
-    if (localStorage.getItem('dark-mode-storage')) {
-        // get the value and set the theme
-        console.log("localStorage value used to set light/dark")
-        let savedTheme = localStorage.getItem("dark-mode-storage");
-        setTheme(savedTheme);
-    } else {
-        //check user preferences for browser scheme
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            // set dark theme
-            darkTheme.disabled = false;
-            toggle.className = "fas fa-sun";
-            console.log('dark mode is enabled by browser/OS preference');
-        } else {
-            // set light theme            
-            darkTheme.disabled = true;
-            toggle.className = "fas fa-moon";
-            console.log('light mode is enabled by browser/OS preference');
-        }
-    }
-}</code></pre>
-</figure>
-</div>
 </div>
 <div id="actions-overt-and-implied" class="section level2">
 <h2>Actions, overt and implied</h2>

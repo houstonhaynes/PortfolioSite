@@ -11,6 +11,7 @@ date: '2018-06-20T14:59:43+05:30'
 featuredpath: img
 featured: Bragi.png
 ogfeatured: H3_og_wide_Bragi.png
+emblem: iot.png
 description: Measuring heart rate through optical pulse oximeters placed in the ear canal
 draft: true
 tags:
