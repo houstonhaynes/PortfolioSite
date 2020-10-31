@@ -13,7 +13,7 @@ featured: deployment.png
 ogfeatured: H3_og_wide_deployment.png
 emblem: cloud.png
 description: Hacking my local R/blogdown deployment process with PowerShell
-draft: false
+draft: true
 tags:
 - R
 - blogdown
