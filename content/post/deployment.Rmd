@@ -28,9 +28,9 @@ editor_options:
   chunk_output_type: inline
 ---
 # Low Maintenance Repeatability
-I've long held (as in **for _<a href="/vitae/about/#IBM">decades</a>_**) that a software engineer could only own the "full stack" moniker if they had experience with instrumenting automated deployment. Over the past few years "devops" has become all the rage, and I'm *here for it*. This is the first of three articles outlining how I build and migrate this site. This entry will focus on the build internals, which is likely to *remain* self-hosted for a few reasons I outline below. 
+I've long held (as in **for _<a href="/vitae/about/#IBM">decades</a>_**) that a software engineer could only brandish the "full stack" moniker if they had experience with instrumenting automated deployment. Over the past few years "devops" has become all the rage, and I'm *here for it*. This is the first of three articles outlining how I build and migrate this site - partyly as a conditioned reflex and also as a study in constructive compromise. 
 
-The second post will focus on the Github Actions self-hosted runner implementation, and how that's triggered from my private GitHub repo. The third will look at how I use this process to re-deploy the site based on updates to source data that are used for time series visualizations on this site. Since this is a *static* site I can't necessarily update when my source data updates, but there are a few *cheat* mechanisms that, with this hands-free deployment process in place, will let me re-trigger the deployment and use R to collect the fresh data at build time. This will allow me to keep the site *and its underlying data* up-to-date without having to chase down loose ends myself.
+This entry focuses on the build internals, which is likely to *remain* self-hosted for a few reasons I outline below. The second post will take a look at Github Actions self-hosted runner implementation, and how that's triggered from my private GitHub repo. The third will look at how I use this process to re-deploy the site based on updates to source data that are used for time series visualizations on this site. Since this is a *static* site I can't necessarily update when public data is updated by the provider. So I use a few *helper* mechanisms that, with this hands-free deployment process in place, will let me re-trigger the deployment and use R to collect the fresh data at build time. This will allow me to keep the site *and its underlying data* up-to-date without having to chase down loose ends myself.
 
 # Groundwork
 
@@ -73,7 +73,7 @@ While keeping local secrets and masking it from th repo isn't a commercial-grade
 
 ## R Script build process
 
-This deserves a bit of unpacking because of the "Russian doll" effect. This is called from within a headless command prompt *within* the PowerShell script, and the R script runs a verbose <a href="https://bookdown.org/yihui/blogdown/methods.html" target="_blank">blogdown</a> command which calls Hugo to generate the site.
+This deserves a bit of unpacking because of the "Russian doll" effect. This is called from within a headless command prompt *within* the PowerShell script, and the R script runs a verbose <a href="https://bookdown.org/yihui/blogdown/methods.html" target="_blank">blogdown</a> command which calls Hugo to generate the site. The "prd" script is the same except for the "int." *not* being present. It seems silly to have something *that* similar in two artifacts, but the property substitution would be more work than just having two *very* shelf-stable files.
 
 <figure><figcaption class="caption">build-int.R - runs a headless R session to build blogdown site</figcaption>
 <pre><code class="r">setwd ("c:/repo/portfoliosite")
@@ -81,7 +81,9 @@ blogdown::hugo_cmd(shQuote(c('-b', 'https://int.h3tech.dev')))
 q("no")</code></pre>
 </figure>
 
-This is not the standard "blogdown::build_site()" command because there's a wrinkle in the config.toml that I use for local debug. Below is an excerpt from the top of my site's config file.
+This is not the standard "blogdown::build_site()" command because there's a wrinkle in the config.toml that I use for local debug. The headless R session sets the working directory, runs the blogdown/hugo command with the baseURL parameter and then instructs the process to run without prompting. 
+
+For context on the baseURL substitution I've included an excerpt from the top of my site's config file.
 
 <figure><figcaption class="caption">config.toml - first five lines</figcaption>
 <pre><code class="ini">baseurl = "/"
@@ -115,7 +117,7 @@ It begins with collecting a required parameter string - either an "int" for the 
 
 `r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "deploy-PowerShellValidation.png")`
 
-These lines do the due diligence of reading the properties entries from the JSON file.
+This portion performs due diligence of reading the properties entries from the JSON file.
 
 <figure><figcaption class="caption">push.ps1 - read the environment properties</figcaption>
 <pre><code class="powershell">$JSON = Get-Content -Path "C:\repo\PortfolioSite\deploy\properties.json" | ConvertFrom-JSON
@@ -124,13 +126,13 @@ $intString = $JSON.int
 $prdString = $JSON.prd</code></pre>
 </figure>
 
-This is a housecleaning move that clears everything from the public folder. (the destination that Hugo uses to output all generated web site assets)
+Below is a housecleaning move that clears everything from the public folder. (the destination that Hugo uses to output all generated web site assets)
 
 <figure><figcaption class="caption">push.ps1 - Remove any previously built files</figcaption>
 <pre><code class="powershell">Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force</code></pre>
 </figure>
 
-The lines below selectively call the respective R script run a headless session that spins up the site. When push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the "int" environment to test mobile on <a href="https://www.browserstack.com" target="_blank">browserstack</a>) the terminal context changes to "Rterm".
+The section below selectively calls the respective R script to run a headless session that spins up the site. When push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the "int" environment to test mobile on <a href="https://www.browserstack.com" target="_blank">browserstack</a>) the terminal context changes to "Rterm".
 
 <figure><figcaption class="caption">push.ps1 - run R script to re-generate the site</figcaption>
 <pre><code class="powershell">If ($environment -eq 'prd') {
