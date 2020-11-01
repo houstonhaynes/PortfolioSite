@@ -160,7 +160,7 @@ The PowerShell command parses all HTML files in the public directory, finds all 
            </code></pre>
 </figure>
 
-And of course highlightjs masks the offending string ("/figure-html//widgets/") inline because the web abhors a double-slash. Below is a screen shot of the actual line of code in the PowerShell script.
+And of course highlightjs masks the offending string inline because the web abhors a double-slash. Below is a screen shot of the actual line of code in the PowerShell script, which shows the offending string and it's replacement.
 
 `r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "deploy-PowerShellSlashSubstitution.png")`
 

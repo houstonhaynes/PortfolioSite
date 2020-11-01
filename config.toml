@@ -3,7 +3,7 @@ languageCode = "en-us"
 title = "H3 Tech Hub"
 theme = "h3tech-future-imperfect"
 preserveTaxonomyNames = true
-paginate = 4
+paginate = 5
 disqusShortname = ""
 googleAnalytics = "UA-122964326-1"
 pluralizeListTitles = false
@@ -107,7 +107,7 @@ enableGitInfo = true
 
 [params.postAmount]
 # Sets the number of recent posts to show in the sidebar. The default value is 5.
-    sidebar = 3
+    sidebar = 4
 
 [params.Vitae]
     postcount = 10
