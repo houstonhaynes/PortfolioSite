@@ -115,17 +115,22 @@ push.ps1 - gather mandatory environment parameter
         [string]$environment = $args[0]
     )</code></pre>
 </figure>
-<p>I didn’t put any fancy string checks because in most cases I would be triggering this script from the self-hosted runner. This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost <em>never</em> trigger. If the parameter is not supplied PowerShell throws a standard message. So if I ever flub the command and run</p>
+<p>I didn’t put any fancy string checks because in most cases I would be triggering this script from the self-hosted runner. This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost <em>never</em> trigger. If the parameter is not supplied PowerShell throws a standard message.</p>
 {{% fancybox-dark-theme-ok "/img" "deploy-PowerShellValidation.png" %}}
-<p>This portion performs due diligence of reading the properties entries from the JSON file.</p>
+<p>And similarly if I flub the input parameter it also halts the script and gives a standard output message.</p>
+{{% fancybox-dark-theme-ok "/img" "deploy-PowerShellValidation-2.png" %}}
+<p>Moving along, this portion of the script performs due diligence of reading the properties entries from the JSON file. The one that’s actually initialized is based on the input context.</p>
 <figure>
 <figcaption class="caption">
 push.ps1 - read the environment properties
 </figcaption>
 <pre><code class="powershell">$JSON = Get-Content -Path "C:\repo\PortfolioSite\deploy\properties.json" | ConvertFrom-JSON
 
-$intString = $JSON.int
-$prdString = $JSON.prd</code></pre>
+If ($environment -eq 'prd') {
+    $prdString = $JSON.prd
+} else {
+    $intString = $JSON.int
+}</code></pre>
 </figure>
 <p>Below is a housecleaning move that clears everything from the public folder. (the destination that Hugo uses to output all generated web site assets)</p>
 <figure>
@@ -134,7 +139,7 @@ push.ps1 - Remove any previously built files
 </figcaption>
 <pre><code class="powershell">Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force</code></pre>
 </figure>
-<p>The section below selectively calls the respective R script to run a headless session that spins up the site. When push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the “int” environment to test mobile on <a href="https://www.browserstack.com" target="_blank">Browserstack</a>) the terminal context changes to “Rterm”.</p>
+<p>The section below selectively calls the respective R script to run a headless session that spins up the site. And as a footnote - when push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the “int” environment to test mobile on <a href="https://www.browserstack.com" target="_blank">Browserstack</a>) the terminal context changes to “Rscript” when the site is being built and “python” when the Azure CLI takes over.</p>
 <figure>
 <figcaption class="caption">
 push.ps1 - run R script to re-generate the site
@@ -145,6 +150,10 @@ push.ps1 - run R script to re-generate the site
     cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-int.R'
 }</code></pre>
 </figure>
+</div>
+</div>
+<div id="the-aforementioned-hack" class="section level1">
+<h1>The Aforementioned Hack</h1>
 <p>The next lines could be a post in itself. In fact, this is where this process started. I found this issue in widgetframe when trying to use it for building this site. I had modified the package and posted a pull request, but the project has been abandoned by the author. Instead of creating a “new” package that has only one line of difference from the original I opted to stay with the “temporary” fix.</p>
 <p>The PowerShell command parses all HTML files in the public directory, finds all of the “offending” sub-strings, and replaces any double-slashes created by the iframe embed.</p>
 <figure>
@@ -152,7 +161,8 @@ push.ps1 - run R script to re-generate the site
 push.ps1 - Clean up a bug left behind by widgetframe
 </figcaption>
 <pre><code class="powershell">Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If (Get-Content $_.FullName | Select-String -Pattern '/figure-html//widgets/') 
-           {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ } }</code></pre>
+           {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ } }
+           </code></pre>
 </figure>
 <p>This is where the script moves beyond housekeeping and local build duties and gets on with the environment push. This uses the Azure CLI to run a blob sync function. It only pushes up “new” files instead of a full delete and replace. This is where the connection string parameters come into play. Like the build script, the environment variable selects which Blob storage container becomes the target for the file sync.</p>
 <figure>
@@ -173,7 +183,6 @@ push.ps1 - Azure CLI command to clear the CDN cache
 <pre><code class="powershell">az cdn endpoint purge -g [myResourceGroup]-n [myCDNendpoint]$environment --profile-name [myProfile] --content-paths '/*'</code></pre>
 </figure>
 <p>Once the CDN purge is complete, users will pull the new version of the web site from blob and those assets will be cached in the CDN. And <em>viola</em> the site deployment is done. In all the process takes a total of about four minutes. The longest portion of the build and deploy process is the CDN cache purge.</p>
-</div>
 <div id="build-and-deploy-dependencies" class="section level2">
 <h2>Build and Deploy Dependencies</h2>
 <p>Of course there are dependencies that make this instrumentation and process work. First of all, there are all of the R packages that are called on to build the assets for the site. There’s also the login context for the Azure CLI. If you have multiple subscriptions you’ll need to ensure that the proper settings have been used. There are ways to manage this programmatically but again the idea is to balance the practicalities of a generally good software practice without getting lost in what could turn into its own software project.</p>

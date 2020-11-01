@@ -11,8 +11,11 @@ Param
 $JSON = Get-Content -Path "C:\repo\PortfolioSite\deploy\properties.json" | ConvertFrom-JSON
 
 # populate connection strings for each environment
-$intString = $JSON.int
-$prdString = $JSON.prd
+If ($environment -eq 'prd') {
+    $prdString = $JSON.prd
+} else {
+    $intString = $JSON.int
+}
 
 # clear the files to ensure that a 'clean' build is generated for all files
 Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force

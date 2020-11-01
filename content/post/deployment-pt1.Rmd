@@ -112,17 +112,24 @@ Now that a few layers have been peeled it's time to look at this "onion" from th
     )</code></pre>
 </figure>
 
-I didn't put any fancy string checks because in most cases I would be triggering this script from the self-hosted runner. This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost *never* trigger. If the parameter is not supplied PowerShell throws a standard message. So if I ever flub the command and run 
+I didn't put any fancy string checks because in most cases I would be triggering this script from the self-hosted runner. This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost *never* trigger. If the parameter is not supplied PowerShell throws a standard message.
 
 `r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "deploy-PowerShellValidation.png")`
 
-This portion performs due diligence of reading the properties entries from the JSON file.
+And similarly if I flub the input parameter it also halts the script and gives a standard output message.
+
+`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "deploy-PowerShellValidation-2.png")`
+
+Moving along, this portion of the script performs due diligence of reading the properties entries from the JSON file. The one that's actually initialized is based on the input context.
 
 <figure><figcaption class="caption">push.ps1 - read the environment properties</figcaption>
 <pre><code class="powershell">$JSON = Get-Content -Path "C:\repo\PortfolioSite\deploy\properties.json" | ConvertFrom-JSON
 
-$intString = $JSON.int
-$prdString = $JSON.prd</code></pre>
+If ($environment -eq 'prd') {
+    $prdString = $JSON.prd
+} else {
+    $intString = $JSON.int
+}</code></pre>
 </figure>
 
 Below is a housecleaning move that clears everything from the public folder. (the destination that Hugo uses to output all generated web site assets)
@@ -131,7 +138,7 @@ Below is a housecleaning move that clears everything from the public folder. (th
 <pre><code class="powershell">Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force</code></pre>
 </figure>
 
-The section below selectively calls the respective R script to run a headless session that spins up the site. When push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the "int" environment to test mobile on <a href="https://www.browserstack.com" target="_blank">Browserstack</a>) the terminal context changes to "Rterm".
+The section below selectively calls the respective R script to run a headless session that spins up the site. And as a footnote - when push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the "int" environment to test mobile on <a href="https://www.browserstack.com" target="_blank">Browserstack</a>) the terminal context changes to "Rscript" when the site is being built and "python" when the Azure CLI takes over. 
 
 <figure><figcaption class="caption">push.ps1 - run R script to re-generate the site</figcaption>
 <pre><code class="powershell">If ($environment -eq 'prd') {
@@ -141,13 +148,16 @@ The section below selectively calls the respective R script to run a headless se
 }</code></pre>
 </figure>
 
+# The Aforementioned Hack
+
 The next lines could be a post in itself. In fact, this is where this process started. I found this issue in widgetframe when trying to use it for building this site. I had modified the package and posted a pull request, but the project has been abandoned by the author. Instead of creating a "new" package that has only one line of difference from the original I opted to stay with the "temporary" fix.
 
 The PowerShell command parses all HTML files in the public directory, finds all of the "offending" sub-strings, and replaces any double-slashes created by the iframe embed. 
 
 <figure><figcaption class="caption">push.ps1 - Clean up a bug left behind by widgetframe</figcaption>
 <pre><code class="powershell">Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If (Get-Content $_.FullName | Select-String -Pattern '/figure-html//widgets/') 
-           {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ } }</code></pre>
+           {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ } }
+           </code></pre>
 </figure>
 
 This is where the script moves beyond housekeeping and local build duties and gets on with the environment push. This uses the Azure CLI to run a blob sync function. It only pushes up "new" files instead of a full delete and replace. This is where the connection string parameters come into play. Like the build script, the environment variable selects which Blob storage container becomes the target for the file sync.
