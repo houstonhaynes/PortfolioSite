@@ -164,8 +164,8 @@ push.ps1 - Clean up a bug left behind by widgetframe
            {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ } }
            </code></pre>
 </figure>
-<p>And of course highlightjs masks the issue inline because the web abhors a double-slash. Below is a screen shot of the actual line of code in the PowerShell script.</p>
-<p><img class="rounded bordered img-fluid filter-none centered" src="/img/deploy-PowerShellSlashSubstitution.png"/></p>
+<p>And of course highlightjs masks the offending string (“/figure-html//widgets/”) inline because the web abhors a double-slash. Below is a screen shot of the actual line of code in the PowerShell script.</p>
+{{% fancybox-dark-theme-ok "/img" "deploy-PowerShellSlashSubstitution.png" %}}
 <p>From this point the script moves beyond housekeeping and local build duties and gets on with the environment push. This uses the Azure CLI to run a blob sync function. It only pushes up “new” files instead of a full delete and replace. This is where the connection string parameters come into play. Like the build script, the environment variable selects which Blob storage container becomes the target for the file sync.</p>
 <figure>
 <figcaption class="caption">
