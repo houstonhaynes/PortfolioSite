@@ -42,14 +42,14 @@ editor_options:
 <p>This definitely falls into the “one person’s laziness is someone else’s efficiency” category. It’s not exactly best practice using local properties files. But since I’m using one of my machines to generate the build I opted to keep things relatively simple.</p>
 <div id="properties-file" class="section level2">
 <h2>Properties File</h2>
-<p>The properties file a set of key/value pairs. There are a variety of ways to deal with constructing a connection string on-the-fly. But I’ve opted for the direct approach.</p>
+<p>The properties file is a set of key/value pairs. There are a variety of ways to deal with constructing a connection string on-the-fly. But I’ve opted for the direct approach.</p>
 <figure>
 <figcaption class="caption">
 properties.json file sample
 </figcaption>
 <pre><code class="json">{
-    "int": "[Full connection string for int Blob storage container]",
-    "prd": "[Full connection string for prd Blob storage container]"
+    "int": "[Full connection string for my int Blob storage container]",
+    "prd": "[Full connection string for my prd Blob storage container]"
 }</code></pre>
 </figure>
 <p>As you’ll see later, build.ps1 reads both values and uses one or the other based on the “environment” parameter passed in at runtime.</p>
@@ -75,7 +75,7 @@ blogdown
 </div>
 <div id="r-script-build-process" class="section level2">
 <h2>R Script build process</h2>
-<p>This deserves a bit of unpacking because of the “Russian doll” effect. This is called from within a headless command prompt <em>within</em> the PowerShell script, and the R script runs a verbose <a href="https://bookdown.org/yihui/blogdown/methods.html" target="_blank">blogdown</a> command which calls Hugo to generate the site. The “prd” script is the same except for the “int.” <em>not</em> being present. It seems silly to have something <em>that</em> similar in two artifacts, but the property substitution would be more work than just having two <em>very</em> shelf-stable files.</p>
+<p>This deserves a bit of unpacking because of the “Russian doll” effect. This is called from within a headless command prompt <em>within</em> the PowerShell script, and the R script runs a verbose <a href="https://bookdown.org/yihui/blogdown/methods.html" target="_blank">blogdown</a> command which calls Hugo to generate the site. The “prd” script is the same except for the “int.” <em>not</em> being present in the baseURL call-out. It seems silly to have something <em>that</em> similar in two artifacts, but the property substitution would be more work than just having two <em>very</em> shelf-stable files.</p>
 <figure>
 <figcaption class="caption">
 build-int.R - runs a headless R session to build blogdown site
@@ -164,7 +164,9 @@ push.ps1 - Clean up a bug left behind by widgetframe
            {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ } }
            </code></pre>
 </figure>
-<p>This is where the script moves beyond housekeeping and local build duties and gets on with the environment push. This uses the Azure CLI to run a blob sync function. It only pushes up “new” files instead of a full delete and replace. This is where the connection string parameters come into play. Like the build script, the environment variable selects which Blob storage container becomes the target for the file sync.</p>
+<p>And of course highlightjs masks the issue inline because the web abhors a double-slash. Below is a screen shot of the actual line of code in the PowerShell script.</p>
+<p><img class="rounded bordered img-fluid filter-none centered" src="/img/deploy-PowerShellSlashSubstitution.png"/></p>
+<p>From this point the script moves beyond housekeeping and local build duties and gets on with the environment push. This uses the Azure CLI to run a blob sync function. It only pushes up “new” files instead of a full delete and replace. This is where the connection string parameters come into play. Like the build script, the environment variable selects which Blob storage container becomes the target for the file sync.</p>
 <figure>
 <figcaption class="caption">
 push.ps1 - Azure CLI command to run azcopy blog storage sync

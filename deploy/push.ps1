@@ -29,6 +29,7 @@ If ($environment -eq 'prd') {
 
 # iframe embed bug the widgetframe R package - this is the workaround
 Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If (Get-Content $_.FullName | Select-String -Pattern '/figure-html//widgets/') 
+
            {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ }}
 
 # do the file push using azcopy sync function

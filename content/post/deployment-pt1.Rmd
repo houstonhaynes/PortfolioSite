@@ -42,12 +42,12 @@ This definitely falls into the "one person's laziness is someone else's efficien
 
 ## Properties File
 
-The properties file a set of key/value pairs. There are a variety of ways to deal with constructing a connection string on-the-fly. But I've opted for the direct approach. 
+The properties file is a set of key/value pairs. There are a variety of ways to deal with constructing a connection string on-the-fly. But I've opted for the direct approach. 
 
 <figure><figcaption class="caption">properties.json file sample</figcaption>
 <pre><code class="json">{
-    "int": "[Full connection string for int Blob storage container]",
-    "prd": "[Full connection string for prd Blob storage container]"
+    "int": "[Full connection string for my int Blob storage container]",
+    "prd": "[Full connection string for my prd Blob storage container]"
 }</code></pre>
 </figure>
 
@@ -73,7 +73,7 @@ While keeping local secrets and masking it from th repo isn't a commercial-grade
 
 ## R Script build process
 
-This deserves a bit of unpacking because of the "Russian doll" effect. This is called from within a headless command prompt *within* the PowerShell script, and the R script runs a verbose <a href="https://bookdown.org/yihui/blogdown/methods.html" target="_blank">blogdown</a> command which calls Hugo to generate the site. The "prd" script is the same except for the "int." *not* being present. It seems silly to have something *that* similar in two artifacts, but the property substitution would be more work than just having two *very* shelf-stable files.
+This deserves a bit of unpacking because of the "Russian doll" effect. This is called from within a headless command prompt *within* the PowerShell script, and the R script runs a verbose <a href="https://bookdown.org/yihui/blogdown/methods.html" target="_blank">blogdown</a> command which calls Hugo to generate the site. The "prd" script is the same except for the "int." *not* being present in the baseURL call-out. It seems silly to have something *that* similar in two artifacts, but the property substitution would be more work than just having two *very* shelf-stable files.
 
 <figure><figcaption class="caption">build-int.R - runs a headless R session to build blogdown site</figcaption>
 <pre><code class="r">setwd ("c:/repo/portfoliosite")
@@ -160,7 +160,11 @@ The PowerShell command parses all HTML files in the public directory, finds all 
            </code></pre>
 </figure>
 
-This is where the script moves beyond housekeeping and local build duties and gets on with the environment push. This uses the Azure CLI to run a blob sync function. It only pushes up "new" files instead of a full delete and replace. This is where the connection string parameters come into play. Like the build script, the environment variable selects which Blob storage container becomes the target for the file sync.
+And of course highlightjs masks the issue inline because the web abhors a double-slash. Below is a screen shot of the actual line of code in the PowerShell script.
+
+<img class="rounded bordered img-fluid filter-none centered" src="/img/deploy-PowerShellSlashSubstitution.png"/>
+
+From this point the script moves beyond housekeeping and local build duties and gets on with the environment push. This uses the Azure CLI to run a blob sync function. It only pushes up "new" files instead of a full delete and replace. This is where the connection string parameters come into play. Like the build script, the environment variable selects which Blob storage container becomes the target for the file sync.
 
 <figure><figcaption class="caption">push.ps1 - Azure CLI command to run azcopy blog storage sync</figcaption>
 <pre><code class="powershell">If ($environment -eq 'prd') {
