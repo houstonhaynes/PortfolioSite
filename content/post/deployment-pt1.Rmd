@@ -1,5 +1,5 @@
 ---
-title: "Deploying my R blogdown Static Site - Part 1"
+title: "Deploying my R blogdown Based Site - Part 1"
 output:
   blogdown::html_page:
     toc: false
@@ -12,7 +12,7 @@ featuredpath: img
 featured: deployment.png
 ogfeatured: H3_og_wide_deployment.png
 emblem: cloud.png
-description: Hacking my local build process with PowerShell
+description: Hacking a self-hosted build with PowerShell
 draft: false
 tags:
 - R
@@ -38,7 +38,7 @@ To start, I created a "deploy" folder in the project along with the scripts need
 
 <img class="rounded bordered img-fluid filter-none centered" src="/img/deploy-folder.png"/>
 
-This definitely falls into the "one person's laziness is another's efficiency" category. It's not exactly best practice using local properties files. But since I'm using one of my machines to generate the build I opted to keep things relatively simple.
+This definitely falls into the "one person's laziness is someone else's efficiency" category. It's not exactly best practice using local properties files. But since I'm using one of my machines to generate the build I opted to keep things relatively simple.
 
 ## Properties File
 
@@ -95,25 +95,24 @@ preserveTaxonomyNames = true</code></pre>
 
 The baseurl parameter is set to "/" by default to keep relative paths while checking local debug builds. But when the site is deployed "in the wild" this writes a fully qualified path to all the places where Hugo calls for it in various templates. Instead of over-writing the top line of the config.toml file I use the hugo_cmd version to pass in the baseurl "-b" value at build time.
 
-When the "Russian doll" has been fully unpacked and the site built, the Auzre CLI takes over. Below is a full run-down of the PowerShell script from top to bottom.
+When the "Russian doll" has been fully unpacked and the site built, the Azure CLI takes over. Below is a full run-down of the PowerShell script from top to bottom.
 
 ## Anatomy of a PowerShell Script
 
-Now that a few layers have been peeled it's time to look at this "onion" from the outside *in*...
-
-It begins with collecting a required parameter string - either an "int" for the integration environment or "prd" for the production tier. 
+Now that a few layers have been peeled it's time to look at this "onion" from the outside *in*. It begins with collecting a required parameter string - either an "int" for the integration environment or "prd" for the production tier. 
 
 <figure><figcaption class="caption">push.ps1 - gather mandatory environment parameter</figcaption>
 <pre><code class="powershell">Param
     (
         [Parameter(Mandatory=$true)]   
         [ValidateNotNull()]
-        [ValidateNotNullOrEmpty()]        
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet("int","prd")]         
         [string]$environment = $args[0]
     )</code></pre>
 </figure>
 
-It begins with collecting a required parameter string - either an "int" for the integration environment or "prd" for the production tier. This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost *never* trigger. If the parameter is not supplied PowerShell throws a standard message. 
+I didn't put any fancy string checks because in most cases I would be triggering this script from the self-hosted runner. This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost *never* trigger. If the parameter is not supplied PowerShell throws a standard message. So if I ever flub the command and run 
 
 `r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "deploy-PowerShellValidation.png")`
 
@@ -132,7 +131,7 @@ Below is a housecleaning move that clears everything from the public folder. (th
 <pre><code class="powershell">Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force</code></pre>
 </figure>
 
-The section below selectively calls the respective R script to run a headless session that spins up the site. When push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the "int" environment to test mobile on <a href="https://www.browserstack.com" target="_blank">browserstack</a>) the terminal context changes to "Rterm".
+The section below selectively calls the respective R script to run a headless session that spins up the site. When push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the "int" environment to test mobile on <a href="https://www.browserstack.com" target="_blank">Browserstack</a>) the terminal context changes to "Rterm".
 
 <figure><figcaption class="caption">push.ps1 - run R script to re-generate the site</figcaption>
 <pre><code class="powershell">If ($environment -eq 'prd') {

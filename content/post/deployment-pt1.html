@@ -1,5 +1,5 @@
 ---
-title: "Deploying my R blogdown Static Site - Part 1"
+title: "Deploying my R blogdown Based Site - Part 1"
 output:
   blogdown::html_page:
     toc: false
@@ -12,7 +12,7 @@ featuredpath: img
 featured: deployment.png
 ogfeatured: H3_og_wide_deployment.png
 emblem: cloud.png
-description: Hacking my local build process with PowerShell
+description: Hacking a self-hosted build with PowerShell
 draft: false
 tags:
 - R
@@ -39,7 +39,7 @@ editor_options:
 <h1>Groundwork</h1>
 <p>To start, I created a “deploy” folder in the project along with the scripts needed to make this work. I had done this process enough times “manually” to have a general idea of how to put it into a scripted form. It’s a bit of a Russian doll, where certain commands perform housekeeping and orchestration, while other actions run an R script to generate the site. And the last few commands execute through the Azure CLI to push the new files up to blob storage and <a href="/post/CDN-refresh">clear the CDN</a>.</p>
 <p><img class="rounded bordered img-fluid filter-none centered" src="/img/deploy-folder.png"/></p>
-<p>This definitely falls into the “one person’s laziness is another’s efficiency” category. It’s not exactly best practice using local properties files. But since I’m using one of my machines to generate the build I opted to keep things relatively simple.</p>
+<p>This definitely falls into the “one person’s laziness is someone else’s efficiency” category. It’s not exactly best practice using local properties files. But since I’m using one of my machines to generate the build I opted to keep things relatively simple.</p>
 <div id="properties-file" class="section level2">
 <h2>Properties File</h2>
 <p>The properties file a set of key/value pairs. There are a variety of ways to deal with constructing a connection string on-the-fly. But I’ve opted for the direct approach.</p>
@@ -97,12 +97,11 @@ theme = "h3tech-future-imperfect"
 preserveTaxonomyNames = true</code></pre>
 </figure>
 <p>The baseurl parameter is set to “/” by default to keep relative paths while checking local debug builds. But when the site is deployed “in the wild” this writes a fully qualified path to all the places where Hugo calls for it in various templates. Instead of over-writing the top line of the config.toml file I use the hugo_cmd version to pass in the baseurl “-b” value at build time.</p>
-<p>When the “Russian doll” has been fully unpacked and the site built, the Auzre CLI takes over. Below is a full run-down of the PowerShell script from top to bottom.</p>
+<p>When the “Russian doll” has been fully unpacked and the site built, the Azure CLI takes over. Below is a full run-down of the PowerShell script from top to bottom.</p>
 </div>
 <div id="anatomy-of-a-powershell-script" class="section level2">
 <h2>Anatomy of a PowerShell Script</h2>
-<p>Now that a few layers have been peeled it’s time to look at this “onion” from the outside <em>in</em>…</p>
-<p>It begins with collecting a required parameter string - either an “int” for the integration environment or “prd” for the production tier.</p>
+<p>Now that a few layers have been peeled it’s time to look at this “onion” from the outside <em>in</em>. It begins with collecting a required parameter string - either an “int” for the integration environment or “prd” for the production tier.</p>
 <figure>
 <figcaption class="caption">
 push.ps1 - gather mandatory environment parameter
@@ -111,11 +110,12 @@ push.ps1 - gather mandatory environment parameter
     (
         [Parameter(Mandatory=$true)]   
         [ValidateNotNull()]
-        [ValidateNotNullOrEmpty()]        
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet("int","prd")]         
         [string]$environment = $args[0]
     )</code></pre>
 </figure>
-<p>It begins with collecting a required parameter string - either an “int” for the integration environment or “prd” for the production tier. This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost <em>never</em> trigger. If the parameter is not supplied PowerShell throws a standard message.</p>
+<p>I didn’t put any fancy string checks because in most cases I would be triggering this script from the self-hosted runner. This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost <em>never</em> trigger. If the parameter is not supplied PowerShell throws a standard message. So if I ever flub the command and run</p>
 {{% fancybox-dark-theme-ok "/img" "deploy-PowerShellValidation.png" %}}
 <p>This portion performs due diligence of reading the properties entries from the JSON file.</p>
 <figure>
@@ -134,7 +134,7 @@ push.ps1 - Remove any previously built files
 </figcaption>
 <pre><code class="powershell">Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force</code></pre>
 </figure>
-<p>The section below selectively calls the respective R script to run a headless session that spins up the site. When push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the “int” environment to test mobile on <a href="https://www.browserstack.com" target="_blank">browserstack</a>) the terminal context changes to “Rterm”.</p>
+<p>The section below selectively calls the respective R script to run a headless session that spins up the site. When push.ps1 is run in a VSCode terminal window (which I do frequently when deploying to the “int” environment to test mobile on <a href="https://www.browserstack.com" target="_blank">Browserstack</a>) the terminal context changes to “Rterm”.</p>
 <figure>
 <figcaption class="caption">
 push.ps1 - run R script to re-generate the site

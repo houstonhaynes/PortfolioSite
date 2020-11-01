@@ -1,9 +1,9 @@
 Param
     (
-        # environment help description
         [Parameter(Mandatory=$true)]   
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]        
+        [ValidateSet("int","prd")] 
         [string]$environment = $args[0]
     )
 
