@@ -44,6 +44,8 @@ URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/
 
 coviddata <- read.csv(URL)
 
+post1 <- "1182465920930701312"
+
 ```
 
 
@@ -139,12 +141,6 @@ frameWidget(widget, width = "100%", height = "100%")
 ```
 But wait... there's more.
 
-```{r Faces of COVID echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-
-"<hr>"
-blogdown::shortcode("tweet", "1182465920930701312")
-"<hr1>"
-
-```
+`r blogdown::shortcode("tweet", post1)`
 
 
