@@ -392,3 +392,15 @@ a#back-to-top:hover {
 .opacity-0h5:hover {
     opacity: 1!important;
 }
+
+button#play-pause-button.fa-pause:before {
+    font-family: "FontAwesome";
+    font-weight: 900;
+    content: '\f04c';
+}
+
+button#play-pause-button.fa-play:before {
+    font-family: "FontAwesome";
+    font-weight: 900;
+    content: '\f04b';
+}

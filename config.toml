@@ -107,7 +107,6 @@ enableGitInfo = true
 
 [params.postAmount]
 # Sets the number of recent posts to show in the sidebar. The default value is 5.
-    sidebar = 4
 
 [params.Vitae]
     postcount = 10

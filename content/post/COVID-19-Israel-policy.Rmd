@@ -1,0 +1,150 @@
+---
+title: "COVID-19 in Motion - World Data"
+output:
+  blogdown::html_page:
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-07-24T14:59:43+05:30'
+featuredpath: img
+featured: Micro-services.png
+ogfeatured: H3_og_wide_micro-services.png
+emblem: health.png
+description: Increasing sell-through by re-tooling the stack
+draft: false
+tags:
+- AWS
+- micro-services
+- Splunk
+- MapReduce
+- SOLR/Lucene
+- Groovy
+categories: 
+- Deep Dive
+weight: 0
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup and file loads, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+
+library(highcharter)
+library(tidyverse)
+library(lubridate)
+library(widgetframe)
+library(xts)
+library(jsonlite)
+library(fontawesome)
+
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+coviddata <- read.csv(URL)
+
+```
+
+
+## tl;dr
+
+Bla bla bla some randome text
+
+
+```{r Israel COVID Policy, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
+  rename(value = new_cases_smoothed_per_million) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date))
+
+data.wide <-  pivot_wider(data, names_from = location, values_from = value)
+
+#data.wide
+
+data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
+
+last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+
+thm <- hc_theme_merge(
+  hc_theme_smpl(),
+  hc_theme(colors = c("#102156", "#d4622b", "#219BAF", "#45C0F5", "#AFDC00", "#85DFD0"),
+           chart = list(backgroundColor = ""),
+           title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Ubuntu")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
+
+widget <- highchart(type = "stock") %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "Israel COVID Policy Progression (new cases/million)", align = "center") %>%
+  hc_subtitle(text = "With Comparison Data from Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
+  hc_credits(enabled = TRUE, 
+             text = last_updated, 
+             position = list(align = "left", x = 10, y = -5)) %>%
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
+  hc_add_series(data_xts$China, type = "line", name = "China") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
+  hc_tooltip(valueDecimals = 2) %>%
+  hc_xAxis(type = "datetime",
+    plotLines = list(list(
+      label = list(text = "Schools opened"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-05-03', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Schools shut down"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-06-01', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "New stricter controls announced"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-07-13', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Loosened 'traffic light' plan"),
+      color = "#800000",
+      width = 4,
+      value = datetime_to_timestamp(as.Date('2020-08-31', tz = 'UTC'))
+    )),
+    plotBands = list(
+      list(
+        label = list(text = "New nationwide<br />lockdown policy", align = "left"),
+        color = "rgba(100, 0, 0, 0.1)",
+        from = datetime_to_timestamp(as.Date('2020-09-13', tz = 'UTC')),
+        to = datetime_to_timestamp(as.Date(end(data_xts), tz = 'UTC'))
+      )
+    )
+  ) %>%
+  hc_legend(
+    enabled = TRUE,
+    align = "right",
+    layout = "proximate",
+    x = 0,
+    y = 0
+    ) 
+  
+
+frameWidget(widget, width = "100%", height = "100%")
+
+```
+But wait... there's more.
+
+```{r Faces of COVID echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+"<hr>"
+blogdown::shortcode("tweet", "1182465920930701312")
+"<hr1>"
+
+```
+
+

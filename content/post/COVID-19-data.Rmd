@@ -1,5 +1,5 @@
 ---
-title: "Conversion Win-Loss in a Global E-Com Platform"
+title: "COVID-19 in Motion - World Data"
 output:
   blogdown::html_page:
     dev: "svg"
@@ -8,7 +8,7 @@ date: '2018-07-24T14:59:43+05:30'
 featuredpath: img
 featured: Micro-services.png
 ogfeatured: H3_og_wide_micro-services.png
-emblem: ecommerce.png
+emblem: health.png
 description: Increasing sell-through by re-tooling the stack
 draft: false
 tags:
@@ -20,7 +20,7 @@ tags:
 - Groovy
 categories: 
 - Deep Dive
-weight: 2
+weight: 0
 editor_options: 
   chunk_output_type: inline
 ---
@@ -31,402 +31,255 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 
-library(jsonlite)
+
 library(highcharter)
+library(tidyverse)
+library(lubridate)
 library(widgetframe)
+library(xts)
+library(jsonlite)
+library(fontawesome)
 
-# Initial Win/Loss Over Time 
-cartLossTableBefore <- fromJSON("../../data/Minute1_Attrition_Example1a.json")
-dfCartLossBefore <- as.data.frame(do.call("cbind", cartLossTableBefore))
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
 
-dfCartLossBefore$Timeout = as.numeric(dfCartLossBefore$Timeout)
-dfCartLossBefore$UserDeleted = as.numeric(dfCartLossBefore$UserDeleted)
-dfCartLossBefore$Error = as.numeric(dfCartLossBefore$Error)
-dfCartLossBefore$Added = as.numeric(dfCartLossBefore$Added)
-dfCartLossBefore$DateTime = paste(dfCartLossBefore$TimeStamp, "s", sep = "")
-
-# Cart Summary Win-Loss Initial Findings 
-dfCartLossBefore$Lost = as.numeric(dfCartLossBefore$UserDeleted + dfCartLossBefore$Error + dfCartLossBefore$Timeout)
-
-# Win/Loss After API/Fee Changes, Over Time
-cartLossTableAfter <- fromJSON("../../data/Minute1_Attrition_Example2a.json")
-dfCartLossAfter <- as.data.frame(do.call("cbind", cartLossTableAfter))
-
-dfCartLossAfter$Timeout = as.numeric(dfCartLossAfter$Timeout)
-dfCartLossAfter$UserDeleted = as.numeric(dfCartLossAfter$UserDeleted)
-dfCartLossAfter$Error = as.numeric(dfCartLossAfter$Error)
-dfCartLossAfter$Added = as.numeric(dfCartLossAfter$Added)
-dfCartLossAfter$Lost = as.numeric(dfCartLossAfter$UserDeleted + dfCartLossAfter$Error + dfCartLossAfter$Timeout)
-dfCartLossAfter$DateTime = paste(dfCartLossAfter$DateTime, "s", sep = "")
-
-# horizonal bar chart showing final result in conversion rate
-Conversions <- c('Before', 'After')
-Lost <- c(757, 740)
-Won <- c(189, 290)
-dfConversionRate <- data.frame(Conversions, Lost, Won)
+coviddata <- read.csv(URL)
 
 ```
 
 
 ## tl;dr
 
-Conversion in e-commerce generally refers to a process where site visitors become paying customers. This portfolio entry discusses some of the analysis conducted for the one of the largest e-commerce sites in the world. I also refer to some of the mobile device simulations and related functions used to verify (and in some cases, dismiss) the assumptions on which the company’s win-loss analytics was based. And finally, I show some of the tooling used to verify partner data feeds and how that became a central component to a new distributed conversion marketing strategy.
+Bla bla bla some randome text
 
-`r blogdown::shortcode("alert-timecapsule", "dark", "Time Capsule:", "This entry is based on Houston's work experience from around 2012. The purpose is to outline the business scenarios encountered and the context in which certain technology choices were made. But it's also an object lesson on why Houston has remained on the front lines of software engineering and continues to embrace cloud-based distributed systems as they emerge.")`
+```{r GLobal New Cases Per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "Splunk-Chart.png")`
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], date, iso_code, location, new_cases_smoothed_per_million)  %>%
+  rename(value = new_cases_smoothed_per_million) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date)) 
 
-# Weblog Blind Spots
+ds <- data %>%
+  group_by(iso_code) %>%
+  do(item = list(
+    iso_code = first(.$iso_code),
+    sequence = .$value,
+    value = first(.$value))) %>%
+  .$item
 
-`r blogdown::shortcode("fancybox-thumb-dark-theme-ok", "/img", "web_v_mobile.png")`
-Our working group created an array of federated micro-services that would serve as an interface between mobile users and the legacy commerce servers. This was new to the company, and so our baseline of information stemmed from web-only user activity. While there are many new wrinkles that are introduced in the API-building process, many of the assumptions about the conversion rate(s) originated from the up-to-then web-only data. And as our working group later found out, that “model” ended up being a collection of very old data and grossly inaccurate generalizations. The company's primary conversion marketing tactic was a timed cart, a function which served dual purposes in the legacy technology stack. Once the user had selected an item, they had a few minutes to complete the transaction or the cart would be discarded and the user would have to re-initiate the process. There were places in the cart workflow where time might be added to the cart, but there was an inflection point where the countdown was simply a means to release inventory back into general availability.
+#head(ds, 10)
 
+vec <- sort(unique(pull(data, date)))
 
-When we reviewed the web logs in order to get an idea of the conversion rate, we couldn’t see the difference between a cart that lapsed due to time-out, a cart that was intentionally discarded by the user, and an error from the server side that prevented the user from completing the cart transaction. All that was recorded in the web logs was the transaction ID for completed cart transactions. And that wasn’t the only place with a lack of data salience. When my team inquired about this, we were told that the logging was “too burdensome” so that level of detail was left out of the record. In essence, this left the task of recording that level of detail to the API and mobile developers – my team.
+url <- "https://code.highcharts.com/mapdata/custom/world-robinson-highres.js"
+tmpfile <- tempfile(fileext = ".json")
+download.file(url, tmpfile)
+geo <- readLines(tmpfile)
+geo <- gsub(".* = ", "", geo)
+map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
 
-# Data Mining
+last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
-Along with the new partner API layer created by the team, a new set of user activity logs were generated based on API activity. This provided the ability to create a more accurate reconstruction of user behavior and analyze system performance. This was useful in general – but especially when analyzing reaction to “sale” events. These marketing pushes were both regional and national, and due to the regional deployment of production servers we could look at comparative statistics for conversions that occurred by geography as well as time period. This is something that could be accomplished in the legacy and web server stacks, but only by inference. Because of the nature of the API server deployments we gained a much more articulated view into user activity.
+thm <- hc_theme_merge(
+  hc_theme_smpl(),
+  hc_theme(chart = list(backgroundColor = "rgba(194, 219, 255, 0.95)"),
+           title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Ubuntu")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
 
-`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "Splunk_chart.png")`
-
-This is the initial view into cart creation established a useful baseline for a national sale event. What I had been told was to expect 60-70 cart creations per second in the first hour of a sale across the API tier. That was based on their own informatics, which I never had the chance to scrutinize directly. As can be seen here from the API data, the situation is much more nuanced.
-
-From that point, the gap between what I had been told in meetings and what the data was telling me continued to widen. Not only was 60-70 cart sessions per second a vast understatement (picture the count shown above multiplied x16 servers across four regions), the distribution of when those cart creations occurred is pretty heavily skewed. 
-
-Along those lines, it wasn’t the first hour that was important, it was the first minute of the first hour. And similarly, it wasn’t just the first minute of the first hour, but the first 10-15 seconds of the first minute.
-
-`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "Splunk_perItem.png")`
-
-This plot is a different view for the same time period, a stacked bar chart to review spread of products selected. It’s interesting that promotional products are placed in a user cart in the first few seconds, based on a national promotion that started on the hour. Then that product seems to disappear. In fact it continues to sell through, but in small numbers that don’t appear in the bar stack as easily as the first few seconds.
-
-By matching cart IDs to final status for each cart, I was able to map the attrition rate to the time grain where the cart was created – showing which instances would eventually fall to the side.
-
-```{r Initial Win-Loss Over Time, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-series = list(
-  list(
-    name = 'Added',
-    data = dfCartLossBefore$Added,
-  format = '{point.y} seconds'
-  ),
-  list(
-    name = 'Error',
-    data = dfCartLossBefore$Error
-  ),
-  list(
-    name = 'UserDeleted',
-    data = dfCartLossBefore$UserDeleted
-  ),
-  list(
-    name = 'Timeout',
-    data = dfCartLossBefore$Timeout
-  )
-)
-
-hcWinLossInitial <- highchart() %>%
-  hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) %>% 
+widget <- highchart(type = "map") %>% 
+  hc_add_theme(thm) %>%
   hc_chart(
-      type = 'area',
-      borderColor = 'rgba(160, 160, 160, 0.3)',
-      borderRadius = 8,
-      borderWidth = 2,
-      marginBottom = '80',
-      marginTop = '60',
-      marginLeft = '60',
-      marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '80') %>% 
-  hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
-  hc_add_series_list(series) %>%
-  hc_plotOptions(
-    series = list(
-      stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_smpl())
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_title(text = "Global COVID Daily New Cases per Million (smoothed)", align = "center") %>%
+  hc_subtitle(text = "Press play button or use slider to change date", align = "center") %>%
+  hc_add_series(data = ds,
+                name = "New Cases per Million",
+                mapData = map,
+                joinBy = c("iso-a3", "iso_code"),
+                borderWidth = 0.01) %>%
+  hc_colorAxis (
+    stops = color_stops(colors = viridisLite::magma(20, begin = 0.1, direction = -1)),
+    type = "linear"
+    ) %>%
+  hc_motion (
+    enabled = TRUE,
+    startIndex = 1, 
+    axisLabel = "date",
+    labels = vec,
+    series = 0,
+    updateIterval = 100,
+    playIcon = "fas fa-play",
+    pauseIcon = "fas fa-pause",
+    magnet = list(
+      round = "floor",
+      step = 0.1
+      )
+  ) %>%
+  hc_legend(layout = "vertical", verticalAlign = "top",
+            align = "right", valueDecimals = 0) %>% 
+  hc_mapNavigation(
+    enabled = TRUE,
+    enableMouseWheelZoom = TRUE,
+    enableDoubleClickZoom = TRUE
+  ) %>%
+  hc_credits(enabled = TRUE, 
+             text = last_updated, 
+             position = list(align = "left", x = 10, y = -5))
 
-frameWidget(hcWinLossInitial, width = "100%", height = "100%")
+
+frameWidget(widget,  width = "100%", height = "640", options=frameOptions(allowfullscreen = T))
+
 ```
+And now... this. 
 
-`r blogdown::shortcode("alert", "success", "Note!", "Click on legend above to show or hide a series.")`
+```{r COVID Line Chart, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code">View the Code behind the Chart</button>
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
+  rename(value = new_cases_smoothed_per_million) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date))
 
-<pre id="code" class="collapse"><code class="r">library(jsonlite)
-library(highcharter)
-library(widgetframe)
-# Initial Win/Loss Over Time 
-cartLossTableBefore &lt;- fromJSON(&quot;../../data/Minute1_Attrition_Example1a.json&quot;)
-dfCartLossBefore &lt;- as.data.frame(do.call(&quot;cbind&quot;, cartLossTableBefore))
-dfCartLossBefore$Timeout = as.numeric(dfCartLossBefore$Timeout)
-dfCartLossBefore$UserDeleted = as.numeric(dfCartLossBefore$UserDeleted)
-dfCartLossBefore$Error = as.numeric(dfCartLossBefore$Error)
-dfCartLossBefore$Added = as.numeric(dfCartLossBefore$Added)
-dfCartLossBefore$DateTime = paste(dfCartLossBefore$TimeStamp, &quot;s&quot;, sep = &quot;&quot;)
-series = list(
-  list(
-    name = 'Added',
-    data = dfCartLossBefore$Added,
-  format = '{point.y} seconds'
-  ),
-  list(
-    name = 'Error',
-    data = dfCartLossBefore$Error
-  ),
-  list(
-    name = 'UserDeleted',
-    data = dfCartLossBefore$UserDeleted
-  ),
-  list(
-    name = 'Timeout',
-    data = dfCartLossBefore$Timeout
-  )
-)
-hcWinLossInitial <- highchart() %>%
-  hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) %>% 
-  hc_chart(
-      type = 'area',
-      borderColor = 'rgba(160, 160, 160, 0.3)',
-      borderRadius = 8,
-      borderWidth = 2,
-      marginBottom = '80',
-      marginTop = '60',
-      marginLeft = '60',
-      marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '80') %>% 
-  hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
-  hc_add_series_list(series) %>%
-  hc_plotOptions(
-    series = list(
-      stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_smpl())
+data.wide <-  pivot_wider(data, names_from = location, values_from = value)
 
-frameWidget(hcWinLossInitial, width = "100%", height = "100%")</code></pre>
+#data.wide
 
-Bear in mind that the cart could have been lost at any point during the countdown period – up to 5 minutes after the item was initially added to the cart. The visualization here is designed to show correlation to the time slot where the cart was created versus the loss rate.
+data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
 
-From there I rolled up the summary wins/loss percentage for the period. A win rate of over 21% may seem like a non-controversial figure, the expectation for a period with an active campaign was expected to close at a 30% rate, even when factoring in baseline conversion of non-campaign items for the same period. With the added visibility into the types of attrition, the API team could make adjustments and monitor the results with a much more prismatic view of the data.
+last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
-# Cache Warming
+thm <- hc_theme_merge(
+  hc_theme_smpl(),
+  hc_theme(colors = c("#102156", "#d4622b", "#219BAF", "#45C0F5", "#AFDC00", "#85DFD0"),
+           chart = list(backgroundColor = ""),
+           title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Ubuntu")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
 
-The initial target was to reduce the volume of cart expirations (Timeout attrition) by shortening the time between creating the cart and the user being presented with conversion incentive options. To improve the win rate the API team approached the issue from two angles, the server side and the partner side. From that, two strategies were employed:
-
-1. Reduce the number of API calls into the inventory system, and
-2. Set up a partner feed that can cache up-sell and incentive items to reduce delivery time.
-
-Because of the caching strategy in the partner API, the length of time for an initial request (even before the user added any item to the cart) was slower during the initial seconds of the sale event, as the cache had not been populated with items that could serve other requests. If a value had been cached on one server, that only benefitted that specific instance. So the value had to be queried out of the SOLR search index a total of 16 times (once from each application server) before the cached values would be served for those early seconds. And this had a cascade effect, where the SOLR index was “hit” many more than 16 times across the tier, as the spike in initial requests outpaced the ability for the server to recognize that a cached value was available. In essence, the cache was not able to “catch up” with the demand until the the request rate had significantly fallen.
-
-
-So we created a cache “warming” method to request sale events before they were generally available to potential customers. I created a user that was provisioned to have access to “sale” event information before the item was officially active. I then programmatically called into each specific application cache server directly to request that information just before the official start time of the sale event.
-
-`r blogdown::shortcode("fancybox-dark-theme-ok", "/img", "SOLR_framework.png")`
-
-I created this process in the soapUI framework, as I was managing infrastructure for the partner API group at the time – and test management was part of the purview. The advantage of using soapUI was that the process could be compiled as a jar and run from any server. So the network operations group deployed the jar to a server that had access to the cache servers and set it to run just before the hour.
-
-First, I would call directly into the database that resides behind the SOLR tier and extract the upcoming items that will be listed in the next hour. 
-<pre><code class="sql">SELECT DISTINCT item.id, item.name, sales.upsell_id, sales.upsell_name
-FROM sales JOIN item ON sales.id = item.id
-WHERE sales.publication_start_date_time >= getdate()
-AND sales.publication_end_date_time <= Dateadd(getdate(), INTERVAL 1 HOUR)</code></pre>
-
-This became the seed data that fed into the SOLR requests that were processed against each server. Below is a re-creation of the filter that’s used by the SOLR service to retrieve up-sell and conversion items. This is concatenated into the request that’s sent for each item from the soapUI jar. For all intents and purposes, these requests “look like” the same form of request that’s received directly from the API request layer, except for the time band I’m imposing on the request.
-
-<pre><code class="apache">sch.solr.item.listing=q=&fq=-Merchandise:true&fq=(MajorGenreId:10001 OR MinorGenreId:203 OR MinorGenreId:51)&fq=-ItemType:3&fq=-ItemType:4&fq=-TCode1:APE
-sch.solr.exclude.mlb=fq=-AttractionOrganization:mlb
-sch.solr.item.filter=fq=VisibilityDate:[NOW TO NOW+1HOUR]&fq=-ItemType:6&fq=-ItemType:15</code></pre>
-
-From that, the cache is populated with the values from the SOLR index just before the sale event occurs. With a cache refresh of 2 minutes this gives sufficient “shelf life” to the values such that the early spike of requests can be directly served by the cache. While it’s of secondary importance that the tool verifies the a response, deep validation is not necessary. The function below is simply checking to see that a valid cart item was returned.
-
-<pre><code class="groovy">def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context );
-def threadId = Thread.currentThread().getId() as String
-def holder = groovyUtils.getXmlHolder( "AddItemsNewCart#ResponseAsXml" );
-def itemsExist = holder["exists(//response/cart)"];
-def request = testRunner.testCase.getTestStepByName( "Properties" );
-def itemCount = request.getProperty( "itemCount" );
-def standingItemPollingCount = request.getProperty( "itemPollingCount" );
-def itemCountMax = request.getProperty( "totalSpotlightItems" );
-if (Integer.parseInt(itemCount.value) > Integer.parseInt(itemCountMax.value))
- {
-   testRunner.fail("Add item loop reached max count. Check failed.")
- }
-else
-   {
-    if (itemsExist == 'true')
-    {
-        def itemPrice = holder.getNodeValue("//response/cart/totals/grand")
-        groovyUtils.setPropertyValue( "Properties", "itemPrice", itemPrice )
-        log.info("[${threadId}] Item price ${itemPrice}. Going to GetCart1.")
-        testRunner.gotoStepByName( "GetCart1" )
-        }
-    else
-        {
-        def itemPollingURL = holder.getNodeValue("//response/polling_url")
-        groovyUtils.setPropertyValue( "Properties", "itemPollingURL", itemPollingURL )
-        def newItemPollingCount = Integer.parseInt(standingItemPollingCount.value) +1 as String;
-        groovyUtils.setPropertyValue( "Properties", "itemPollingCount", newItemPollingCount );
-        log.info("[${threadId}] AddItem polled [count = ${newItemPollingCount}]. Cycling to HTTP polling request.")
-        testRunner.gotoStepByName( "delayForItemPollingInterval" )
-        } 
-    }</code></pre>
+widget <- highchart(type = "stock") %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "Israel COVID Policy Progression (new cases/million)", align = "center") %>%
+  hc_subtitle(text = "With Comparison Data from Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
+  hc_credits(enabled = TRUE, 
+             text = last_updated, 
+             position = list(align = "left", x = 10, y = -5)) %>%
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
+  hc_add_series(data_xts$China, type = "line", name = "China") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
+  hc_tooltip(valueDecimals = 2) %>%
+  hc_xAxis(type = "datetime",
+    plotLines = list(list(
+      label = list(text = "Schools opened"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-05-03', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Schools shut down"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-06-01', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "New stricter controls announced"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-07-13', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Loosened 'traffic light' plan"),
+      color = "#800000",
+      width = 4,
+      value = datetime_to_timestamp(as.Date('2020-08-31', tz = 'UTC'))
+    )),
+    plotBands = list(
+      list(
+        label = list(text = "New nationwide<br />lockdown policy", align = "left"),
+        color = "rgba(100, 0, 0, 0.1)",
+        from = datetime_to_timestamp(as.Date('2020-09-13', tz = 'UTC')),
+        to = datetime_to_timestamp(as.Date(end(data_xts), tz = 'UTC'))
+      )
+    )
+  ) %>%
+  hc_legend(
+    enabled = TRUE,
+    align = "right",
+    layout = "proximate",
+    x = 0,
+    y = 0
+    ) 
   
-    
-# Partner Feeds
 
-Following on the success of the cache warming process, executives worked with some of the larger partners (Apple, Google, etc) to deliver a feed of upcoming sale items – and their related conversion and up-sell options – in a file feed that could be retrieved shortly before a sale event. This meant creating an API service for retrieving that feed, which was very similar to the process that I had created for warming the cache.
+frameWidget(widget, width = "100%", height = "100%")
 
-In this case I wasn’t making a request from the database, but rather simply requesting the feed file through the web method that was implemented. Once that was complete, I simply iterated through the file and validated each item using the SOLR index as a baseline.
-
-<pre><code class="groovy">if (lastResultStatus == 'FAILED') {
- // echo the top-level information on the ItemID in error
- log.info("Row [${NodePosition}] - FAIL - " + " " + "[${ItemID}]" + " " + "[${ItemMajorGenreName}]" + " " + "[${ItemMajorGenreID}]" + "[${ItemMinorGenreName}]" + " " + "[${ItemMinorGenreID}]")
- // collect the assertions that failed into the SolrError array (with an escape/break if there's no document in the SOLR response)
- def counter = SOLRstep.getAssertionList().size() as Integer
- for (count in 0.. < counter) {
-  error = SOLRstep.getAssertionAt(count).getErrors()
-  if (error != null) {
-   SolrError.add("Assertion: " + SOLRstep.getAssertionAt(count).getName() + " :: " +
-    SOLRstep.getAssertionAt(count).getStatus())
-  }
-  // go ahead and escape any further error collection if no SOLR document is present (i.e. if "XQuery SOLR Doc Exists" FAILS)
-  if (SolrError[0].contains("SOLR")) {
-   // escape the for loop - no SOLR doc means that none of the other validations matter.
-   break;
-  }
- }
- // set the array of failed assertions to the external Properties step, so that the DataSink can pick up the full string
- groovyUtils.setPropertyValue("Properties", "FailureReason", "${SolrError}")
- //echo the SolrError array to the console for run-time monitoring
- log.info("${SolrError}")
- // set the result of the GetSOLRforFeedItemID as context for this script, so that the DataSink step can grab it from here.
- // This is in case some logic is set here to 'flip' the status within the Groovy script, though none exists here yet.
- return lastResultStatus
-} else {
- // This is the core positive case - all assertions validate
- log.info("Row [${NodePosition}] - PASS - " + " " + "[${ItemID}]" + " " + "[${ItemMajorGenreName}]" + " " + "[${ItemMajorGenreID}]" + "[${ItemMinorGenreName}]" + " " + "[${ItemMinorGenreID}]")
- // set a string value for FailureReason so the DataSink doesn't error out (if it tries to read a null value)
- groovyUtils.setPropertyValue("Properties", "FailureReason", "N/A")
- // again, set the result status of the GetSOLRforFeedItemID test step (which should be OK) when it falls through to this level
- return lastResultStatus
-}</code></pre>
-
-Once the feed file was validated, a status byte was set that allowed the file to be pulled by a partner with a valid cert. This ensured that partners always received a complete and correct feed file for caching item information (including URLs to graphics, conversion marketing tie-ins, etc) on their side. Like the cache warming process, this validation process was deployed as a jar with the service, and was executed on each server just before each hour.
-
-# Closing the Gap
-
-After the cache warming and partner feed changes (along with a few other API tweaks, primarily reduction of the number of requests made to gather up-sell and conversion marketing products) there were noticeable improvements in sell-through and user retention. These time charts show that overall cart creations increased for similar sales periods, and also that cart loss due to timeout had been reduced.
-
-```{r Cart Summary Win-Loss Initial Findings, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-series = list(
-  list(
-    name = 'Won',
-    data = dfCartLossBefore$Added
-  ),
-  list(
-    name = 'Lost',
-    data = dfCartLossBefore$Lost
-  )
-)
-
-hcWinLossBefore <- highchart() %>%
-  hc_title(text = paste("Cart Summary Win-Loss Initial Findings")) %>% 
-  hc_chart(
-      type = 'area',
-      borderColor = 'rgba(160, 160, 160, 0.3)',
-      borderRadius = 8,
-      borderWidth = 2,
-      marginBottom = '80',
-      marginTop = '60',
-      marginLeft = '80',
-      marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '100') %>% 
-  hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
-  hc_add_series_list(series) %>%
-  hc_plotOptions(
-    series = list(
-      stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_smpl())
-
-frameWidget(hcWinLossBefore, width = "100%", height = "100%")
 ```
+But wait... there's more.
 
-Early deployments of the API focused on delivery to in-house mobile applications, we later supported Apple, RIM, Facebook and other partners that would increase user activity by 40% overall and cart creation activity by 15%. As one might expect, executives were most encouraged by the conversion rate. While it still was not in the targeted 30%+ range, the findings were trending in the right direction.
+```{r Lines in Motion, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-The second chart is derived some a server in a different time zone for the same day period (7AM West Coast/10AM East Coast) on a later date. And while the overall “shape” of the Cart Loss charts looks similar, once those are aggregated and reviewed against the cart transactions that were completed – the fuller picture emerges.
+data <- select(coviddata, date, location, new_cases_smoothed) %>%
+  rename(value = new_cases_smoothed) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date))
+
+data.wide <-  pivot_wider(data, names_from = location, values_from = value)
+
+#data.wide
+
+data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
+
+#head(ds, 10)
 
 
-```{r Win-Loss After API Feed Changes}
-series = list(
-  list(
-    name = 'Won',
-    data = dfCartLossAfter$Added
-  ),
-  list(
-    name = 'Lost',
-    data = dfCartLossAfter$Lost
-  )
-)
+vec <- sort(unique(pull(data.wide, date)))
 
-hcWinLossAfter <- highchart() %>%
-  hc_title(text = paste("Cart Summary Win-Loss After API & Feed Changes")) %>% 
-  hc_chart(
-      type = 'area',
-      borderColor = 'rgba(160, 160, 160, 0.3)',
-      borderRadius = 8,
-      borderWidth = 2,
-      marginBottom = '80',
-      marginTop = '60',
-      marginLeft = '80',
-      marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_xAxis(categories = dfCartLossAfter$DateTime) %>% 
-  hc_yAxis(max = '100') %>% 
-  hc_add_series_list(series) %>%
-  hc_plotOptions(
-    series = list(
-      stacking = 'normal', marker = 'none')) %>% 
-  hc_add_theme(hc_theme_smpl())
+#head(data_xts, 100)
 
-frameWidget(hcWinLossAfter, width = "100%", height = "100%")
+highchart(hcaes(x = date, y = location)) %>%
+  hc_credits(enabled = TRUE, 
+           text = last_updated, 
+           position = list(align = "left", x = 10, y = -5)) %>%
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
+  hc_add_series(data_xts$China, type = "line", name = "China") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
+  hc_motion (
+  enabled = TRUE,
+  axisLabel = "date",
+  labels = vec,
+  series = data_xts$date,
+  updateIterval = 50,
+  magnet = list(
+    round = "floor",
+    step = 0.1
+    )
+  ) %>%
+  hc_tooltip(valueDecimals = 2) %>%
+  hc_xAxis(categories = data_xts$date, type = "datetime") %>%
+  hc_legend(
+    layout = "vertical",
+    reversed = TRUE,
+    floating = FALSE,
+    align = "right"
+    )
+
+
+
+
 ```
 
 
-Through a deeper understanding of the legacy commerce systems the API team found optimizations that could be brought to bear which yielded sizable system and financial performance improvements. When these issues were originally brought to senior management, the initial response was to simply increase the horizontal scale of the server infrastructure. While in most companies that would not be the measure of first resort, the long-standing technology groups at the company had always brought this option to the table as a reflex.
-
-```{r Final Result in Conversion Rate, echo=FALSE}
-series = list(
-    list(
-    name = 'Won',
-    data = dfConversionRate$Won,
-    dataLabels = list(
-      enabled = 'true', 
-      format = '{point.percentage:.1f} %')
-  ),
-    list(
-    name = 'Lost',
-    data = dfConversionRate$Lost
-  )
-)
-
-hcConversionRate <- highchart() %>%
-  hc_title(text = paste("Conversion Ratio Before & After API/Feed Changes")) %>% 
-  hc_chart(
-      type = 'bar',
-      borderColor = 'rgba(160, 160, 160, 0.3)',
-      borderRadius = 8,
-      borderWidth = 2,
-      marginBottom = '80',
-      marginTop = '60',
-      marginLeft = '80',
-      marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_xAxis(categories = dfConversionRate$Conversions) %>% 
-  hc_add_series_list(series) %>%
-  hc_plotOptions(
-    series = list(
-      marker = 'none', stacking = 'normal')) %>% 
-  hc_add_theme(hc_theme_smpl())
-
-frameWidget(hcConversionRate, width = "100%", height = "100%")
-```
-
-In that legacy context this is not a surprise, as some of the systems at that company date back to the late 1970s. Horizontal scaling was (and in this case – is) the only option for technology of that generation. In this case we found new and useful ways to “pierce the veil” and work more efficiently in and around the existing solution stack. From that point we continued to refine the API layer – and likewise – measured changes in system and user behavior in a way that provided new insight to IT and marketing executives.
