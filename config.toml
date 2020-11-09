@@ -136,12 +136,18 @@ enableGitInfo = true
   url = "/categories/deep dive/"
   identifier = "fas fa-chalkboard-teacher"
   weight = 3
+  
+[[menu.main]]
+  name = "COVID-19"
+  url = "/tags/covid-19/"
+  identifier = "fas fa-virus"
+  weight = 4
 
 #[[menu.main]]
 #  name = "Perspective"
 #  url = "/categories/perspective/"
 #  identifier = "fas fa-telescope"
-#  weight = 4
+#  weight = 5
   
 #[[menu.main]]
 #  name = "Contact"

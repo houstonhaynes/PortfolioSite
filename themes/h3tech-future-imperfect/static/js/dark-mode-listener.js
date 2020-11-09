@@ -6,11 +6,6 @@ let darkTheme = document.getElementById("dark-mode-theme");
 // set mode on page load
 document.addEventListener("DOMContentLoaded", setDefaultMode, false);
 
-// set iframe load listener
-document.querySelector('#htmlwidget_container').addEventListener("load", ev => {
-    setDefaultMode();
-})
-
 // Checks for value pushed "up" from OS or browser settings
 const darkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 // this try/catch only exists because of Safari being weird

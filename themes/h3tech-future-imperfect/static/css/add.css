@@ -390,17 +390,33 @@ a#back-to-top:hover {
 }
 
 .opacity-0h5:hover {
-    opacity: 1!important;
+    opacity: 1 !important;
 }
 
-button#play-pause-button.fa-pause:before {
-    font-family: "FontAwesome";
-    font-weight: 900;
-    content: '\f04c';
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #3c3b3b;
+    font-family: "Ubuntu", Helvetica, sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
 }
 
-button#play-pause-button.fa-play:before {
-    font-family: "FontAwesome";
-    font-weight: 900;
-    content: '\f04b';
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border: 0;
+    border-bottom: solid 2px rgba(160, 160, 160, 0.3);
+    margin: 2em 0;
+}
+
+.separator::before {
+    margin-right: .25em;
+}
+
+.separator::after {
+    margin-left: .25em;
 }
