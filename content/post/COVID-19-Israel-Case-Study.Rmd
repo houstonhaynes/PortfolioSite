@@ -34,7 +34,6 @@ library(lubridate)
 library(widgetframe)
 library(xts)
 library(jsonlite)
-library(fontawesome)
 
 URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
 
@@ -371,12 +370,10 @@ The majority of this code is formatting the display elements of the chart using 
 
 <pre id="code" class="collapse"><code class="r"># begin setup code chunk
 library(highcharter)
+library(widgetframe)
 library(tidyverse)
 library(lubridate)
-library(widgetframe)
 library(xts)
-library(jsonlite)
-library(fontawesome)
 
 URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
 

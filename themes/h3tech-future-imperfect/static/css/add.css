@@ -422,5 +422,6 @@ a#back-to-top:hover {
 }
 
 .widgetframe {
+    margin-top: 1rem;
     margin-bottom: 2rem;
 }

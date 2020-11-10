@@ -19,6 +19,7 @@ If ($environment -eq 'prd') {
 
 # clear the files to ensure that a 'clean' build is generated for all files
 Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force
+Remove-Item C:\repo\PortfolioSite\content\post\*.html -Recurse -Force
 
 # run R terminal to build blogdown site for specific URL pattern
 If ($environment -eq 'prd') {

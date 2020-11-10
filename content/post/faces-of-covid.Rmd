@@ -117,7 +117,7 @@ And it's certainly possible to keep going. Notice below how Bootstrap's "12 colu
 
 # Daily Refresh
 
-Aside from the normal devops process while fleshing out this site, the build/deploy cycle also re-triggers whenever there's new COVID data available. I'll be writing about that under separate cover but it bears mentioning here to illustrate how that process also benefits this function. As the COVID data is refreshed and site re-deployed, it also re-runs the rtweet functions. That will not only gather any new posts that have been made over the previous day, but will continue to shuffle and display "new" entries that arraive at the top of that shuffled list. So each day it will rotate the tweets and continue to shine a light on the myriad life stories that were in so many cases unduly cut short by this tragedy.
+Aside from the normal devops process while fleshing out this site, the build/deploy cycle also re-triggers whenever there's new COVID data available. I'll be writing about that under separate cover but it bears mentioning here to illustrate how that process also benefits this function. As the COVID data is refreshed and site re-deployed, it also re-runs the rtweet functions. That will not only gather any new posts that have been made over the previous day, but will continue to shuffle and display "new" entries that arraive at the top of that shuffled list. So each day it will rotate the tweets and continue to shine a light on the myriad life stories that were unduly cut short by this tragedy.
 
 <div class="separator">More Faces of COVID-19</div>
 <figure>
