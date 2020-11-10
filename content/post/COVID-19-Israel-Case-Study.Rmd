@@ -470,9 +470,9 @@ widget <- highchart(type = "stock") %>%
 
 frameWidget(widget, width = "100%", height = "36rem")</code></pre>
 
-The file from "Our World in Data" is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You'll see the creation of an initial *data* dataframe, which in each case selects on of the dozen or more columns in the original set. Then the *wide* version of the table is created to split out each country-based time series into its own column. That *wide* dataframe is then converted to an *xts* or extenteded time series dataframe.
+The file from "Our World in Data" is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You'll see the creation of an initial *data* dataframe, which in each case selects on of the dozen or more columns in the original set. Then the *wide* version of the table is created to split out each country-based time series into its own column. That *wide* dataframe is then converted to an *xts* or extended time series dataframe.
 
-The *plotLines* and *plotBands* are largely manually generated - from dates I found in the wikipedia page mentioned above. The one date that is dynamically set is the end date for the plotBand which always grabs the last date of the current report range. Once there's a change in policy then that will again require some hand-curated edits, as opposed to the general daily pull of data for the time series information.
+Each report is largely the same. The only factors that are changed is the selected metric (new cases/million, new deaths/million, new tests/thousand) and of course the titles. The *plotLines* and *plotBands* are largely manually generated - from dates I found in the wikipedia page mentioned above. The one plotBand date that is dynamically set is the end date which always uses the last date of the current report range. Once there's a change in policy then that will again require some hand-curated edits. Until then the daily reports will continue to 'stretch' that last *plotBand* as the data grows.
 
 # Continuing Research
 

@@ -158,8 +158,8 @@ widget <- highchart(type = "stock") %>%
     ) 
 
 frameWidget(widget, width = "100%", height = "36rem")</code></pre>
-<p>The file from “Our World in Data” is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You’ll see the creation of an initial <em>data</em> dataframe, which in each case selects on of the dozen or more columns in the original set. Then the <em>wide</em> version of the table is created to split out each country-based time series into its own column. That <em>wide</em> dataframe is then converted to an <em>xts</em> or extenteded time series dataframe.</p>
-<p>The <em>plotLines</em> and <em>plotBands</em> are largely manually generated - from dates I found in the wikipedia page mentioned above. The one date that is dynamically set is the end date for the plotBand which always grabs the last date of the current report range. Once there’s a change in policy then that will again require some hand-curated edits, as opposed to the general daily pull of data for the time series information.</p>
+<p>The file from “Our World in Data” is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You’ll see the creation of an initial <em>data</em> dataframe, which in each case selects on of the dozen or more columns in the original set. Then the <em>wide</em> version of the table is created to split out each country-based time series into its own column. That <em>wide</em> dataframe is then converted to an <em>xts</em> or extended time series dataframe.</p>
+<p>Each report is largely the same. The only factors that are changed is the selected metric (new cases/million, new deaths/million, new tests/thousand) and of course the titles. The <em>plotLines</em> and <em>plotBands</em> are largely manually generated - from dates I found in the wikipedia page mentioned above. The one plotBand date that is dynamically set is the end date which always uses the last date of the current report range. Once there’s a change in policy then that will again require some hand-curated edits. Until then the daily reports will continue to ‘stretch’ that last <em>plotBand</em> as the data grows.</p>
 </div>
 <div id="continuing-research" class="section level1">
 <h1>Continuing Research</h1>
@@ -170,13 +170,13 @@ Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1319313200240861186" %}}
+{{% tweet "1323025775738736649" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1313113918601129985" %}}
+{{% tweet "1312037121360764930" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1320111872859869185" %}}
+{{% tweet "1319443422810259456" %}}
 </div>
 </div>
 <figcaption class="caption">
