@@ -97,7 +97,8 @@ last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updat
 
 thm <- hc_theme_merge(
   hc_theme_smpl(),
-  hc_theme(colors = c("#800000", "#102156", "#d4622b",  "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
+  hc_theme(colors = c("#800000", "#102156", "#d4622b",  "#45C0F5", 
+                      "#AFDC00", "#85DFD0", "purple", "orange"),
            chart = list(backgroundColor = ""),
            title = list(style = list(fontFamily = "Ubuntu")),
            subtitle = list(style = list(fontFamily = "Ubuntu")),
@@ -195,7 +196,8 @@ last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updat
 
 thm <- hc_theme_merge(
   hc_theme_smpl(),
-  hc_theme(colors = c("#800000", "#102156", "#d4622b",  "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
+  hc_theme(colors = c("#800000", "#102156", "#d4622b",  
+                      "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
            chart = list(backgroundColor = ""),
            title = list(style = list(fontFamily = "Ubuntu")),
            subtitle = list(style = list(fontFamily = "Ubuntu")),
@@ -287,7 +289,8 @@ last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updat
 
 thm <- hc_theme_merge(
   hc_theme_smpl(),
-  hc_theme(colors = c("#800000", "#102156", "#d4622b",  "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
+  hc_theme(colors = c("#800000", "#102156", "#d4622b",  
+                      "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
            chart = list(backgroundColor = ""),
            title = list(style = list(fontFamily = "Ubuntu")),
            subtitle = list(style = list(fontFamily = "Ubuntu")),
@@ -364,10 +367,6 @@ frameWidget(widget, width = "100%", height = "36rem")
 
 The majority of this code is formatting the display elements of the chart using the highcharter library. Here I'll focus on how the data was collected and processed for use in this chart. Not all time series charts are the same and I'm using the "stock" chart type for the windowed slider at the bottom.
 
-The file from "Our World in Data" is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You'll see the creation of an initial *data* dataframe, which in each case selects on of the dozen or more columns in the original set. Then the *wide* version of the table is created to split out each country-based time series into its own column. That *wide* dataframe is then converted to an *xts* or extenteded time series dataframe.
-
-The *plotLines* and *plotBands* are largely manually generated - from dates I found in the wikipedia page mentioned above. The one date that is dynamically set is the end date for the plotBand which always grabs the last date of the current report range. Once there's a change in policy then that will again require some hand-curated edits, as opposed to the general daily pull of data for the time series information.
-
 <button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code">View the Code behind the Chart</button>
 
 <pre id="code" class="collapse"><code class="r"># begin setup code chunk
@@ -399,7 +398,8 @@ last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updat
 
 thm <- hc_theme_merge(
   hc_theme_smpl(),
-  hc_theme(colors = c("#800000", "#102156", "#d4622b",  "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
+  hc_theme(colors = c("#800000", "#102156", "#d4622b",  
+                        "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
            chart = list(backgroundColor = ""),
            title = list(style = list(fontFamily = "Ubuntu")),
            subtitle = list(style = list(fontFamily = "Ubuntu")),
@@ -470,6 +470,9 @@ widget <- highchart(type = "stock") %>%
 
 frameWidget(widget, width = "100%", height = "36rem")</code></pre>
 
+The file from "Our World in Data" is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You'll see the creation of an initial *data* dataframe, which in each case selects on of the dozen or more columns in the original set. Then the *wide* version of the table is created to split out each country-based time series into its own column. That *wide* dataframe is then converted to an *xts* or extenteded time series dataframe.
+
+The *plotLines* and *plotBands* are largely manually generated - from dates I found in the wikipedia page mentioned above. The one date that is dynamically set is the end date for the plotBand which always grabs the last date of the current report range. Once there's a change in policy then that will again require some hand-curated edits, as opposed to the general daily pull of data for the time series information.
 
 # Continuing Research
 

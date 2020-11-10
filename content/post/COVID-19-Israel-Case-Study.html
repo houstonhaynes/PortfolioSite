@@ -55,8 +55,6 @@ editor_options:
 <div id="code-review" class="section level1">
 <h1>Code Review</h1>
 <p>The majority of this code is formatting the display elements of the chart using the highcharter library. Here I’ll focus on how the data was collected and processed for use in this chart. Not all time series charts are the same and I’m using the “stock” chart type for the windowed slider at the bottom.</p>
-<p>The file from “Our World in Data” is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You’ll see the creation of an initial <em>data</em> dataframe, which in each case selects on of the dozen or more columns in the original set. Then the <em>wide</em> version of the table is created to split out each country-based time series into its own column. That <em>wide</em> dataframe is then converted to an <em>xts</em> or extenteded time series dataframe.</p>
-<p>The <em>plotLines</em> and <em>plotBands</em> are largely manually generated - from dates I found in the wikipedia page mentioned above. The one date that is dynamically set is the end date for the plotBand which always grabs the last date of the current report range. Once there’s a change in policy then that will again require some hand-curated edits, as opposed to the general daily pull of data for the time series information.</p>
 <button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code">
 View the Code behind the Chart
 </button>
@@ -89,7 +87,8 @@ last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updat
 
 thm <- hc_theme_merge(
   hc_theme_smpl(),
-  hc_theme(colors = c("#800000", "#102156", "#d4622b",  "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
+  hc_theme(colors = c("#800000", "#102156", "#d4622b",  
+                        "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
            chart = list(backgroundColor = ""),
            title = list(style = list(fontFamily = "Ubuntu")),
            subtitle = list(style = list(fontFamily = "Ubuntu")),
@@ -159,6 +158,8 @@ widget <- highchart(type = "stock") %>%
     ) 
 
 frameWidget(widget, width = "100%", height = "36rem")</code></pre>
+<p>The file from “Our World in Data” is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You’ll see the creation of an initial <em>data</em> dataframe, which in each case selects on of the dozen or more columns in the original set. Then the <em>wide</em> version of the table is created to split out each country-based time series into its own column. That <em>wide</em> dataframe is then converted to an <em>xts</em> or extenteded time series dataframe.</p>
+<p>The <em>plotLines</em> and <em>plotBands</em> are largely manually generated - from dates I found in the wikipedia page mentioned above. The one date that is dynamically set is the end date for the plotBand which always grabs the last date of the current report range. Once there’s a change in policy then that will again require some hand-curated edits, as opposed to the general daily pull of data for the time series information.</p>
 </div>
 <div id="continuing-research" class="section level1">
 <h1>Continuing Research</h1>
@@ -169,13 +170,13 @@ Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1312000948114468867" %}}
+{{% tweet "1319313200240861186" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1314573834771558401" %}}
+{{% tweet "1313113918601129985" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1310190264674398209" %}}
+{{% tweet "1320111872859869185" %}}
 </div>
 </div>
 <figcaption class="caption">
