@@ -1,22 +1,22 @@
 ---
-title: "COVID-19 in Motion - World Data"
+title: "COVID-19 in Motion - Israel as a Case Study"
 output:
   blogdown::html_page:
     dev: "svg"
 author: "Houston Haynes"
-date: '2018-07-24T14:59:43+05:30'
+date: '2018-11-09T14:59:43+05:30'
 featuredpath: img
-featured: Micro-services.png
-ogfeatured: H3_og_wide_micro-services.png
+featured: COVID-19.png
+ogfeatured: H3_og_wide_COVID-19.png
 emblem: health.png
-description: Increasing sell-through by re-tooling the stack
-draft: false
+description: How policy directly affects incident rates
+draft: true
 tags:
 - COVID-19
 - R
 categories: 
 - Deep Dive
-weight: 0
+weight: 2
 editor_options: 
   chunk_output_type: inline
 ---
@@ -65,19 +65,18 @@ token <- create_token(
   access_key,
   access_secret)
 
-COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE) %>%
-  filter(str_detect(text, "died of COVID"))
+COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
+  filter(!str_detect(text, 'reply')) %>%
+  filter(!str_detect(text, 'replied')) %>%
+  filter(str_detect(text, 'died of COVID'))
 
 COVIDtweets <- sample(COVIDtweets$status_id)
-
-post1 <- COVIDtweets[1]
-post2 <- COVIDtweets[2]
 
 ```
 
 ## tl;dr
 
-Bla bla bla some randome text
+Bla bla bla some random text
 
 
 ```{r Israel COVID Policy, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
@@ -174,8 +173,9 @@ But wait... there's more.
 <div class="separator">Faces of COVID-19</div>
 <figure>
 <div class="row">
-  <div class="col-md-6">`r blogdown::shortcode("tweet", post1)`</div>
-  <div class="col-md-6">`r blogdown::shortcode("tweet", post2)`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[1])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[2])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[3])`</div>
 </div>
 <figcaption class="caption">The pandemic-related posts on this site are about more than data. <strong>Behind every number is a person, a family and a community.</strong> As reports are refreshed, new selections will also be chosen at random. To see how this is done, <a href="/post/faces-of-covid">see this sidebar</a>.</figcaption>
 <hr>

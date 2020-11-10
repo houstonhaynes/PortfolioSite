@@ -1,15 +1,15 @@
 ---
-title: "Faces of COVID-19"
+title: "Showing the Many Faces of the Pandemic"
 output:
   blogdown::html_page:
     dev: "svg"
 author: "Houston Haynes"
-date: '2018-11-09T14:59:43+05:30'
+date: '2018-11-07T14:59:43+05:30'
 featuredpath: img
 featured: FacesOfCovid.png
 ogfeatured: H3_og_wide_FacesOfCovid.png
 emblem: health.png
-description: Using rtweet to show the human impact of the pandemic
+description: Underscoring COVID-19 data with reminders of its human toll
 draft: false
 tags:
 - COVID-19
@@ -19,32 +19,132 @@ tags:
 - Hugo
 categories: 
 - Sidebar
-weight: 1
+weight: 3
 editor_options: 
   chunk_output_type: inline
 ---
 
 
 
-<div id="tldr" class="section level2">
-<h2>tl;dr</h2>
-<p>Bla bla bla some randome text</p>
-<p>But wait… there’s more.</p>
+<div id="more-than-words" class="section level1">
+<h1>More Than Words</h1>
+<p>Data can tell a compelling story when it’s properly collected, collated and curated. But there are times when data isn’t enough. And it’s not the lack of information that causes the picture to be lost. Sometimes it’s sheer overwhelming volume that can diminish the translation of data into information and ultimately into <em>actionable intelligence</em>. With the scope and scale of COVID-19, even experts can struggle to capture the essence of what they’re seeing in the flood of data.</p>
+<p>While sorting through some data sets for this blog, I decided to add a counterpoint to the global, national and state level data by embedding tweets from the “FacesOfCovid” Twitter account. I thought it was just as important to put a face on the crises as it is to get a full grasp of the breadth and scope of the pandemic. It can be all too easy to lose sight of how COVID-19 ripples out into the fabric of society. So I used the method below to keep the analysis grounded.</p>
+</div>
+<div id="repurposing-rtweet" class="section level1">
+<h1>Repurposing rtweet</h1>
+<p>rtweet is a handy library and that’s a go-to for a variety of tasks. I’ve used it for collecting and analyzing wide swaths of data for purposes ranging from sentiment analysis to investigating bot and astro-turfing patterns online. But here, instead of using it as a data mining tool, I’m doing a quick and easy pull of tweet <em>status_id</em>s to embed randomized tweets into COVID-related post on this site.</p>
 <div class="separator">
 Faces of COVID-19
 </div>
 <figure>
 <div class="row">
-<div class="col-md-6">
-{{% tweet "1315287608428290048" %}}
+<div class="col-md-4">
+{{% tweet "1323743002095808514" %}}
 </div>
-<div class="col-md-6">
-{{% tweet "1311372741581434881" %}}
+<div class="col-md-4">
+{{% tweet "1313282830299009025" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1319715217849237504" %}}
 </div>
 </div>
+<hr>
+</figure>
+</div>
+<div id="getting-into-the-code" class="section level1">
+<h1>Getting into the code</h1>
+<p>Like several other places on the site, I let blogdown and Hugo do the heavy lifting, embedding the selected codes into “shortcodes” that are then processed after the initial R code has populated the pages with Twitter status ids. I then wrap the shortcodes with Bootstrap markup that performs the arrangement of the tweets, three to a row in a “normal” landscape view and then vertically for mobile devices.</p>
+<p>It starts with a block of R code at the top of the page that pulls and filters the timeline for the “FacesOfCovid” account. There’s a lot going on “under the hood” of this code, which is part of the beauty of what this library handles on the user’s behalf. One thing that’s not shown here is the setup of the token used to make an authorized request into the Twitter API to collect the data. There are plenty of <a href="https://mran.microsoft.com/snapshot/2017-02-04/web/packages/rtweet/vignettes/auth.html" target ="_blank">tutorials online</a> of how to manage that (and embed the token into a .rds file to then be read into an RSession variable with the project. )</p>
+<figure>
 <figcaption class="caption">
-The pandemic-related posts on this site are about more than data. <strong>Behind every number is a person, a family and a community.</strong> As reports are refreshed, new selections will also be chosen at random. To see how this is done, <a href="/post/faces-of-covid">see this sidebar</a>.
+Collecting Tweets from “FacesOfCovid” Account
 </figcaption>
+<pre><code class="r">COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE) %>%
+  filter(str_detect(text, 'died of COVID'))</code></pre>
+</figure>
+<p>The “get_timeline” command first takes the account name (which can also be an account id) and an value of 1,000 - to get a longer list that then default 100. Filtering significantly pares down the list and getting 1,000 tweets mean I go “back in time” far enough to get a good cross-section from which to randomly select the posts to embed. The <em>parse</em> function does the heavy lifting and putting the API result into a dataframe, and setting <em>include_rts</em> to FALSE keeps retweets out of the list. And finally, the filter command selects for posts containing a string that I use a <em>key</em> to strive to get announcement posts. In my last check that pared down the initial 1,000 to slightly less than 400 tweets, which is plenty for the next step.</p>
+<figure>
+<figcaption class="caption">
+Random re-order and assign vector
+</figcaption>
+<pre><code class="r">COVIDtweets <- sample(COVIDtweets$status_id)</code></pre>
+</figure>
+<p>The last line from the setup block does two things. First it takes <em>status_id</em> column as a vector and randomly re-orders it with the “sample” function. Then it assigns that new vector into <em>COVIDTweets</em> for use in the embed. Picking values <strong>in order</strong> gives me a randomized selection, since the <em>sample</em> function did the re-shuffling.</p>
+<figure>
+<figcaption class="caption">
+Bootstrap wrapper responsive layout
+</figcaption>
+<pre><code class="django"><div class="separator">Faces of COVID-19</div>
+  <figure>
+    <div class="row">
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[1])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[2])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[3])&grave;</div>
+    </div>
+  </figure>
+<hr></code></pre>
+</figure>
+<p>I opted to go with three tweets arranged in standard wide/landscape views. There’s certainly an option to go to two by <em>col-md-6</em> indicators, but putting four on a row was too tight.</p>
+<p>And it’s certainly possible to keep going. Notice here how I simply created a single “row” with multiple tweets that in standard landscape orientation the browser displays in a 3X3 grid.</p>
+<figure>
+<figcaption class="caption">
+Extended Grid Layout
+</figcaption>
+<pre><code class="django"><div class="separator">More Faces of COVID-19</div>
+  <figure>
+    <div class="row">
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[4])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[5])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[6])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[7])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[8])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[9])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[10])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[11])&grave;</div>
+      <div class="col-md-4">&grave;r blogdown::shortcode("tweet", COVIDtweets[12])&grave;</div>
+    </div>
+  </figure>
+<hr>
+</code></pre>
+</figure>
+</div>
+<div id="daily-refresh" class="section level1">
+<h1>Daily Refresh</h1>
+<p>Aside from the normal compose/fix/build/deploy cycle in fleshing out this site, the build/deploy cycle also re-triggers whenever there’s new COVID data available. I’ll be writing about that under separate cover but it bears mentioning here to illustrate how that process also benefits this layout function. As the COVID data is refreshed and site re-deployed, it also re-runs the rtweet functions. That will not only gather any new posts that have made over the previous day, but will continue to shuffle and display “new” entries. So it will keep rotating the tweets and continue to shine a light on the myriad life stories that were in so many cases unduly cut short by this on-going tragedy.</p>
+<div class="separator">
+More Faces of COVID-19
+</div>
+<figure>
+<div class="row">
+<div class="col-md-4">
+{{% tweet "1323731680612536323" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1314249196443103240" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1325822957629939719" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1309168713078374402" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1320183295800475650" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1317253997275738112" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1315394658097340416" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1323765651274665984" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1317140749956374529" %}}
+</div>
+</div>
 <hr>
 </figure>
 </div>
