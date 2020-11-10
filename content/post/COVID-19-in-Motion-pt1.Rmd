@@ -1,0 +1,315 @@
+---
+title: "COVID-19 in Motion - World Data"
+output:
+  blogdown::html_page:
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-11-08T14:59:43+05:30'
+featuredpath: img
+featured: COVID-19.png
+ogfeatured: H3_og_wide_COVID-19.png
+emblem: health.png
+description: Increasing sell-through by re-tooling the stack
+draft: true
+tags:
+- COVID-19
+categories: 
+- Deep Dive
+weight: 1
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup and file loads, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+
+library(highcharter)
+library(tidyverse)
+library(lubridate)
+library(widgetframe)
+library(xts)
+library(jsonlite)
+library(fontawesome)
+
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+coviddata <- read.csv(URL)
+
+```
+
+```{r Tweets from Faces of COVID, include=FALSE }
+
+library(rtweet)
+library(stringr)
+library(dplyr)
+
+appname <- "H3 Tech Blog"
+consumer_key <- "Tb5d892Ozn7W3EP2uvm5RVQPH"
+consumer_secret <- "i094J3ewdwxm1KKmY3n4hnJ5ygxwwrl2cjvcfYWCv4VjQwOHHh"
+access_key <- "4434818952-MGJ5dPTsqmtm5sQHR3w2ebpDVt14wYsQeWBN9Bw"
+access_secret <- "p5sI2H0Z8YeZ8Tiyvv8ivb6R6fYmPP7VgqoNkjEGgDBUm"
+
+token <- create_token(
+  appname, 
+  consumer_key, 
+  consumer_secret,
+  access_key,
+  access_secret)
+
+COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
+  filter(str_detect(text, 'died of COVID'))
+
+COVIDtweets <- sample(COVIDtweets$status_id)
+
+```
+
+## tl;dr
+
+Bla bla bla some random text
+
+```{r GLobal New Cases Per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], date, iso_code, location, new_cases_smoothed_per_million)  %>%
+  rename(value = new_cases_smoothed_per_million) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date)) 
+
+ds <- data %>%
+  group_by(iso_code) %>%
+  do(item = list(
+    iso_code = first(.$iso_code),
+    sequence = .$value,
+    value = first(.$value))) %>%
+  .$item
+
+#head(ds, 10)
+
+vec <- sort(unique(pull(data, date)))
+
+url <- "https://code.highcharts.com/mapdata/custom/world-robinson-highres.js"
+tmpfile <- tempfile(fileext = ".json")
+download.file(url, tmpfile)
+geo <- readLines(tmpfile)
+geo <- gsub(".* = ", "", geo)
+map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
+
+last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+
+thm <- hc_theme_merge(
+  hc_theme_smpl(),
+  hc_theme(chart = list(backgroundColor = "rgba(194, 219, 255, 0.95)"),
+           title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Ubuntu")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
+
+widget <- highchart(type = "map") %>% 
+  hc_add_theme(thm) %>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_title(text = "Global COVID Daily New Cases per Million (smoothed)", align = "center") %>%
+  hc_subtitle(text = "Press play button or use slider to change date", align = "center") %>%
+  hc_add_series(data = ds,
+                name = "New Cases per Million",
+                mapData = map,
+                joinBy = c("iso-a3", "iso_code"),
+                borderWidth = 0.01) %>%
+  hc_colorAxis (
+    stops = color_stops(colors = viridisLite::magma(20, begin = 0.1, direction = -1)),
+    type = "linear"
+    ) %>%
+  hc_motion (
+    enabled = TRUE,
+    startIndex = 1, 
+    axisLabel = "date",
+    labels = vec,
+    series = 0,
+    updateIterval = 100,
+    playIcon = "fas fa-play",
+    pauseIcon = "fas fa-pause",
+    magnet = list(
+      round = "floor",
+      step = 0.1
+      )
+  ) %>%
+  hc_legend(layout = "vertical", verticalAlign = "top",
+            align = "right", valueDecimals = 0) %>% 
+  hc_mapNavigation(
+    enabled = TRUE,
+    enableMouseWheelZoom = TRUE,
+    enableDoubleClickZoom = TRUE
+  ) %>%
+  hc_credits(enabled = TRUE, 
+             text = last_updated, 
+             position = list(align = "left", x = 10, y = -5))
+
+
+frameWidget(widget,  width = "100%", height = "640", options=frameOptions(allowfullscreen = T))
+
+```
+And now... this. 
+
+```{r COVID Line Chart, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
+  rename(value = new_cases_smoothed_per_million) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date))
+
+data.wide <-  pivot_wider(data, names_from = location, values_from = value)
+
+#data.wide
+
+data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
+
+last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+
+thm <- hc_theme_merge(
+  hc_theme_smpl(),
+  hc_theme(colors = c("#102156", "#d4622b", "#219BAF", "#45C0F5", "#AFDC00", "#85DFD0"),
+           chart = list(backgroundColor = ""),
+           title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Ubuntu")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
+
+widget <- highchart(type = "stock") %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "Israel COVID Policy Progression (new cases/million)", align = "center") %>%
+  hc_subtitle(text = "With Comparison Data from Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
+  hc_credits(enabled = TRUE, 
+             text = last_updated, 
+             position = list(align = "left", x = 10, y = -5)) %>%
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
+  hc_add_series(data_xts$China, type = "line", name = "China") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
+  hc_tooltip(valueDecimals = 2) %>%
+  hc_xAxis(type = "datetime",
+    plotLines = list(list(
+      label = list(text = "Schools opened"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-05-03', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Schools shut down"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-06-01', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "New stricter controls announced"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-07-13', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Loosened 'traffic light' plan"),
+      color = "#800000",
+      width = 4,
+      value = datetime_to_timestamp(as.Date('2020-08-31', tz = 'UTC'))
+    )),
+    plotBands = list(
+      list(
+        label = list(text = "New nationwide<br />lockdown policy", align = "left"),
+        color = "rgba(100, 0, 0, 0.1)",
+        from = datetime_to_timestamp(as.Date('2020-09-13', tz = 'UTC')),
+        to = datetime_to_timestamp(as.Date(end(data_xts), tz = 'UTC'))
+      )
+    )
+  ) %>%
+  hc_legend(
+    enabled = TRUE,
+    align = "right",
+    layout = "proximate",
+    x = 0,
+    y = 0
+    ) 
+  
+
+frameWidget(widget, width = "100%", height = "100%")
+
+```
+But wait... there's more.
+
+```{r Lines in Motion, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+data <- select(coviddata, date, location, new_cases_smoothed) %>%
+  rename(value = new_cases_smoothed) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date))
+
+data.wide <-  pivot_wider(data, names_from = location, values_from = value)
+
+#data.wide
+
+data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
+
+#head(ds, 10)
+
+
+vec <- sort(unique(pull(data.wide, date)))
+
+#head(data_xts, 100)
+
+highchart(hcaes(x = date, y = location)) %>%
+  hc_credits(enabled = TRUE, 
+           text = last_updated, 
+           position = list(align = "left", x = 10, y = -5)) %>%
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
+  hc_add_series(data_xts$China, type = "line", name = "China") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
+  hc_motion (
+  enabled = TRUE,
+  axisLabel = "date",
+  labels = vec,
+  series = data_xts$date,
+  updateIterval = 50,
+  magnet = list(
+    round = "floor",
+    step = 0.1
+    )
+  ) %>%
+  hc_tooltip(valueDecimals = 2) %>%
+  hc_xAxis(categories = data_xts$date, type = "datetime") %>%
+  hc_legend(
+    layout = "vertical",
+    reversed = TRUE,
+    floating = FALSE,
+    align = "right"
+    )
+
+
+
+
+```
+
+
+<div class="separator">Faces of COVID-19</div>
+<figure>
+<div class="row">
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[1])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[2])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[3])`</div>
+</div>
+<figcaption class="caption">The pandemic-related posts on this site are about more than data. <strong>Behind every number is a person, a family and a community.</strong> As reports are refreshed, new selections will also be chosen at random. To see how this is done, <a href="/post/faces-of-covid">see this sidebar</a>.</figcaption>
+<hr>
+</figure>

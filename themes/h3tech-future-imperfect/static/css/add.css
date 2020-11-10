@@ -420,3 +420,7 @@ a#back-to-top:hover {
 .separator::after {
     margin-left: .25em;
 }
+
+.widgetframe {
+    margin-bottom: 2rem;
+}

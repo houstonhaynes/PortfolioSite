@@ -414,7 +414,7 @@ pre {
     display: table;
     border-radius: 4px;
     table-layout: fixed;
-    width: 100%
+    width: 100%;
 }
 
 pre code {

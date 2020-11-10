@@ -191,8 +191,8 @@ Vimeo and Twitter ‘exclusion’ in dark.css
 </figcaption>
 <pre><code class="css">iframe[src^="https://player.vimeo.com/video"],
 iframe[src^="https://platform.twitter.com"] {
-    filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
-    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
+    filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(95%);
+    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(95%);
 }</code></pre>
 </figure>
 <p>I was tempted to “surface” the internal Vimeo and Twitter embed templates in Hugo and modify them for my site. But again, I’m trying to split the difference between honoring the spirit of this browser feature set without overinvesting for what amounts to a personal tech vanity site. Considering usability issues like this have shifted “dark mode” from a convenience feature and more about how users who <em>need</em> this functionality can better interact with the site. This is still a burgeoning field within the web community, and I’ll continue to refactor to make the site better suited to <em>“a11y”</em> standards as I learn work more with Hugo. (or when I transition to another framework which makes this more manageable)</p>

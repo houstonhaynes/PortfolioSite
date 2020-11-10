@@ -1,0 +1,186 @@
+---
+title: "COVID-19 in Motion - Israel as Case Study"
+output:
+  blogdown::html_page:
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-11-09T14:59:43+05:30'
+featuredpath: img
+featured: COVID-19.png
+ogfeatured: H3_og_wide_COVID-19.png
+emblem: health.png
+description: How policy directly affects incident rates
+draft: false
+tags:
+- COVID-19
+- R
+- highcharts
+categories: 
+- Sidebar
+weight: 2
+editor_options: 
+  chunk_output_type: inline
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
+<script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+
+
+<div id="a-crucible" class="section level1">
+<h1>A Crucible</h1>
+<p>Having read several articles about <a href="https://www.wsj.com/articles/israels-second-lockdown-seems-to-be-working-better-than-its-first-11604235601" target="_blank">Israel’s mask mandate</a> and how that showed marked results that I had to see for myself. It didn’t disappoint. When leveled for cases-per-million the shape of the data is unmistakable.</p>
+<p>The data came from <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> and made for ample analysis. That said, there are some data shapes that cause me to raise an eyebrow. However, the chart below is a really stark visual story. I added some plotlines to indicate dates of policy changes (gathered from a <a href="https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Israel" target="_blank">wiki page</a>) and the visual story is unmistakable. Not only does the case count per day <em>skyrocket</em> but it also <em>lags</em> the re-issuance of stricter guidelines.</p>
+<div id="comparison-countries" class="section level2">
+<h2>Comparison Countries</h2>
+<p>I was fairly arbitrary in my selection of countries to compare to Israel’s data. I picked US and UK because the response in general has been <em>so poor</em> from a policy perspective. And as counterpoint I pulled in Canada and Germany who have better national strategies. India and China were chosen for their population size (even when leveled for cases per million I was expecting to see more from their data) and Japan has a pretty well-established mask culture. As you look at death and test rates below the picture continues to develop.</p>
+<div id="htmlwidget-1" style="width:100%;height:36rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-Israel-Case-Study_files/figure-html//widgets/widget_Israel COVID Cases per Million.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+{{% alert "info" "Working with the Report:" "Use the legend on the right to highlight, show or hide a series. Use the bar at the bottom or zoom controls at the top to change the time range of the report." %}}
+<p>Researchers will talk about the lag time between a change in policy and the shift in incident rates, but seldom will you see a more clear example. And of course the final piece to this mosaic is that the case rate in Israel moves <em>below</em> the UK, US, Germany and Canada as of the latest date (Nov 9) as of this writing.</p>
+</div>
+<div id="deaths-per-million" class="section level2">
+<h2>Deaths per Million</h2>
+<p>I was shocked to see the deaths per million <em>so high</em> in the UK. I honestly wonder if the US <em>not</em> being a higher number might be about improper/false attribution of cause of death. I’ve read anecdotes about folks in rest homes whose families assert they died from COVID-19 but their COD was listed as some other, more common cause. That said, the trend of the numbers in Israel after the new lockdown policy in mid September shows both the lagging response post-implementation <em>as well as</em> a rate the descends below those of the US and UK.</p>
+<div id="htmlwidget-2" style="width:100%;height:36rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/COVID-19-Israel-Case-Study_files/figure-html//widgets/widget_Israel COVID Deaths per Million.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="tests-per-thousand" class="section level2">
+<h2>Tests per Thousand</h2>
+<p>While the tests per thousand is increasing, it’s not nearly high enough. It’s really interesting to see how Israel’s testing jumped up at the same time that case rate spiked. The drop-off at the end I assume is lag in reporting that will eventually be back-filled, but I’ll go to other sources if this data sub-set flattens out.</p>
+<div id="htmlwidget-3" style="width:100%;height:36rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"url":"/post/COVID-19-Israel-Case-Study_files/figure-html//widgets/widget_Israel COVID Tests per Thousand.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="code-review" class="section level1">
+<h1>Code Review</h1>
+<p>The majority of this code is formatting the display elements of the chart using the highcharter library. Here I’ll focus on how the data was collected and processed for use in this chart. Not all time series charts are the same and I’m using the “stock” chart type for the windowed slider at the bottom.</p>
+<p>The file from “Our World in Data” is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You’ll see the creation of an initial <em>data</em> dataframe, which in each case selects on of the dozen or more columns in the original set. Then the <em>wide</em> version of the table is created to split out each country-based time series into its own column. That <em>wide</em> dataframe is then converted to an <em>xts</em> or extenteded time series dataframe.</p>
+<p>The <em>plotLines</em> and <em>plotBands</em> are largely manually generated - from dates I found in the wikipedia page mentioned above. The one date that is dynamically set is the end date for the plotBand which always grabs the last date of the current report range. Once there’s a change in policy then that will again require some hand-curated edits, as opposed to the general daily pull of data for the time series information.</p>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code">
+View the Code behind the Chart
+</button>
+<pre id="code" class="collapse"><code class="r"># begin setup code chunk
+library(highcharter)
+library(tidyverse)
+library(lubridate)
+library(widgetframe)
+library(xts)
+library(jsonlite)
+library(fontawesome)
+
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+coviddata <- read.csv(URL)
+
+# end setup code chunk
+
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
+  rename(value = new_cases_smoothed_per_million) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date))
+
+data.wide <-  pivot_wider(data, names_from = location, values_from = value)
+
+data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
+
+last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",
+                        format(Sys.time(), "%a %b %d %Y %X"))
+
+thm <- hc_theme_merge(
+  hc_theme_smpl(),
+  hc_theme(colors = c("#800000", "#102156", "#d4622b",  "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
+           chart = list(backgroundColor = ""),
+           title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Ubuntu")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
+
+widget <- highchart(type = "stock") %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "Global New Cases per Milion - Israel as Case Study", align = "center") %>%
+  hc_subtitle(
+    text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_credits(enabled = TRUE, 
+             text = last_updated, 
+             position = list(align = "left", x = 10, y = -5)) %>%
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
+  hc_add_series(data_xts$China, type = "line", name = "China") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
+  hc_tooltip(valueDecimals = 2) %>%
+  hc_xAxis(type = "datetime",
+    plotLines = list(list(
+      label = list(text = "Schools opened"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-05-03', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Schools shut down"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-06-01', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "New stricter controls announced"),
+      color = "#4D6278",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2020-07-13', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Loosened 'traffic light' plan"),
+      color = "#800000",
+      width = 4,
+      value = datetime_to_timestamp(as.Date('2020-08-31', tz = 'UTC'))
+    )),
+    plotBands = list(
+      list(
+        label = list(text = "New nationwide<br />lockdown policy", align = "left"),
+        color = "rgba(100, 0, 0, 0.1)",
+        from = datetime_to_timestamp(as.Date('2020-09-13', tz = 'UTC')),
+        to = datetime_to_timestamp(as.Date(end(data_xts), tz = 'UTC'))
+      )
+    )
+  ) %>%
+  hc_legend(
+    enabled = TRUE,
+    align = "right",
+    layout = "proximate",
+    x = 0,
+    y = 0
+    ) 
+
+frameWidget(widget, width = "100%", height = "36rem")</code></pre>
+</div>
+<div id="continuing-research" class="section level1">
+<h1>Continuing Research</h1>
+<p>This isn’t the only report I had planned for looking at this data, but given the recent press around Israel’s changes in policy, and the dramatic effect that had on COVID incident rates, I had to see the data for myself. As more data is gathered and more interesting questions are posed to that data, other report types will surely follow.</p>
+<div class="separator">
+Faces of COVID-19
+</div>
+<figure>
+<div class="row">
+<div class="col-md-4">
+{{% tweet "1312000948114468867" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1314573834771558401" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1310190264674398209" %}}
+</div>
+</div>
+<figcaption class="caption">
+The pandemic-related posts on this site are about more than data. <strong>Behind every number is a person, a family and a community.</strong> As reports are refreshed, new selections will also be chosen at random. To see how this is done, <a href="/post/faces-of-covid">see this sidebar</a>.
+</figcaption>
+<hr>
+</figure>
+</div>

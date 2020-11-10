@@ -6,8 +6,8 @@ output:
 author: "Houston Haynes"
 date: '2018-11-07T14:59:43+05:30'
 featuredpath: img
-featured: FacesOfCovid.png
-ogfeatured: H3_og_wide_FacesOfCovid.png
+featured: facesofcovid.png
+ogfeatured: H3_og_wide_facesofcovid.png
 emblem: health.png
 description: Underscoring COVID-19 data with reminders of its human toll
 draft: false
@@ -40,13 +40,13 @@ Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1323743002095808514" %}}
+{{% tweet "1318930045319131147" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1313282830299009025" %}}
+{{% tweet "1321610198956597249" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1319715217849237504" %}}
+{{% tweet "1311644531733925888" %}}
 </div>
 </div>
 <hr>
@@ -63,14 +63,14 @@ Collecting Tweets from “FacesOfCovid” Account
 <pre><code class="r">COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE) %>%
   filter(str_detect(text, 'died of COVID'))</code></pre>
 </figure>
-<p>The “get_timeline” command first takes the account name (which can also be an account id) and an value of 1,000 - to get a longer list that then default 100. Filtering significantly pares down the list and getting 1,000 tweets mean I go “back in time” far enough to get a good cross-section from which to randomly select the posts to embed. The <em>parse</em> function does the heavy lifting and putting the API result into a dataframe, and setting <em>include_rts</em> to FALSE keeps retweets out of the list. And finally, the filter command selects for posts containing a string that I use a <em>key</em> to strive to get announcement posts. In my last check that pared down the initial 1,000 to slightly less than 400 tweets, which is plenty for the next step.</p>
+<p>The “get_timeline” command first takes the account name (which can also be an account id) and a <em>n</em> value of 1,000 - to get a longer list that then default 100. Filtering significantly pares down the list and getting 1,000 tweets mean I go “back in time” far enough to get a good cross-section from which to randomly select the posts to embed. The <em>parse</em> function does the heavy lifting of putting the API result into a dataframe, and setting <em>include_rts</em> to FALSE keeps retweets out of the list. And finally, the filter command selects for posts containing a string that I use as a <em>key</em> to strive to get announcement posts. The last time I tested this locally I noticed that the initial pared down to slightly less than 400 tweets, which is plenty for the next step.</p>
 <figure>
 <figcaption class="caption">
 Random re-order and assign vector
 </figcaption>
 <pre><code class="r">COVIDtweets <- sample(COVIDtweets$status_id)</code></pre>
 </figure>
-<p>The last line from the setup block does two things. First it takes <em>status_id</em> column as a vector and randomly re-orders it with the “sample” function. Then it assigns that new vector into <em>COVIDTweets</em> for use in the embed. Picking values <strong>in order</strong> gives me a randomized selection, since the <em>sample</em> function did the re-shuffling.</p>
+<p>The last line from the setup block does two things. First it takes <em>status_id</em> column as a vector and randomly re-orders it with the <em>sample</em> function. Then it assigns that new vector into <em>COVIDTweets</em> for use in the embed. Picking values <strong>in order</strong> gives me a randomized selection, since the <em>sample</em> function did the re-shuffling.</p>
 <figure>
 <figcaption class="caption">
 Bootstrap wrapper responsive layout
@@ -86,7 +86,7 @@ Bootstrap wrapper responsive layout
 <hr></code></pre>
 </figure>
 <p>I opted to go with three tweets arranged in standard wide/landscape views. There’s certainly an option to go to two by <em>col-md-6</em> indicators, but putting four on a row was too tight.</p>
-<p>And it’s certainly possible to keep going. Notice here how I simply created a single “row” with multiple tweets that in standard landscape orientation the browser displays in a 3X3 grid.</p>
+<p>And it’s certainly possible to keep going. Notice below how Bootstrap’s “12 column” grid system only requires a single “row” with multiple tweets that in standard landscape orientation the browser displays in a 3X3 grid.</p>
 <figure>
 <figcaption class="caption">
 Extended Grid Layout
@@ -111,38 +111,38 @@ Extended Grid Layout
 </div>
 <div id="daily-refresh" class="section level1">
 <h1>Daily Refresh</h1>
-<p>Aside from the normal compose/fix/build/deploy cycle in fleshing out this site, the build/deploy cycle also re-triggers whenever there’s new COVID data available. I’ll be writing about that under separate cover but it bears mentioning here to illustrate how that process also benefits this layout function. As the COVID data is refreshed and site re-deployed, it also re-runs the rtweet functions. That will not only gather any new posts that have made over the previous day, but will continue to shuffle and display “new” entries. So it will keep rotating the tweets and continue to shine a light on the myriad life stories that were in so many cases unduly cut short by this on-going tragedy.</p>
+<p>Aside from the normal devops process while fleshing out this site, the build/deploy cycle also re-triggers whenever there’s new COVID data available. I’ll be writing about that under separate cover but it bears mentioning here to illustrate how that process also benefits this function. As the COVID data is refreshed and site re-deployed, it also re-runs the rtweet functions. That will not only gather any new posts that have been made over the previous day, but will continue to shuffle and display “new” entries that arraive at the top of that shuffled list. So each day it will rotate the tweets and continue to shine a light on the myriad life stories that were in so many cases unduly cut short by this tragedy.</p>
 <div class="separator">
 More Faces of COVID-19
 </div>
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1323731680612536323" %}}
+{{% tweet "1324041219077410817" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1314249196443103240" %}}
+{{% tweet "1314543637611655168" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1325822957629939719" %}}
+{{% tweet "1318899839212675072" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1309168713078374402" %}}
+{{% tweet "1323093723429961728" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1320183295800475650" %}}
+{{% tweet "1315460906566979584" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1317253997275738112" %}}
+{{% tweet "1310190264674398209" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1315394658097340416" %}}
+{{% tweet "1320523034487332864" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1323765651274665984" %}}
+{{% tweet "1318197713415016448" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1317140749956374529" %}}
+{{% tweet "1323776978802020352" %}}
 </div>
 </div>
 <hr>

@@ -61,7 +61,6 @@ View the Code behind the Chart
 <pre id="code" class="collapse"><code class="r">library(jsonlite)
 library(highcharter)
 library(widgetframe)
-# Initial Win/Loss Over Time 
 cartLossTableBefore &lt;- fromJSON(&quot;../../data/Minute1_Attrition_Example1a.json&quot;)
 dfCartLossBefore &lt;- as.data.frame(do.call(&quot;cbind&quot;, cartLossTableBefore))
 dfCartLossBefore$Timeout = as.numeric(dfCartLossBefore$Timeout)
