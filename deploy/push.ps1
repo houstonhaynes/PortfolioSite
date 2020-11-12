@@ -1,10 +1,13 @@
 Param
     (
-        [Parameter(Mandatory=$true)]   
+        [Parameter(Mandatory=$TRUE)]   
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]        
         [ValidateSet("int","prd")] 
-        [string]$environment = $args[0]
+        [string]$environment,
+        [Parameter(Mandatory=$FALSE)]   
+        [ValidateSet("Rmd")]
+        [string]$build
     )
 
 # get connection strings from local file
@@ -19,7 +22,13 @@ If ($environment -eq 'prd') {
 
 # clear the files to ensure that a 'clean' build is generated for all files
 Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force
-Remove-Item C:\repo\PortfolioSite\content\post\*.html -Recurse -Force
+
+
+If ($build -eq 'Rmd') {
+    Remove-Item C:\repo\PortfolioSite\content\post\*.html -Recurse -Force
+    cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-site.R'
+}
+
 
 # run R terminal to build blogdown site for specific URL pattern
 If ($environment -eq 'prd') {

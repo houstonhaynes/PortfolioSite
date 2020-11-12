@@ -65,6 +65,7 @@ COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts 
 
 COVIDtweets <- sample(COVIDtweets$status_id)
 
+
 ```
 
 # Exercise in Scale
@@ -73,16 +74,26 @@ When I started working with the <a href="https://ourworldindata.org/" target="_b
 
 ```{r New Cases by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
 
-library(dplyr)
+library(zoo)
+library(slider)
 
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], date, continent, new_cases_smoothed_per_million)   %>%
-  rename(value = new_cases_smoothed_per_million) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
+pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
+               date, continent, location, new_cases)   %>%
+  filter(location != "International", location != "World") %>%
+  mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
   mutate(date = ymd(date)) %>%
+  left_join(pop, location = location) %>%
+  select(date, continent, new_cases, population) %>%
+  mutate(ncpm = ((new_cases / population) * 1000000)) %>%
+  select (date, continent, new_cases, ncpm) %>%
   group_by(date, continent) %>%
-  summarise_each(funs(sum))
-
-data <- subset(data, continent != "") 
+  summarize(new_cases = sum(new_cases), ncpm = sum(ncpm)) %>%
+  group_by(continent) %>%
+  arrange(continent, date) %>%
+  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3)) %>%
+  mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
+  ungroup()
 
 thm <- hc_theme_merge(
   hc_theme_ffx(),
@@ -90,7 +101,55 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Fira Code")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
-widget <- hchart(data, "areaspline", hcaes(x = date, y = value, group = continent, labels = FALSE))%>%
+hchart(data, "areaspline", hcaes(x = date, y = new_cases, group = continent, labels = FALSE))%>%
+  hc_plotOptions(series = list(stacking = 'normal')) %>%
+  hc_title(text = "Global COVID Daily New Cases (raw)", align = "center") %>% 
+  hc_add_theme(thm) %>%
+  hc_subtitle(text = "Summed by continent :: Higher == BAD", align = "center")%>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_yAxis(title = list(enabled = FALSE)) %>%
+  hc_xAxis(title = list(enabled = FALSE))
+
+hchart(data, "areaspline", hcaes(x = date, y = ncrm, group = continent, labels = FALSE))%>%
+  hc_plotOptions(series = list(stacking = 'normal')) %>%
+  hc_title(text = "Global COVID Daily New Cases (smoothed)", align = "center") %>% 
+  hc_add_theme(thm) %>%
+  hc_subtitle(text = "Summed by continent :: Higher == BAD", align = "center")%>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_yAxis(title = list(enabled = FALSE)) %>%
+  hc_xAxis(title = list(enabled = FALSE))
+
+hchart(data, "areaspline", hcaes(x = date, y = ncpm, group = continent, labels = FALSE))%>%
+  hc_plotOptions(series = list(stacking = 'normal')) %>%
+  hc_title(text = "Global COVID Daily New Cases per Million (raw)", align = "center") %>% 
+  hc_add_theme(thm) %>%
+  hc_subtitle(text = "Summed by continent :: Higher == BAD", align = "center")%>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_yAxis(title = list(enabled = FALSE)) %>%
+  hc_xAxis(title = list(enabled = FALSE))
+
+hchart(data, "areaspline", hcaes(x = date, y = ncpmrm, group = continent, labels = FALSE))%>%
   hc_plotOptions(series = list(stacking = 'normal')) %>%
   hc_title(text = "Global COVID Daily New Cases per Million (smoothed)", align = "center") %>% 
   hc_add_theme(thm) %>%
@@ -106,14 +165,14 @@ widget <- hchart(data, "areaspline", hcaes(x = date, y = value, group = continen
   hc_yAxis(title = list(enabled = FALSE)) %>%
   hc_xAxis(title = list(enabled = FALSE))
 
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))
+#frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))
 
 
 ```
 
 `r blogdown::shortcode("alert", "info", "Working with the Report:", "Use the legend to highlight, show or hide a series. Hovering over bands in the chart reveals detail for a given date.")`
 
-So I took the data and plotted it on a map, to play on a day grain through time. The gradations are pretty subtle at the start, and that's because of the data getting *very* dark late in the range. In fact when I first created this report I didn't have 
+So I took the data and plotted it on a map, to play on a day grain through time. The gradations are pretty subtle at the start, and that's because of the data getting *very* dark late in the range. 
 
 ```{r Global New Cases Per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
@@ -201,13 +260,13 @@ frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allo
 
 ```
 
-`r blogdown::shortcode("alert", "info", "Working with the Report:", "Aside from the play/pause and controls, the map is *zoomable*. Hovering over a country will highlight and show the value for the current position on the timeline. Hovering while playing back will show rolling changes to the values for that country.")`
+`r blogdown::shortcode("alert", "info", "Working with the Report:", "Aside from the play/pause and date slider, the map is *zoomable*. Hovering over a country will highlight and show the value for the current position on the timeline. Hovering while playing back will show updating changes to the values for that country.")`
 
-`r blogdown::shortcode("alert", "warning", "Bug Report:", "The play/pause button for the map charts *works* but the icons are currently not visible. A fix is being researched now, but thought the power of the visual was worth publishing with missing key element. Thanks for understanding.")`
+`r blogdown::shortcode("alert", "warning", "Bug Report:", "The play/pause button for the map charts *works* but the icons are currently not visible. A fix is being researched now. Thanks for understanding.")`
 
 # Daily COVID Mortality
 
-One of the things I expected was to see some "chop" in early data as reporting became more consistent. Here I was surprised to see irregular bumps in the "smoothed" data. I'm not sure whether it's *my processing* of the data (grouped/summed by continent) or if there's something in the data itself. That's something I'll have to check against other data sets and within my code. Such as it is, the visuals tell a convincing story of where things are going as of November, and it's *not* good.
+One of the things I expected was to see some "chop" in early data as reporting became more consistent. Here I was surprised to see irregular bumps in the "smoothed" data. Once South America is removed from the set then things look much less strange. Such as it is, the visuals tell a convincing story of where things are going as of November, and it's *not* good.
 ```{r New Deaths by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
 
 library(dplyr)
@@ -217,7 +276,7 @@ data <- select(coviddata[with(coviddata, order(date, iso_code)),], date, contine
   mutate(value = ifelse(is.na(value), 0, value)) %>%
   mutate(date = ymd(date)) %>%
   group_by(date, continent) %>%
-  summarise_each(funs(sum))
+  summarise_each(funs(mean))
 
 data <- subset(data, continent != "") 
 
@@ -248,7 +307,7 @@ frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allow
 
 ```
 
-Again here - like the area chart - the direction of what's happening in Europe is unmistakable. In fact it bothers me to the point that I'll probably end up sourcing some other data just so I can sleep tonight. 
+Again here - like the area chart - the direction of what's happening in Europe is unmistakable. In fact it bothers me to the point that I'll probably end up sourcing some other data just so I can sleep tonight. But one thing we can see and possibly discard is the sudden jump in values in South America. Per our area chart above which showed that as the offending portion of the data set that was skewing the result.
  
 ```{r Global New Deaths Per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
@@ -353,12 +412,12 @@ While spelunking through the data I thought I'd take a look at testing. The good
 
 library(dplyr)
 
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], date, continent, new_tests_smoothed)   %>%
-  rename(value = new_tests_smoothed) %>%
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], date, continent, new_tests_smoothed_per_thousand)   %>%
+  rename(value = new_tests_smoothed_per_thousand) %>%
   mutate(value = ifelse(is.na(value), 0, value)) %>%
   mutate(date = ymd(date)) %>%
   group_by(date, continent) %>%
-  summarise_each(funs(sum))
+  summarise_each(funs(mean))
 
 data <- subset(data, continent != "") 
 
@@ -370,7 +429,7 @@ thm <- hc_theme_merge(
 
 widget <- hchart(data, "area", hcaes(x = date, y = value, group = continent))%>%
   hc_plotOptions(series = list(stacking = 'normal')) %>%
-  hc_title(text = "Global COVID Daily Tests (smoothed)", align = "center") %>% 
+  hc_title(text = "Global COVID Daily Tests per Thousand (smoothed)", align = "center") %>% 
   hc_add_theme(thm) %>%
   hc_subtitle(text = "Summed by continent :: Higher == GOOD", align = "center")%>%
   hc_chart(
@@ -393,7 +452,8 @@ Here's the flip-side of the previous two reports - where the numbers go *green* 
 
 ```{r Global New Test Per Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], date, iso_code, location, new_tests_smoothed_per_thousand)  %>%
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
+               date, iso_code, location, new_tests_smoothed_per_thousand)  %>%
   rename(value = new_tests_smoothed_per_thousand) %>%
   mutate(value = ifelse(is.na(value), 0, value)) %>%
   mutate(date = ymd(date)) 
@@ -478,6 +538,158 @@ frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allo
 
 ```
 
-# Furhter analysis
+## How the resports were built
+
+The area charts are relatively straightforward. The only data munging task was summing the values by continent and date. After that it was mainly about formatting and some tweaks to keep the display clean. 
+
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code1">View the Code behind the First Area Chart</button>
+
+<pre id="code1" class="collapse"><code class="r"># begin setup code chunk
+library(highcharter)
+library(widgetframe)
+library(tidyverse)
+library(lubridate)
+library(xts)
+
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+coviddata <- read.csv(URL)
+
+# end setup code chunk
+
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
+                date, continent, new_cases_smoothed_per_million)   %>%
+  rename(value = new_cases_smoothed_per_million) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date)) %>%
+  group_by(date, continent) %>%
+  summarise_each(funs(mean))
+
+data <- subset(data, continent != "") 
+
+thm <- hc_theme_merge(
+  hc_theme_ffx(),
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
+
+widget <- hchart(data, "areaspline", hcaes(x = date, y = value, group = continent, labels = FALSE))%>%
+  hc_plotOptions(series = list(stacking = 'normal')) %>%
+  hc_title(text = "Global COVID Daily New Cases per Million (smoothed)", align = "center") %>% 
+  hc_add_theme(thm) %>%
+  hc_subtitle(text = "Summed by continent :: Higher == BAD", align = "center")%>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_yAxis(title = list(enabled = FALSE)) %>%
+  hc_xAxis(title = list(enabled = FALSE))
+
+frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))</code></pre>
+
+The map charts were more complex. Aside from tying together the geojson map to the data (by joining iso-a3 in the map data to the iso_code value from the source data) there was building the sequence of data itself. This wasn't immediately apparent but <a href="https://jkunst.com/blog/posts/2016-04-12-adding-motion-to-choropleths/" target="_blank">this tutorial</a> was a great help.
+
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code2">View the Code behind the First Map Chart</button>
+
+<pre id="code2" class="collapse"><code class="r"># begin setup code chunk
+library(highcharter)
+library(widgetframe)
+library(tidyverse)
+library(lubridate)
+library(xts)
+
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+coviddata <- read.csv(URL)
+
+# end setup code chunk
+
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
+                date, iso_code, location, new_cases_smoothed_per_million)  %>%
+  rename(value = new_cases_smoothed_per_million) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date)) 
+
+ds <- data %>%
+  group_by(iso_code) %>%
+  do(item = list(
+    iso_code = first(.$iso_code),
+    sequence = .$value,
+    value = first(.$value))) %>%
+  .$item
+
+vec <- sort(unique(pull(data, date)))
+
+url <- "https://code.highcharts.com/mapdata/custom/world-robinson-highres.js"
+tmpfile <- tempfile(fileext = ".json")
+download.file(url, tmpfile)
+geo <- readLines(tmpfile)
+geo <- gsub(".* = ", "", geo)
+map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
+
+last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",
+                        format(Sys.time(), "%a %b %d %Y %X"))
+
+thm <- hc_theme_merge(
+  hc_theme_ffx(),
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Ubuntu")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
+
+widget <- highchart(type = "map") %>% 
+  hc_add_theme(thm) %>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_title(text = "Global COVID Daily New Cases per Million (smoothed)", align = "center") %>%
+  hc_subtitle(text = "Press play button or use slider to change date", align = "center") %>%
+  hc_add_series(data = ds,
+                name = "New Cases per Million",
+                mapData = map,
+                joinBy = c("iso-a3", "iso_code"),
+                borderWidth = 0.01) %>%
+  hc_colorAxis (min = 0 ,
+                max = 1000,
+                stops = color_stops(colors = viridisLite::inferno(20, 
+                                                                begin = 0.1, 
+                                                                direction = -1))) %>%
+  hc_motion (
+    enabled = TRUE,
+    startIndex = 23, 
+    axisLabel = "date",
+    labels = vec,
+    series = 0,
+    updateInterval = 10,
+    playIcon = "fas fa-play",
+    pauseIcon = "fas fa-pause",
+    magnet = list(
+      round = "floor",
+      step = 0.1
+      )
+  ) %>%
+  hc_legend(layout = "vertical", verticalAlign = "top",
+            align = "right", valueDecimals = 0) %>% 
+  hc_mapNavigation(
+    enabled = TRUE,
+    enableMouseWheelZoom = TRUE,
+    enableDoubleClickZoom = TRUE
+  ) %>%
+  hc_credits(enabled = TRUE, 
+             text = last_updated, 
+             position = list(align = "left", x = 10, y = -5))
+
+
+frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))</code></pre>
+
+# Further analysis
 
 Aside from drilling into other categories of data here and checking against other data sets, I'll also be looking at various forecast models and lag indicators. There will also be *drill down* into national and regional level data. In any case, as the story continues to unfold we should all brace for a very *dark* winter. 
