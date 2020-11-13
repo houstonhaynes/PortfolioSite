@@ -1,17 +1,17 @@
 ---
-title: "Mathjax"
+title: "COVID-19 Datapothecary"
 output:
   blogdown::html_page:
-    toc: true
+    toc: false
     toc_depth: 1
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2019-10-11T14:59:43+05:30'
+date: '2019-12-11T14:59:43+05:30'
 featuredpath: img
-featured: h3sitehex.png
-ogfeatured: H3_og_wide_h3sitehex.png
-description: Using Rmarkdown, blogdown, Hugo and Azure Infrastructure to build a responsive static site
+featured: COVID_datapothecary.png
+ogfeatured: H3_og_wide_COVID_datapothecary.png
+description: Processing source data for a more robust result
 draft: true
 tags:
 - R
@@ -27,13 +27,21 @@ editor_options:
 
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
-<div id="TOC">
-<ul>
-<li><a href="#mathjax">MathJax</a></li>
-</ul>
-</div>
 
 <div id="mathjax" class="section level1">
 <h1>MathJax</h1>
-<p><span class="math display">\[\scriptsize\LARGE\text{incidents per million} = \large(\frac{incidents}{population})\times{1,000,000}\]</span></p>
+<div class="row">
+<div class="col-12">
+<span class="math display">\[\LARGE(\frac{incidents}{population})\times{1,000,000}\]</span>
+<hr>
+</div>
+<div class="col-12">
+<p><span class="math display">\[
+\begin{aligned}
+\LARGE\overline{p}_\text{SM} &amp;= \LARGE\frac { \normalsize{p} \small{_M} \normalsize + p{ \small_M -1} + \cdots + p_{M \normalsize-(n-1)^{}}}{n}\\
+                       &amp;= \LARGE\frac1n \sum_{i=0}^{n-1} p_{ \small{M} \normalsize{-i}}
+\end{aligned}
+\]</span></p>
+</div>
+</div>
 </div>
