@@ -15,10 +15,8 @@ description: Processing source data for a more robust result
 draft: true
 tags:
 - R
-- blogdown
-- Hugo
-- RStudio
-- Azure
+- COVID-19
+- MathJax
 categories: 
 - Deep Dive
 editor_options: 
@@ -46,42 +44,42 @@ coviddata <- read.csv(URL)
 
 ```
 # MathJax
-<div class="row">
-<div class="col-12">
+
 $$(\frac{incidents}{population})\times{1,000,000}$$
+<hr>
+<div class="row">
+  <div class="colxs-12>
 ```{r New Cases by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
 library(zoo)
 library(slider)
+library(DT)
 
 pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
 data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
                date, continent, location, new_cases)   %>%
-  filter(location != "International", location != "World", location == "Vatican") %>%
+  filter(location != "International", location != "World") %>%
   mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
   mutate(date = ymd(date)) %>%
-  left_join(pop, location = location) 
-
-datatable(data)
-
-%>%
-  select(date, continent, new_cases, population) 
-
-
-%>%
+  left_join(pop, location = location) %>%
+  select(date, continent, new_cases, population) %>%
   mutate(ncpm = ((new_cases / population) * 1000000)) %>%
-  select (date, continent, new_cases, ncpm) %>%
+  select (date, continent, new_cases, population, ncpm) %>%
   group_by(date, continent) %>%
-  summarize(new_cases = sum(new_cases), ncpm = sum(ncpm)) %>%
+  summarize(new_cases = sum(new_cases), population = sum(population), ncpm = sum(ncpm)) %>%
   group_by(continent) %>%
   arrange(continent, date) %>%
   mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3)) %>%
   mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
   ungroup()
+
+datatable(data)
 ```
+  </div>
 </div>
+<hr>
 $$
 (\frac{7}{801})\times{1,000,000} = 8,739.07$$
-<div class="col-12">
+<hr>
 $$
 \begin{aligned}
 \LARGE\overline{p}_\text{SM} &= \LARGE\frac { \normalsize{p} \small{_M} \normalsize + p{ \small_M -1} + \cdots + p_{M \normalsize-(n-1)^{}}}{n}\\
@@ -89,5 +87,3 @@ $$
 \end{aligned}
 $$
 
-</div>
-</div>
