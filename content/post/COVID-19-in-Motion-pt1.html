@@ -52,13 +52,13 @@ Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1324826391918092290" %}}
+{{% tweet "1315460906566979584" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1312407063671136257" %}}
+{{% tweet "1324071417302822912" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1320720136614092800" %}}
+{{% tweet "1323964105892519936" %}}
 </div>
 </div>
 <figcaption class="caption">
@@ -98,57 +98,48 @@ pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
 data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
                date, continent, location, new_cases)   %>%
   filter(location != "International",
-         location != "World",
-         date > "2020-03-01") %>%
+         location != "World") %>%
   mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-07-18" &
                                 location == "Chile" &
                                 new_cases == 1057),
                              57,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-07-24" &
                                 location == "Peru" &
                                 new_cases == 3887),
                              187,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-08-14" &
                                 location == "Peru" &
                                 new_cases == 3935),
                              235,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-09-07" &
                                 location == "Ecuador" &
                                 new_cases == 3800),
                              38,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-09-07" &
                                 location == "Bolivia" &
                                 new_cases == 1610),
                              61,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-10-02" &
                                 location == "Argentina" &
                                 new_cases == 3351),
                             351,
-                            new_cases
-                            )) %>%
+                            new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-10-09" &
                                 location == "Ecuador" &
                                 new_cases == 398),
                             39,
-                            new_cases
-                            )) %>%
+                            new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-10-09" &
                                 location == "Mexico" &
                                 new_cases == 3013),
                             313,
-                            new_cases
-                            )) %>%
+                            new_cases)) %>%
   mutate(date = ymd(date)) %>%
   left_join(pop, location = location) %>%
   select(date, continent, new_cases, population) %>%
@@ -215,50 +206,42 @@ data <- select(coviddata[with(coviddata, order(date, iso_code)),],
                                 location == "Chile" &
                                 new_cases == 1057),
                              57,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-07-24" &
                                 location == "Peru" &
                                 new_cases == 3887),
                              187,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-08-14" &
                                 location == "Peru" &
                                 new_cases == 3935),
                              235,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-09-07" &
                                 location == "Ecuador" &
                                 new_cases == 3800),
                              38,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-09-07" &
                                 location == "Bolivia" &
                                 new_cases == 1610),
                              61,
-                             new_cases
-  )) %>%
+                             new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-10-02" &
                                 location == "Argentina" &
                                 new_cases == 3351),
                             351,
-                            new_cases
-                            )) %>%
+                            new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-10-09" &
                                 location == "Ecuador" &
                                 new_cases == 398),
                             39,
-                            new_cases
-                            )) %>%
+                            new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-10-09" &
                                 location == "Mexico" &
                                 new_cases == 3013),
                             313,
-                            new_cases
-                            )) %>%
+                            new_cases)) %>%
   mutate(date = ymd(date)) %>%
   left_join(pop, location = location) %>%
   select(date, iso_code, new_cases, population) %>%
