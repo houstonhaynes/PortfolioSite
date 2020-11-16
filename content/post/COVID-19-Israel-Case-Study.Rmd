@@ -404,7 +404,7 @@ thm <- hc_theme_merge(
 
 widget <- highchart(type = "stock") %>%
   hc_add_theme(thm) %>%
-  hc_title(text = "Global New Cases per Milion - Israel as Case Study", align = "center") %>%
+  hc_title(text = "Global New Cases per Million - Israel as Case Study", align = "center") %>%
   hc_subtitle(
     text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
     hc_chart(

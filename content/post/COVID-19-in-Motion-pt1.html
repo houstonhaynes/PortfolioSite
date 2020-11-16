@@ -52,13 +52,13 @@ Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1315460906566979584" %}}
+{{% tweet "1318575203035828224" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1324071417302822912" %}}
+{{% tweet "1313818991719313408" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1323964105892519936" %}}
+{{% tweet "1324826391918092290" %}}
 </div>
 </div>
 <figcaption class="caption">
@@ -98,7 +98,8 @@ pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
 data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
                date, continent, location, new_cases)   %>%
   filter(location != "International",
-         location != "World") %>%
+         location != "World",
+         date > "2020-03-01") %>%
   mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
   mutate(new_cases = ifelse((date == "2020-07-18" &
                                 location == "Chile" &
