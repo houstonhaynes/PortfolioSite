@@ -1,5 +1,5 @@
 ---
-title: "COVID-19 in Motion - Israel as Case Study"
+title: "Israel as Mask Compliance Case Study"
 output:
   blogdown::html_page:
     dev: "svg"
@@ -9,7 +9,7 @@ featuredpath: img
 featured: COVID-19.png
 ogfeatured: H3_og_wide_COVID-19.png
 emblem: health.png
-description: How policy directly affects incident rates
+description: COVID-19 in Motion - How policy directly affects incident rates
 draft: false
 tags:
 - COVID-19
@@ -17,7 +17,6 @@ tags:
 - highcharts
 categories: 
 - Sidebar
-weight: 2
 editor_options: 
   chunk_output_type: inline
 ---

@@ -23,7 +23,7 @@ tags:
 - devops
 categories: 
 - Deep Dive
-weight: 2
+weight: 4
 editor_options: 
   chunk_output_type: inline
 ---
