@@ -1,0 +1,135 @@
+```{r setup and file loads, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+
+ library(highcharter)
+ library(tidyverse)
+ library(lubridate)
+ library(widgetframe)
+ library(xts)
+ library(jsonlite)
+ library(fontawesome)
+
+ URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+ coviddata <- read.csv(URL)
+
+```
+
+
+```{r New Cases by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
+
+library(zoo)
+library(slider)
+library(DT)
+library(highcharter)
+library(xts)
+
+pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
+               date, continent, location, new_cases)   %>%
+  filter(location != "International",
+         location != "World",
+         continent == "Europe",
+         date == "2020-10-13") %>%
+  mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-07-18" &
+                                location == "Chile" &
+                                new_cases == 1057),
+                             57,
+                             new_cases
+  )) %>%
+  mutate(new_cases = ifelse((date == "2020-07-24" &
+                                location == "Peru" &
+                                new_cases == 3887),
+                             187,
+                             new_cases
+  )) %>%
+  mutate(new_cases = ifelse((date == "2020-08-14" &
+                                location == "Peru" &
+                                new_cases == 3935),
+                             235,
+                             new_cases
+  )) %>%
+  mutate(new_cases = ifelse((date == "2020-09-07" &
+                                location == "Ecuador" &
+                                new_cases == 3800),
+                             38,
+                             new_cases
+  )) %>%
+  mutate(new_cases = ifelse((date == "2020-09-07" &
+                                location == "Bolivia" &
+                                new_cases == 1610),
+                             61,
+                             new_cases
+  )) %>%
+  mutate(new_cases = ifelse((date == "2020-10-02" &
+                                location == "Argentina" &
+                                new_cases == 3351),
+                            351,
+                            new_cases
+                            )) %>%
+  mutate(new_cases = ifelse((date == "2020-10-09" &
+                                location == "Ecuador" &
+                                new_cases == 398),
+                            39,
+                            new_cases
+                            )) %>%
+  mutate(new_cases = ifelse((date == "2020-10-09" &
+                                location == "Mexico" &
+                                new_cases == 3013),
+                            313,
+                            new_cases
+                            )) %>%
+  mutate(date = ymd(date)) %>%
+  left_join(pop, location = location) %>%
+  select(date, continent, new_cases, population) %>%
+  group_by(date, continent) %>%
+  summarize(new_cases = sum(new_cases), population = sum(population)) %>%
+  mutate(ncpm = ((new_cases / population) * 1000000)) %>%
+  group_by(date, continent, population) %>%
+  summarize(new_cases = sum(new_cases), ncpm = sum(ncpm)) %>%
+  group_by(continent) %>%
+  arrange(continent, date) %>%
+  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3)) %>%
+  mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
+  ungroup() %>%
+  select(date, continent, population, new_cases, ncpm, ncrm) %>%
+  mutate(date, datetime_to_timestamp(date))
+
+data_xts <- xts(data[,-1], order.by = data$date)
+
+datatable(data)
+
+thm <- hc_theme_merge(
+  hc_theme_bloom(),
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
+
+widget <- highchart(type = "chart") %>%
+  hc_plotOptions(series = list(marker = list(enabled = FALSE))) %>%
+  hc_add_series(data$new_cases, type = "column", name = "New Cases") %>%
+  hc_add_series(data$ncrm, type = "line", name = "7-day rolling mean") %>%
+  hc_title(text = "COVID Daily New Cases - North America (raw and smoothed)", align = "center") %>% 
+  hc_xAxis(categories = data$date) %>%
+  hc_add_theme(thm) %>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_yAxis(title = list(enabled = FALSE)) %>%
+  hc_xAxis(title = list(enabled = FALSE))
+
+frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))
+
+
+```
