@@ -1,20 +1,21 @@
 ---
-title: "World Data Overview - Global Heat Maps"
+title: "COVID-19 US Data - Inverse Correlation of Masks vs Cases"
 output:
   blogdown::html_page:
     dev: "svg"
 author: "Houston Haynes"
-date: '2018-11-08T14:59:43+05:30'
+date: '2018-11-17T14:59:43+05:30'
 featuredpath: img
-featured: COVID-19.png
-ogfeatured: H3_og_wide_COVID-19.png
+featured: COVID-19-US.png
+ogfeatured: H3_og_wide_COVID-19-US.png
 emblem: health.png
-description: COVID-19 in Motion - Animated Time Series for cases, deaths and testing
+description: Cumlative, population-leveled case data versus public mask percentage
 draft: false
 tags:
 - COVID-19
 categories: 
-- Deep Dive
+- Sidebar
+weight: 1
 editor_options: 
   chunk_output_type: inline
 ---
@@ -25,19 +26,50 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 
-
-library(highcharter)
 library(tidyverse)
-library(lubridate)
+library(highcharter)
 library(widgetframe)
-library(xts)
-library(jsonlite)
-library(fontawesome)
+library(lubridate)
 
-URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+counties <- read.csv("../../data/us_county.csv", header = TRUE)
 
-coviddata <- read.csv(URL)
+counties <-
+  counties %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
 
+county_pop <- select(counties, fips, state, population)
+
+US_COVID_data <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv"
+
+us_data <- read.csv(US_COVID_data)
+
+us_data_map <- 
+  us_data %>%
+  filter(fips != "") %>%
+  mutate(date = ymd(date)) %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0')) %>%
+  select(date, fips, state, county, cases, deaths)  %>%
+  left_join(county_pop, fips = fips) %>%
+  arrange(fips, date) %>%
+  mutate(ncpht = ((cases / population) * 100000)) %>%
+  mutate(ndpht = ((deaths / population) * 100000)) %>%
+  ungroup() %>%
+  rename(location = state)
+
+mask_URL <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv"
+
+mask_data <- read.csv(mask_URL)
+
+mask_data <- 
+  mask_data %>%
+  mutate(COUNTYFP = str_pad(COUNTYFP, 5, side = 'left', pad = '0'))  %>%
+  select(COUNTYFP, NEVER, RARELY, SOMETIMES, FREQUENTLY, ALWAYS) %>%
+  mutate(always_pct = (ALWAYS * 100)) %>%
+  rename(fips = COUNTYFP) %>%
+  left_join(county_pop, fips = fips) %>%
+  rename(location = state)
+
+last_updated <- paste("Source: New York Times - Report Last Updated:", format(Sys.time(), "%a %b %d %Y %X"))
 ```
 
 ```{r Tweets from Faces of COVID, include=FALSE }
@@ -67,534 +99,82 @@ COVIDtweets <- sample(COVIDtweets$status_id)
 
 ```
 
-# Exercise in Scale
+# Contrast and Compare
 
-When I started working with the <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> COVID-19 data set I wanted to chart out a few things to get a *feel* for the data. I've done this work for quite a while and the first thing you often do is a form of *reality* check. In some cases I checked againtt other charts based on the same data and thought "that can't be right" only to plot it myself and see it directly. (looking at you, *Europe*) As we all have witnessed this year experts have been sounding the alarm since early on. Pandemics are like locomotives, they're difficult to stop once they gain momentum. The same goes for an effective responte.
+Wearing masks __more__ often means __fewer__ COVID-19 cases. It's that simple, and it couldn't be more clear in the data.
 
-```{r New Cases by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
+I started looking into US data with the latest cumulative counts for likely and confirmed COVID-19 cases and deaths compiled by the <a href="https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html" target="_blank">New York Times</a>. Aside from the split between "likely" and "confirmed" cases (the latter coming from a very specific postmortem test) I also wanted to look at the survey data collected on public mask wearing. 
 
-library(zoo)
-library(slider)
-library(DT)
-library(highcharter)
+I had suspected that there would be an inverse correlation but I *didn't* expect it to come up this quickly, or that it would be *such* a clear, stark result. I still have quite a bit of refinement work to do on presenting the report. And I *also* want to start looking at time series data, in order to use a weighted average that matches the time when the mask-wearing surveys are conducted. Right now I'm simply taking the full count, but when the mask guidelines change and compliance shifts I want to be sure I *also* evaluate changes in case rate. 
 
-pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
-               date, continent, location, new_cases)   %>%
-  filter(location != "International",
-         location != "World",
-         date > "2020-01-23") %>%
-  mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-07-18" &
-                                location == "Chile" &
-                                new_cases == 1057),
-                             57,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-07-24" &
-                                location == "Peru" &
-                                new_cases == 3887),
-                             187,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-08-14" &
-                                location == "Peru" &
-                                new_cases == 3935),
-                             235,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-09-07" &
-                                location == "Ecuador" &
-                                new_cases == 3800),
-                             38,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-09-07" &
-                                location == "Bolivia" &
-                                new_cases == 1610),
-                             61,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-10-02" &
-                                location == "Argentina" &
-                                new_cases == 3351),
-                            351,
-                            new_cases
-                            )) %>%
-  mutate(new_cases = ifelse((date == "2020-10-09" &
-                                location == "Ecuador" &
-                                new_cases == 398),
-                            39,
-                            new_cases
-                            )) %>%
-  mutate(new_cases = ifelse((date == "2020-10-09" &
-                                location == "Mexico" &
-                                new_cases == 3013),
-                            313,
-                            new_cases
-                            )) %>%
-  mutate(date = ymd(date)) %>%
-  left_join(pop, location = location) %>%
-  select(date, continent, new_cases, population) %>%
-  group_by(date, continent) %>%
-  summarize(new_cases = sum(new_cases), population = sum(population)) %>%
-  mutate(ncpm = ((new_cases / population) * 1000000)) %>%
-  group_by(date, continent) %>%
-  summarize(new_cases = sum(new_cases), ncpm = sum(ncpm)) %>%
-  group_by(continent) %>%
-  arrange(continent, date) %>%
-  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3)) %>%
-  mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
-  ungroup()
+## Animated GIF
 
-#datatable(data)
+I was so struck by the clear inverse correlation between masks and cases that I made an animated GIF with the contrasting charts cycling back and forth. 
 
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Fira Code")),
-           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
+`r blogdown::shortcode("fancybox", "/img", "US_Masks_Cases.gif")`
 
-widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, labels = FALSE)) %>%
-  hc_plotOptions(series = list(stacking = 'normal')) %>%
-  hc_title(text = "World COVID Daily New Cases per Million (smoothed)", align = "center") %>%
-  hc_add_theme(thm) %>%
-  hc_subtitle(text = "Summed by continent :: Higher == BAD", align = "center")%>%
-  hc_chart(
-    borderColor = 'rgba(160, 160, 160, 0.3)',
-    borderRadius = 8,
-    borderWidth = 2,
-    marginBottom = '80',
-    marginTop = '60',
-    marginLeft = '60',
-    marginRight = '60') %>%
-  hc_yAxis(title = list(enabled = FALSE)) %>%
-  hc_xAxis(title = list(enabled = FALSE))
+# The Charts
 
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))
+After some edits and surfacing state labels for tooltips (which pop up when you hover over any of the counties in the chart) I re-rendered the reports here for more detailed review. Like the other reports that pull data from OWID and JHU these will continue to shift and change as new cumulative case numbers are added in. And likewise, when there's an update to the mask wearing surveys there will be new data there as well. Once I have a better view of the full time COVID time series data set I'll shift to a weighted average for the past few weeks or month, or match the case counts to the time range for the survey period. But for now this provides a valuable, if slowly-moving snapshot.
 
+```{r Cumulative Cases Pop Leveled, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
 
-```
-
-`r blogdown::shortcode("alert", "info", "Working with the Report:", "Use the legend to highlight, show or hide a series. Hovering over bands in the chart reveals detail for a given date.")`
-
-So I took the data and plotted it on a map, to play on a day grain through time. The gradationt are pretty subtle at the start, and that's because of the data getting *very* dark late in the range. 
-
-```{r Global New Cases Per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-
-library(ggplot2)
-
-pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
-               date, iso_code, location, new_cases)   %>%
-  filter(location != "International",
-         location != "World") %>%
-  mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-07-18" &
-                                location == "Chile" &
-                                new_cases == 1057),
-                             57,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-07-24" &
-                                location == "Peru" &
-                                new_cases == 3887),
-                             187,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-08-14" &
-                                location == "Peru" &
-                                new_cases == 3935),
-                             235,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-09-07" &
-                                location == "Ecuador" &
-                                new_cases == 3800),
-                             38,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-09-07" &
-                                location == "Bolivia" &
-                                new_cases == 1610),
-                             61,
-                             new_cases
-  )) %>%
-  mutate(new_cases = ifelse((date == "2020-10-02" &
-                                location == "Argentina" &
-                                new_cases == 3351),
-                            351,
-                            new_cases
-                            )) %>%
-  mutate(new_cases = ifelse((date == "2020-10-09" &
-                                location == "Ecuador" &
-                                new_cases == 398),
-                            39,
-                            new_cases
-                            )) %>%
-  mutate(new_cases = ifelse((date == "2020-10-09" &
-                                location == "Mexico" &
-                                new_cases == 3013),
-                            313,
-                            new_cases
-                            )) %>%
-  mutate(date = ymd(date)) %>%
-  left_join(pop, location = location) %>%
-  select(date, iso_code, new_cases, population) %>%
-  group_by(date, iso_code, population) %>%
-  summarize(new_cases = sum(new_cases)) %>%
-  mutate(ncpm = ((new_cases / population) * 1000000)) %>%
-  group_by(iso_code) %>%
-  arrange(iso_code, date) %>%
-  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3)) %>%
-  mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
-  ungroup() %>%
-  mutate_at(vars(ncpm, ncrm, ncpmrm), funs(round(., 2)))
-
-#datatable(data)
-
-
-ds <- data %>%
-  group_by(iso_code) %>%
-  do(item = list(
-    iso_code = first(.$iso_code),
-    sequence = .$ncpmrm,
-    ncpmrm = last(.$ncpmrm))) %>%
-  .$item
-
-#head(ds, 10)
-
-vec <- sort(unique(pull(data, date)))
-
-url <- "https://code.highcharts.com/mapdata/custom/world-robinson-highres.js"
-tmpfile <- tempfile(fileext = ".json")
-download.file(url, tmpfile)
-geo <- readLines(tmpfile)
-geo <- gsub(".* = ", "", geo)
-map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
-
-last_updated <- paste("Source: https://ourworldincata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
-
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
-widget <- highchart(type = "map") %>%
-  hc_add_theme(thm) %>%
-  hc_chart(
-    borderColor = 'rgba(160, 160, 160, 0.3)',
-    borderRadius = 8,
-    borderWidth = 2,
-    marginBottom = '80',
-    marginTop = '60',
-    marginLeft = '60',
-    marginRight = '60') %>%
-  hc_title(text = "Global COVID Daily New Cases per Million (smoothed)", align = "center") %>%
-  hc_subtitle(text = "Press play button or use slider to change date", align = "center") %>%
-  hc_add_series(data = ds,
-                name = "New Cases per Million",
-                mapData = map,
-                joinBy = c("iso-a3", "iso_code"),
-                borderWidth = 0.01) %>%
-  hc_colorAxis (min = 0 ,
-                max = 1000,
-                stops = color_stops(colors = viridisLite::inferno(20,
-                                                                begin = 0.1,
-                                                                direction = -1))) %>%
-  hc_motion (
-    enabled = TRUE,
-    startIndex = 23,
-    axisLabel = "date",
-    labels = vec,
-    updateInterval = 5,
-    playIcon = "fas fa-play",
-    pauseIcon = "fas fa-pause",
-    magnet = list(
-      rounc = "floor",
-      step = 0.1
-      )
-  ) %>%
+widget <- hcmap("countries/us/us-all-all",
+      data = us_data_map,
+      value = "ncpht",
+      join = "fips",
+      name = "Cumulative Cases per 100 000",
+      tooltip = list(pointFormat = "State: {point.location}<br> {point.county} County: {point.value:.2f}")) %>%
+  hc_title(text = "US Cumulative Cases by County", align = "center") %>%
+  hc_subtitle(text = "per 100,000 Population", align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_colorAxis(minColor = "white", maxColor = "#800000") %>%
   hc_legend(layout = "vertical", verticalAlign = "top",
             align = "right", valueDecimals = 0) %>%
-  hc_mapNavigation(
-    enabled = TRUE,
-    enableMouseWheelZoom = TRUE,
-    enableDoubleClickZoom = TRUE
-  ) %>%
   hc_credits(enabled = TRUE,
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
 
-
-frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))
-
-```
-
-`r blogdown::shortcode("alert", "info", "Working with the Report:", "Aside from the play/pause and date slider, the map is *zoomable*. Hovering over a country will highlight and show the value for the current position on the timeline. Hovering while playing back will show updating changes to the values for that country.")`
-
-`r blogdown::shortcode("alert", "warning", "Bug Report:", "The play/pause button for the map charts *works* but the icons are currently not visible. A fix is being researched now. Thanks for understanding.")`
-
-# Daily COVID Mortality
-
-One of the things I expected was to see some "chop" in early data as reporting became more contistent. Here I was surprised to see irregular bumps in the "smoothed" data. Once South America is removed from the set then things look much less strange. Such as it is, the visuals tell a convincing story of where things are going as of November, and it's *not* good.
-```{r New Deaths by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
-
-library(zoo)
-library(slider)
-library(DT)
-library(highcharter)
-
-pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
-               date, continent, location, new_deaths)   %>%
-  filter(location != "International",
-         location != "World",
-         date > "2020-01-23") %>%
-  mutate(new_deaths = ifelse(is.na(new_deaths), 0, new_deaths)) %>%
-  mutate(new_deaths = ifelse((date == "2020-07-18" &
-                                location == "Chile" &
-                                new_deaths == 1057),
-                             57,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-07-24" &
-                                location == "Peru" &
-                                new_deaths == 3887),
-                             187,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-08-14" &
-                                location == "Peru" &
-                                new_deaths == 3935),
-                             235,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-09-07" &
-                                location == "Ecuador" &
-                                new_deaths == 3800),
-                             38,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-09-07" &
-                                location == "Bolivia" &
-                                new_deaths == 1610),
-                             61,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-10-02" &
-                                location == "Argentina" &
-                                new_deaths == 3351),
-                            351,
-                            new_deaths
-                            )) %>%
-  mutate(new_deaths = ifelse((date == "2020-10-09" &
-                                location == "Ecuador" &
-                                new_deaths == 398),
-                            39,
-                            new_deaths
-                            )) %>%
-  mutate(new_deaths = ifelse((date == "2020-10-09" &
-                                location == "Mexico" &
-                                new_deaths == 3013),
-                            313,
-                            new_deaths
-                            )) %>%
-  mutate(date = ymd(date)) %>%
-  left_join(pop, location = location) %>%
-  select(date, continent, new_deaths, population) %>%
-  group_by(date, continent) %>%
-  summarize(new_deaths = sum(new_deaths), population = sum(population)) %>%
-  mutate(ndpm = ((new_deaths / population) * 1000000)) %>%
-  group_by(date, continent) %>%
-  summarize(new_deaths = sum(new_deaths), ndpm = sum(ndpm)) %>%
-  group_by(continent) %>%
-  arrange(continent, date) %>%
-  mutate(ndrm = slider::slide_dbl(new_deaths, mean, .before = 3, .after = 3)) %>%
-  mutate(ndpmrm = slider::slide_dbl(ndpm, mean, .before = 3, .after = 3)) %>%
-  ungroup()
-
-#datatable(data)
-
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Fira Code")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
-widget <- hchart(data, "area", hcaes(x = date, y = ndpmrm, group = continent, labels = FALSE)) %>%
-  hc_plotOptions(series = list(stacking = 'normal')) %>%
-  hc_title(text = "World COVID Daily New Deaths per Million (smoothed)", align = "center") %>%
-  hc_add_theme(thm) %>%
-  hc_subtitle(text = "Summed by continent :: Higher == BAD", align = "center")%>%
-  hc_chart(
-    borderColor = 'rgba(160, 160, 160, 0.3)',
-    borderRadius = 8,
-    borderWidth = 2,
-    marginBottom = '80',
-    marginTop = '60',
-    marginLeft = '60',
-    marginRight = '60') %>%
-  hc_yAxis(title = list(enabled = FALSE)) %>%
-  hc_xAxis(title = list(enabled = FALSE))
-
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))
-
+frameWidget(widget, width = "100%", height = "36rem")
 
 ```
+```{r Mask Percentage by County, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-Again here - like the area chart - the direction of what's happening in Europe is unmistakable. In fact it bothers me to the point that I'll probably end up sourcing some other data just so I can sleep tonight. But one thing we can see and possibly discard is the sudden jump in values in South America. Per our area chart above which showed that as the offending portion of the data set that was skewing the result.
- 
-```{r Global New Deaths Per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-
-op <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
-               date, iso_code, location, new_deaths)   %>%
-  filter(location != "International",
-         location != "World") %>%
-  mutate(new_deaths = ifelse(is.na(new_deaths), 0, new_deaths)) %>%
-  mutate(new_deaths = ifelse((date == "2020-07-18" &
-                                location == "Chile" &
-                                new_deaths == 1057),
-                             57,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-07-24" &
-                                location == "Peru" &
-                                new_deaths == 3887),
-                             187,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-08-14" &
-                                location == "Peru" &
-                                new_deaths == 3935),
-                             235,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-09-07" &
-                                location == "Ecuador" &
-                                new_deaths == 3800),
-                             38,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-09-07" &
-                                location == "Bolivia" &
-                                new_deaths == 1610),
-                             61,
-                             new_deaths
-  )) %>%
-  mutate(new_deaths = ifelse((date == "2020-10-02" &
-                                location == "Argentina" &
-                                new_deaths == 3351),
-                            351,
-                            new_deaths
-                            )) %>%
-  mutate(new_deaths = ifelse((date == "2020-10-09" &
-                                location == "Ecuador" &
-                                new_deaths == 398),
-                            39,
-                            new_deaths
-                            )) %>%
-  mutate(new_deaths = ifelse((date == "2020-10-09" &
-                                location == "Mexico" &
-                                new_deaths == 3013),
-                            313,
-                            new_deaths
-                            )) %>%
-  mutate(date = ymd(date)) %>%
-  left_join(pop, location = location) %>%
-  select(date, iso_code, new_deaths, population) %>%
-  group_by(date, iso_code, population) %>%
-  summarize(new_deaths = sum(new_deaths)) %>%
-  mutate(ndpm = ((new_deaths / population) * 1000000)) %>%
-  group_by(iso_code) %>%
-  arrange(iso_code, date) %>%
-  mutate(ndrm = slider::slide_dbl(new_deaths, mean, .before = 3, .after = 3)) %>%
-  mutate(ndpmrm = slider::slide_dbl(ndpm, mean, .before = 3, .after = 3)) %>%
-  ungroup() %>%
-  mutate_at(vars(ndpm, ndrm, ndpmrm), funs(round(., 2)))
-
-#datatable(data)
-
-
-ds <- data %>%
-  group_by(iso_code) %>%
-  do(item = list(
-    iso_code = first(.$iso_code),
-    sequence = .$ndpmrm,
-    ndpmrm = last(.$ndpmrm))) %>%
-  .$item
-
-#head(ds, 10)
-
-vec <- sort(unique(pull(data, date)))
-
-url <- "https://code.highcharts.com/mapdata/custom/world-robinson-highres.js"
-tmpfile <- tempfile(fileext = ".json")
-download.file(url, tmpfile)
-geo <- readLines(tmpfile)
-geo <- gsub(".* = ", "", geo)
-map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
-
-last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
-
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
-widget <- highchart(type = "map") %>%
-  hc_add_theme(thm) %>%
-  hc_chart(
-    borderColor = 'rgba(160, 160, 160, 0.3)',
-    borderRadius = 8,
-    borderWidth = 2,
-    marginBottom = '80',
-    marginTop = '60',
-    marginLeft = '60',
-    marginRight = '60') %>%
-  hc_title(text = "Global COVID Daily New Deaths per Million (smoothed)", align = "center") %>%
-  hc_subtitle(text = "Press play button or use slider to change date", align = "center") %>%
-  hc_add_series(data = ds,
-                name = "New Cases per Million",
-                mapData = map,
-                joinBy = c("iso-a3", "iso_code"),
-                borderWidth = 0.01) %>%
-  hc_colorAxis (min = 0 ,
-                max = 10,
-                stops = color_stops(colors = viridisLite::inferno(20,
-                                                                begin = 0.1,
-                                                                direction = -1))) %>%
-  hc_motion (
-    enabled = TRUE,
-    startIndex = 23,
-    axisLabel = "date",
-    labels = vec,
-    updateInterval = 5,
-    playIcon = "fas fa-play",
-    pauseIcon = "fas fa-pause",
-    magnet = list(
-      round = "floor",
-      step = 0.1
-      )
-  ) %>%
+widget <- hcmap("countries/us/us-all-all",
+      data = mask_data,
+      value = "always_pct",
+      name = "Percentage that always wears masks in public",
+      join = "fips") %>%
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+  hc_title(text = "Percentage of Mask Wearing in Public", align = "center") %>%
+  hc_subtitle(text = "Respondants Claiming to Always Wear a Mask", align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
   hc_legend(layout = "vertical", verticalAlign = "top",
             align = "right", valueDecimals = 0) %>%
-  hc_mapNavigation(
-    enabled = TRUE,
-    enableMouseWheelZoom = TRUE,
-    enableDoubleClickZoom = TRUE
-  ) %>%
   hc_credits(enabled = TRUE,
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
 
+frameWidget(widget, width = "100%", height = "36rem")
 
-frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))
 
 ```
+
+## Exceptions Worth Noting
+
+It should be noted that the NYT found there to be some marginal variance in the actual level of mask wearers and the reported answers from the survey. 
+
+<blockquote class="blockquote">
+  <p class="mb-0">Researchers who hand-counted Wisconsin grocery shoppers in May and June found about 40 percent of shoppers wore masks, a level that is lower than the 45 percent who said they always wore masks in the recent Dynata sample (another 24 percent said they frequently wore masks).</p></blockquote>
+  
+They noted that it didn't affect the result in aggregate. But it bears further scrutiny as more emphasis on masks is placed by public officials and the "virtue signal" of answering the questionnaires/surveys widen the gap with actual use.
 
 <div class="separator">Faces of COVID-19</div>
 <figure>
@@ -607,529 +187,118 @@ frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allo
 <hr>
 </figure>
 
-# Testing, Testing, 1, 1, 3...
+## The code behind the reports
 
-While spelunking through the data I thought I'd take a look at testing. The good news, the numbers are increasing. 
-
-```{r New Tests by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
-
-library(zoo)
-library(slider)
-library(DT)
-library(highcharter)
-
-pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
-               date, continent, location, new_tests)   %>%
-  filter(location != "International",
-         location != "World",
-         date > "2020-01-23") %>%
-  mutate(new_tests = ifelse(is.na(new_tests), 0, new_tests)) %>%
-  mutate(new_tests = ifelse((date == "2020-07-18" &
-                                location == "Chile" &
-                                new_tests == 1057),
-                             57,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-07-24" &
-                                location == "Peru" &
-                                new_tests == 3887),
-                             187,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-08-14" &
-                                location == "Peru" &
-                                new_tests == 3935),
-                             235,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-09-07" &
-                                location == "Ecuador" &
-                                new_tests == 3800),
-                             38,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-09-07" &
-                                location == "Bolivia" &
-                                new_tests == 1610),
-                             61,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-10-02" &
-                                location == "Argentina" &
-                                new_tests == 3351),
-                            351,
-                            new_tests
-                            )) %>%
-  mutate(new_tests = ifelse((date == "2020-10-09" &
-                                location == "Ecuador" &
-                                new_tests == 398),
-                            39,
-                            new_tests
-                            )) %>%
-  mutate(new_tests = ifelse((date == "2020-10-09" &
-                                location == "Mexico" &
-                                new_tests == 3013),
-                            313,
-                            new_tests
-                            )) %>%
-  mutate(date = ymd(date)) %>%
-  left_join(pop, location = location) %>%
-  select(date, continent, new_tests, population) %>%
-  group_by(date, continent) %>%
-  summarize(new_tests = sum(new_tests), population = sum(population)) %>%
-  mutate(ntpt = ((new_tests / population) * 1000)) %>%
-  group_by(date, continent) %>%
-  summarize(new_tests = sum(new_tests), ntpt = sum(ntpt)) %>%
-  group_by(continent) %>%
-  arrange(continent, date) %>%
-  mutate(ntrm = slider::slide_dbl(new_tests, mean, .before = 3, .after = 3)) %>%
-  mutate(ntptrm = slider::slide_dbl(ntpt, mean, .before = 3, .after = 3)) %>%
-  ungroup()
-
-#datatable(data)
-
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Fira Code")),
-           legent = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
-widget <- hchart(data, "area", hcaes(x = date, y = ntptrm, group = continent, labels = FALSE)) %>%
-  hc_plotOptions(series = list(stacking = 'normal')) %>%
-  hc_title(text = "World COVID Daily New Tests per Thousand (smoothed)", align = "center") %>%
-  hc_add_theme(thm) %>%
-  hc_subtitle(text = "Summed by continent :: Higher == GOOD", align = "center")%>%
-  hc_chart(
-    borderColor = 'rgba(160, 160, 160, 0.3)',
-    borderRadius = 8,
-    borderWidth = 2,
-    marginBottom = '80',
-    marginTop = '60',
-    marginLeft = '60',
-    marginRight = '60') %>%
-  hc_yAxis(title = list(enabled = FALSE)) %>%
-  hc_xAxis(title = list(enabled = FALSE))
-
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))
-
-
-```
-
-Here's the flip-side of the previous two reports - where the numbers go *green* as they go higher. But again, it runt the risk of painting an inaccurate picture to show  less than 5 tests per 1,000 people as a positive indication. That value should be much, much higher - but in this case relative values matter. 
-
-```{r Global New Tests Per Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-
-op <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
-               date, iso_code, location, new_tests)   %>%
-  filter(location != "International",
-         location != "World") %>%
-  mutate(new_tests = ifelse(is.na(new_tests), 0, new_tests)) %>%
-  mutate(new_tests = ifelse((date == "2020-07-18" &
-                                location == "Chile" &
-                                new_tests == 1057),
-                             57,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-07-24" &
-                                location == "Peru" &
-                                new_tests == 3887),
-                             187,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-08-14" &
-                                location == "Peru" &
-                                new_tests == 3935),
-                             235,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-09-07" &
-                                location == "Ecuador" &
-                                new_tests == 3800),
-                             38,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-09-07" &
-                                location == "Bolivia" &
-                                new_tests == 1610),
-                             61,
-                             new_tests
-  )) %>%
-  mutate(new_tests = ifelse((date == "2020-10-02" &
-                                location == "Argentina" &
-                                new_tests == 3351),
-                            351,
-                            new_tests
-                            )) %>%
-  mutate(new_tests = ifelse((date == "2020-10-09" &
-                                location == "Ecuador" &
-                                new_tests == 398),
-                            39,
-                            new_tests
-                            )) %>%
-  mutate(new_tests = ifelse((date == "2020-10-09" &
-                                location == "Mexico" &
-                                new_tests == 3013),
-                            313,
-                            new_tests
-                            )) %>%
-  mutate(date = ymd(date)) %>%
-  left_join(pop, location = location) %>%
-  select(date, iso_code, new_tests, population) %>%
-  group_by(date, iso_code, population) %>%
-  summarize(new_tests = sum(new_tests)) %>%
-  mutate(ntpt = ((new_tests / population) * 1000)) %>%
-  group_by(iso_code) %>%
-  arrange(iso_code, date) %>%
-  mutate(ntrm = slider::slide_dbl(new_tests, mean, .before = 3, .after = 3)) %>%
-  mutate(ntptrm = slider::slide_dbl(ntpt, mean, .before = 3, .after = 3)) %>%
-  ungroup() %>%
-  mutate_at(vars(ntpt, ntrm, ntptrm), funs(round(., 2)))
-
-#datatable(data)
-
-
-ds <- data %>%
-  group_by(iso_code) %>%
-  do(item = list(
-    iso_code = first(.$iso_code),
-    sequence = .$ntptrm,
-    ndpmrm = last(.$ntptrm))) %>%
-  .$item
-
-#head(ds, 10)
-
-vec <- sort(unique(pull(data, date)))
-
-url <- "https://code.highcharts.com/mapdata/custom/world-robinson-highres.js"
-tmpfile <- tempfile(fileext = ".json")
-download.file(url, tmpfile)
-geo <- readLines(tmpfile)
-geo <- gsub(".* = ", "", geo)
-map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
-
-last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
-
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
-widget <- highchart(type = "map") %>%
-  hc_add_theme(thm) %>%
-  hc_chart(
-    borderColor = 'rgba(160, 160, 160, 0.3)',
-    borderRadius = 8,
-    borderWidth = 2,
-    marginBottom = '80',
-    marginTop = '60',
-    marginLeft = '60',
-    marginRight = '60') %>%
-  hc_title(text = "Global COVID Daily New Tests per Thousand (smoothed)", align = "center") %>%
-  hc_subtitle(text = "Press play button or use slider to change date", align = "center") %>%
-  hc_add_series(data = ds,
-                name = "New Cases per Million",
-                mapData = map,
-                joinBy = c("iso-a3", "iso_code"),
-                borderWidth = 0.01) %>%
-  hc_colorAxis (min = 0 ,
-                max = 4,
-                stops = color_stops(colors = viridisLite::viridis(4,
-                                                                begin = 0.1,
-                                                                direction = -1))) %>%
-  hc_motion (
-    enabled = TRUE,
-    startIndex = 23,
-    axisLabel = "date",
-    labels = vec,
-    updateInterval = 5,
-    playIcon = "fas fa-play",
-    pauseIcon = "fas fa-pause",
-    magnet = list(
-      round = "floor",
-      step = 0.1
-      )
-  ) %>%
-  hc_legend(layout = "vertical", verticalAlign = "top",
-            align = "right", valueDecimals = 0) %>%
-  hc_mapNavigation(
-    enabled = TRUE,
-    enableMouseWheelZoom = TRUE,
-    enableDoubleClickZoom = TRUE
-  ) %>%
-  hc_credits(enabled = TRUE,
-             text = last_updated,
-             position = list(align = "left", x = 10, y = -5))
-
-
-frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))
-
-```
-
-## How the resports were built
-
-The area charts are relatively straightforward. The only data munging task was summing the values by continent and date. After that it was mainly about formatting and some tweaks to keep the display clean. 
-
-<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code1">View the Code behind the First Area Chart</button>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code1">View the Code behind the First Chart</button>
 
 <pre id="code1" class="collapse"><code class="r"># begin setup code chunk
+library(tidyverse)
 library(highcharter)
 library(widgetframe)
-library(tidyverse)
 library(lubridate)
-library(xts)
 
-URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+counties <- read.csv("../../data/us_county.csv", header = TRUE)
 
-coviddata <- read.csv(URL)
+counties <-
+  counties %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
+
+county_pop <- select(counties, fips, state, population)
+
+mask_URL <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv"
+
+mask_data <- read.csv(mask_URL)
+
+mask_data <- 
+  mask_data %>%
+  mutate(COUNTYFP = str_pad(COUNTYFP, 5, side = 'left', pad = '0'))  %>%
+  select(COUNTYFP, NEVER, RARELY, SOMETIMES, FREQUENTLY, ALWAYS) %>%
+  mutate(always_pct = (ALWAYS * 100)) %>%
+  rename(fips = COUNTYFP) %>%
+  left_join(county_pop, fips = fips) %>%
+  rename(location = state)
+
+last_updated <- paste("Source: New York Times  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
 # end setup code chunk
 
-pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
-               date, continent, location, new_cases)   %>%
-  filter(location != "International",
-         location != "World",
-         date > "2020-03-01") %>%
-  mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-07-18" &
-                                location == "Chile" &
-                                new_cases == 1057),
-                             57,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-07-24" &
-                                location == "Peru" &
-                                new_cases == 3887),
-                             187,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-08-14" &
-                                location == "Peru" &
-                                new_cases == 3935),
-                             235,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-09-07" &
-                                location == "Ecuador" &
-                                new_cases == 3800),
-                             38,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-09-07" &
-                                location == "Bolivia" &
-                                new_cases == 1610),
-                             61,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-10-02" &
-                                location == "Argentina" &
-                                new_cases == 3351),
-                            351,
-                            new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-10-09" &
-                                location == "Ecuador" &
-                                new_cases == 398),
-                            39,
-                            new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-10-09" &
-                                location == "Mexico" &
-                                new_cases == 3013),
-                            313,
-                            new_cases)) %>%
-  mutate(date = ymd(date)) %>%
-  left_join(pop, location = location) %>%
-  select(date, continent, new_cases, population) %>%
-  group_by(date, continent) %>%
-  summarize(new_cases = sum(new_cases), population = sum(population)) %>%
-  mutate(ncpm = ((new_cases / population) * 1000000)) %>%
-  group_by(date, continent) %>%
-  summarize(new_cases = sum(new_cases), ncpm = sum(ncpm)) %>%
-  group_by(continent) %>%
-  arrange(continent, date) %>%
-  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3)) %>%
-  mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
-  ungroup()
-
-#datatable(data)
-
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Fira Code")),
-           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
-widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, labels = FALSE)) %>%
-  hc_plotOptions(series = list(stacking = 'normal')) %>%
-  hc_title(text = "World COVID Daily New Cases per Million (smoothed)", align = "center") %>%
-  hc_add_theme(thm) %>%
-  hc_subtitle(text = "Summed by continent :: Higher == BAD", align = "center")%>%
-  hc_chart(
-    borderColor = 'rgba(160, 160, 160, 0.3)',
-    borderRadius = 8,
-    borderWidth = 2,
-    marginBottom = '80',
-    marginTop = '60',
-    marginLeft = '60',
-    marginRight = '60') %>%
-  hc_yAxis(title = list(enabled = FALSE)) %>%
-  hc_xAxis(title = list(enabled = FALSE))
-
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))</code></pre>
-
-The map charts were more complex. Aside from tying together the geojson map to the data (by joining iso-a3 in the map data to the iso_code value from the source data) there was building the sequence of data itself. This wasn't immediately apparent but <a href="https://jkuntt.com/blog/posts/2016-04-12-adding-motion-to-choropleths/" target="_blank">this tutorial</a> was a great help.
-
-<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code2">View the Code behind the First Map Chart</button>
-
-<pre id="code2" class="collapse"><code class="r"># begin setup code chunk
-library(highcharter)
-library(widgetframe)
-library(tidyverse)
-library(lubridate)
-library(xts)
-
-URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
-
-coviddata <- read.csv(URL)
-
-# end setup code chunk
-
-pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
-data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
-               date, iso_code, location, new_cases)   %>%
-  filter(location != "International",
-         location != "World") %>%
-  mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-07-18" &
-                                location == "Chile" &
-                                new_cases == 1057),
-                             57,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-07-24" &
-                                location == "Peru" &
-                                new_cases == 3887),
-                             187,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-08-14" &
-                                location == "Peru" &
-                                new_cases == 3935),
-                             235,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-09-07" &
-                                location == "Ecuador" &
-                                new_cases == 3800),
-                             38,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-09-07" &
-                                location == "Bolivia" &
-                                new_cases == 1610),
-                             61,
-                             new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-10-02" &
-                                location == "Argentina" &
-                                new_cases == 3351),
-                            351,
-                            new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-10-09" &
-                                location == "Ecuador" &
-                                new_cases == 398),
-                            39,
-                            new_cases)) %>%
-  mutate(new_cases = ifelse((date == "2020-10-09" &
-                                location == "Mexico" &
-                                new_cases == 3013),
-                            313,
-                            new_cases)) %>%
-  mutate(date = ymd(date)) %>%
-  left_join(pop, location = location) %>%
-  select(date, iso_code, new_cases, population) %>%
-  group_by(date, iso_code, population) %>%
-  summarize(new_cases = sum(new_cases)) %>%
-  mutate(ncpm = ((new_cases / population) * 1000000)) %>%
-  group_by(iso_code) %>%
-  arrange(iso_code, date) %>%
-  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3)) %>%
-  mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
-  ungroup() %>%
-  mutate_at(vars(ncpm, ncrm, ncpmrm), funs(round(., 2)))
-
-#datatable(data)
-
-
-ds <- data %>%
-  group_by(iso_code) %>%
-  do(item = list(
-    iso_code = first(.$iso_code),
-    sequence = .$ncpmrm,
-    ncpmrm = last(.$ncpmrm))) %>%
-  .$item
-
-#head(ds, 10)
-
-vec <- sort(unique(pull(data, date)))
-
-url <- "https://code.highcharts.com/mapdata/custom/world-robinson-highres.js"
-tmpfile <- tempfile(fileext = ".json")
-download.file(url, tmpfile)
-geo <- readLines(tmpfile)
-geo <- gsub(".* = ", "", geo)
-map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
-
-last_updated <- paste("Source: https://ourworldincata.org/  -  Report Last Updated:",
-                      format(Sys.time(), "%a %b %d %Y %X"))
-
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
-widget <- highchart(type = "map") %>%
-  hc_add_theme(thm) %>%
-  hc_chart(
-    borderColor = 'rgba(160, 160, 160, 0.3)',
-    borderRadius = 8,
-    borderWidth = 2,
-    marginBottom = '80',
-    marginTop = '60',
-    marginLeft = '60',
-    marginRight = '60') %>%
-  hc_title(text = "Global COVID Daily New Cases per Million (smoothed)", align = "center") %>%
-  hc_subtitle(text = "Press play button or use slider to change date", align = "center") %>%
-  hc_add_series(data = ds,
-                name = "New Cases per Million",
-                mapData = map,
-                joinBy = c("iso-a3", "iso_code"),
-                borderWidth = 0.01) %>%
-  hc_colorAxis (min = 0 ,
-                max = 1000,
-                stops = color_stops(colors = viridisLite::inferno(20,
-                                                                begin = 0.1,
-                                                                direction = -1))) %>%
-  hc_motion (
-    enabled = TRUE,
-    startIndex = 23,
-    axisLabel = "date",
-    labels = vec,
-    updateInterval = 5,
-    playIcon = "fas fa-play",
-    pauseIcon = "fas fa-pause",
-    magnet = list(
-      rounc = "floor",
-      step = 0.1
-      )
-  ) %>%
+widget <- hcmap("countries/us/us-all-all",
+      data = mask_data,
+      value = "always_pct",
+      name = "Percentage that always wears masks in public",
+      join = "fips") %>%
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public", align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
   hc_legend(layout = "vertical", verticalAlign = "top",
             align = "right", valueDecimals = 0) %>%
-  hc_mapNavigation(
-    enabled = TRUE,
-    enableMouseWheelZoom = TRUE,
-    enableDoubleClickZoom = TRUE
-  ) %>%
   hc_credits(enabled = TRUE,
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
 
+frameWidget(widget, width = "100%", height = "36rem")</code></pre>
 
-frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))</code></pre>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code2">View the Code behind the Second Chart</button>
+
+<pre id="code2" class="collapse"><code class="r"># begin setup code chunk
+library(tidyverse)
+library(highcharter)
+library(widgetframe)
+library(lubridate)
+
+counties <- read.csv("../../data/us_county.csv", header = TRUE)
+
+counties <-
+  counties %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
+
+county_pop <- select(counties, fips, state, population)
+
+US_COVID_data <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv"
+
+us_data <- read.csv(US_COVID_data)
+
+us_data_map <- 
+  us_data %>%
+  filter(fips != "") %>%
+  mutate(date = ymd(date)) %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0')) %>%
+  select(date, fips, state, county, cases, deaths)  %>%
+  left_join(county_pop, fips = fips) %>%
+  arrange(fips, date) %>%
+  mutate(ncpht = ((cases / population) * 100000)) %>%
+  mutate(ndpht = ((deaths / population) * 100000)) %>%
+  ungroup() %>%
+  rename(location = state)
+
+last_updated <- paste("Source: New York Times  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+
+# end setup code chunk
+
+widget <- hcmap("countries/us/us-all-all",
+      data = mask_data,
+      value = "always_pct",
+      name = "Percentage that always wears masks in public",
+      join = "fips") %>%
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public", align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
+  hc_legend(layout = "vertical", verticalAlign = "top",
+            align = "right", valueDecimals = 0) %>%
+  hc_credits(enabled = TRUE,
+             text = last_updated,
+             position = list(align = "left", x = 10, y = -5))
+
+frameWidget(widget, width = "100%", height = "36rem")</code></pre>
 
 # Further analysis
 
-Aside from drilling into other categories of data here and checking againtt other data sets, I'll also be looking at various forecast models and lag indicators. There will also be *drill down* into national and regional level data. In any case, as the story continues to unfold we should all brace for a very *dark* winter. 
+As I mentioned above, the focus will eventually shift to the time series data, as opposed to the latest cumulative data files. There will be more detailed reporting as well. Right now the data looks bleak, but there **is** a *silver lining* here - on how following simple guidelines and hygiene protocols can limit the spread of infection and save lives.
