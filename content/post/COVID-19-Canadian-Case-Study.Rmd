@@ -120,7 +120,7 @@ widget <- highchart(type = "stock") %>%
                 type = "area", name = "Daily Cases per Million", yAxis = 0) %>%
   hc_add_yAxis(nid = 1L, title = list(text = "Cases per Million"), relative = 2) %>%
   hc_add_series(data_xts$new_deaths_smoothed_per_million, 
-                type = "area", name = "Daily Cases per Million", yAxis = 1) %>%
+                type = "area", name = "Daily Deaths per Million", yAxis = 1) %>%
   hc_add_yAxis(nid = 2L, title = list(text = "Deaths per Million"), relative = 1) %>%
   hc_tooltip(valueDecimals = 2) %>%
   hc_xAxis(type = "datetime", labels = list(format = '{value:%b %d}'),
