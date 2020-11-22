@@ -560,7 +560,7 @@ widget <- highchart(type = "map") %>%
                 borderWidth = .25,
                 borderColor = 'rgba(160, 160, 160, 0.9)') %>%
   hc_colorAxis (min = 0 ,
-                max = 10,
+                max = 15,
                 stops = color_stops(colors = viridisLite::inferno(20,
                                                                 begin = 0.1,
                                                                 direction = -1))) %>%
@@ -825,7 +825,7 @@ widget <- highchart(type = "map") %>%
                 borderWidth = .25,
                 borderColor = 'rgba(160, 160, 160, 0.9)') %>%
   hc_colorAxis (min = 0 ,
-                max = 4,
+                max = 5,
                 stops = color_stops(colors = viridisLite::viridis(4,
                                                                 begin = 0.1,
                                                                 direction = -1))) %>%
