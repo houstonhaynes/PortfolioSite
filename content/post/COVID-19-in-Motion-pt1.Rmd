@@ -1,8 +1,10 @@
 ---
 title: "World Data Overview - Global Heat Maps"
 output:
+  self_contained: FALSE
   blogdown::html_page:
     dev: "svg"
+  keep_md: TRUE
 author: "Houston Haynes"
 date: '2018-11-08T14:59:43+05:30'
 featuredpath: img
@@ -22,9 +24,9 @@ editor_options:
 knitr::opts_chunk$set(
 	echo = FALSE,
 	message = FALSE,
-	warning = FALSE
+	warning = FALSE,
+	widgetframe_widgetsdir = 'my_widgets'
 )
-
 
 library(highcharter)
 library(tidyverse)
@@ -40,7 +42,7 @@ coviddata <- read.csv(URL)
 
 ```
 
-```{r Tweets from Faces of COVID, include=FALSE }
+```{r Tweets_from_Faces_of_COVID, include=FALSE }
 
 library(rtweet)
 library(stringr)
@@ -64,14 +66,21 @@ COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts 
 
 COVIDtweets <- sample(COVIDtweets$status_id)
 
+thm <- hc_theme_merge(
+  hc_theme_ffx(),
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
 ```
 
 # Exercise in Scale
 
-When I started working with the <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> COVID-19 data set I wanted to chart out a few things to get a *feel* for the data. I've done this work for quite a while and the first thing you often do is a form of *reality* check. In some cases I checked againtt other charts based on the same data and thought "that can't be right" only to plot it myself and see it directly. (looking at you, *Europe*) As we all have witnessed this year experts have been sounding the alarm since early on. Pandemics are like locomotives, they're difficult to stop once they gain momentum. The same goes for an effective responte.
+When I started working with the <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> COVID-19 data set I wanted to chart out a few things to get a *feel* for the data. I've done this work for quite a while and the first thing you often do is a form of *reality* check. In some cases I checked againtt other charts based on the same data and thought "that can't be right" only to plot it myself and see it directly. (looking at you, *Europe*) As we all have witnessed this year experts have been sounding the alarm since early on. Pandemics are like locomotives, they're difficult to stop once they gain momentum. The same goes for an effective response.
 
-```{r New Cases by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Cases_by_Continent.html")`
+
+```{r New_Cases_by_Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
 
 library(zoo)
 library(slider)
@@ -149,13 +158,9 @@ data <- select(coviddata[with(coviddata, order(date, iso_code)),],
 
 #datatable(data)
 
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Fira Code")),
-           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
-widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, labels = FALSE)) %>%
+widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, labels = FALSE),
+      tooltip = list(
+        pointFormat = "{series.name}: {point.ncpmrm:.2f}")) %>%
   hc_plotOptions(series = list(stacking = 'normal')) %>%
   hc_title(text = "World COVID Daily New Cases per Million (smoothed)", align = "center") %>%
   hc_add_theme(thm) %>%
@@ -171,7 +176,7 @@ widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, la
   hc_yAxis(title = list(enabled = FALSE)) %>%
   hc_xAxis(title = list(enabled = FALSE))
 
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))
+frameWidget(widget,  width = "100%", height = "32rem")
 
 
 ```
@@ -180,7 +185,9 @@ frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allow
 
 So I took the data and plotted it on a map, to play on a day grain through time. The gradationt are pretty subtle at the start, and that's because of the data getting *very* dark late in the range. 
 
-```{r Global New Cases Per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Cases_Per_Million.html")`
+
+```{r Global_New_Cases_Per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 library(ggplot2)
 
@@ -275,12 +282,6 @@ map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
 
 last_updated <- paste("Source: https://ourworldincata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
 widget <- highchart(type = "map") %>%
   hc_add_theme(thm) %>%
   hc_chart(
@@ -297,7 +298,8 @@ widget <- highchart(type = "map") %>%
                 name = "New Cases per Million",
                 mapData = map,
                 joinBy = c("iso-a3", "iso_code"),
-                borderWidth = 0.01) %>%
+                borderWidth = .25,
+                borderColor = 'rgba(160, 160, 160, 0.9)') %>%
   hc_colorAxis (min = 0 ,
                 max = 1000,
                 stops = color_stops(colors = viridisLite::inferno(20,
@@ -325,21 +327,25 @@ widget <- highchart(type = "map") %>%
   ) %>%
   hc_credits(enabled = TRUE,
              text = last_updated,
-             position = list(align = "left", x = 10, y = -5))
+             position = list(align = "left", x = 10, y = -5))%>%
+  hc_legend(enabled = FALSE) 
 
 
-frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))
+frameWidget(widget,  width = "100%", height = "40rem")
 
 ```
 
-`r blogdown::shortcode("alert", "info", "Working with the Report:", "Aside from the play/pause and date slider, the map is *zoomable*. Hovering over a country will highlight and show the value for the current position on the timeline. Hovering while playing back will show updating changes to the values for that country.")`
+`r blogdown::shortcode("alert", "info", "Working with the report:", "Aside from the play/pause and date slider, the map is *zoomable*. Hovering over a country will highlight and show the value for the current position on the timeline. Hovering while playing back will show updating changes to the values for that country.")`
 
 `r blogdown::shortcode("alert", "warning", "Bug Report:", "The play/pause button for the map charts *works* but the icons are currently not visible. A fix is being researched now. Thanks for understanding.")`
 
 # Daily COVID Mortality
 
 One of the things I expected was to see some "chop" in early data as reporting became more contistent. Here I was surprised to see irregular bumps in the "smoothed" data. Once South America is removed from the set then things look much less strange. Such as it is, the visuals tell a convincing story of where things are going as of November, and it's *not* good.
-```{r New Deaths by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
+
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Deaths_by_Continent.html")`
+
+```{r New_Deaths_by_Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
 
 library(zoo)
 library(slider)
@@ -417,12 +423,6 @@ data <- select(coviddata[with(coviddata, order(date, iso_code)),],
 
 #datatable(data)
 
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Fira Code")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
 widget <- hchart(data, "area", hcaes(x = date, y = ndpmrm, group = continent, labels = FALSE)) %>%
   hc_plotOptions(series = list(stacking = 'normal')) %>%
   hc_title(text = "World COVID Daily New Deaths per Million (smoothed)", align = "center") %>%
@@ -439,14 +439,16 @@ widget <- hchart(data, "area", hcaes(x = date, y = ndpmrm, group = continent, la
   hc_yAxis(title = list(enabled = FALSE)) %>%
   hc_xAxis(title = list(enabled = FALSE))
 
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))
+frameWidget(widget,  width = "100%", height = "32rem")
 
 
 ```
 
 Again here - like the area chart - the direction of what's happening in Europe is unmistakable. In fact it bothers me to the point that I'll probably end up sourcing some other data just so I can sleep tonight. But one thing we can see and possibly discard is the sudden jump in values in South America. Per our area chart above which showed that as the offending portion of the data set that was skewing the result.
  
-```{r Global New Deaths Per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Deaths_Per_Million.html")` 
+ 
+```{r Global_New_Deaths_Per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 op <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
 data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
@@ -539,12 +541,6 @@ map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
 
 last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
 widget <- highchart(type = "map") %>%
   hc_add_theme(thm) %>%
   hc_chart(
@@ -561,7 +557,8 @@ widget <- highchart(type = "map") %>%
                 name = "New Cases per Million",
                 mapData = map,
                 joinBy = c("iso-a3", "iso_code"),
-                borderWidth = 0.01) %>%
+                borderWidth = .25,
+                borderColor = 'rgba(160, 160, 160, 0.9)') %>%
   hc_colorAxis (min = 0 ,
                 max = 10,
                 stops = color_stops(colors = viridisLite::inferno(20,
@@ -592,7 +589,7 @@ widget <- highchart(type = "map") %>%
              position = list(align = "left", x = 10, y = -5))
 
 
-frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))
+frameWidget(widget,  width = "100%", height = "40rem")
 
 ```
 
@@ -611,7 +608,9 @@ frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allo
 
 While spelunking through the data I thought I'd take a look at testing. The good news, the numbers are increasing. 
 
-```{r New Tests by Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Tests_by_Continent.html")`
+
+```{r New_Tests_by_Continent, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
 
 library(zoo)
 library(slider)
@@ -689,12 +688,6 @@ data <- select(coviddata[with(coviddata, order(date, iso_code)),],
 
 #datatable(data)
 
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Fira Code")),
-           legent = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
 widget <- hchart(data, "area", hcaes(x = date, y = ntptrm, group = continent, labels = FALSE)) %>%
   hc_plotOptions(series = list(stacking = 'normal')) %>%
   hc_title(text = "World COVID Daily New Tests per Thousand (smoothed)", align = "center") %>%
@@ -711,14 +704,16 @@ widget <- hchart(data, "area", hcaes(x = date, y = ntptrm, group = continent, la
   hc_yAxis(title = list(enabled = FALSE)) %>%
   hc_xAxis(title = list(enabled = FALSE))
 
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))
+frameWidget(widget,  width = "100%", height = "32rem")
 
 
 ```
 
 Here's the flip-side of the previous two reports - where the numbers go *green* as they go higher. But again, it runt the risk of painting an inaccurate picture to show  less than 5 tests per 1,000 people as a positive indication. That value should be much, much higher - but in this case relative values matter. 
 
-```{r Global New Tests Per Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Tests_Per_Thousand.html")` 
+
+```{r Global_New_Tests_Per_Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 op <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
 data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
@@ -811,12 +806,6 @@ map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
 
 last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
-thm <- hc_theme_merge(
-  hc_theme_ffx(),
-  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
-
 widget <- highchart(type = "map") %>%
   hc_add_theme(thm) %>%
   hc_chart(
@@ -833,7 +822,8 @@ widget <- highchart(type = "map") %>%
                 name = "New Cases per Million",
                 mapData = map,
                 joinBy = c("iso-a3", "iso_code"),
-                borderWidth = 0.01) %>%
+                borderWidth = .25,
+                borderColor = 'rgba(160, 160, 160, 0.9)') %>%
   hc_colorAxis (min = 0 ,
                 max = 4,
                 stops = color_stops(colors = viridisLite::viridis(4,

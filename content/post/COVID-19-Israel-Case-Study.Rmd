@@ -41,7 +41,7 @@ coviddata <- read.csv(URL)
 ```
 
 
-```{r Tweets from Faces of COVID, include=FALSE }
+```{r Tweets_from_Faces_of_COVID, include=FALSE }
 
 library(rtweet)
 library(stringr)
@@ -77,8 +77,9 @@ The data came from <a href="https://ourworldindata.org/" target="_blank">Our Wor
 
 I was fairly arbitrary in my selection of countries to compare to Israel's data. I picked US and UK because the response in general has been *so poor* from a policy perspective. And as counterpoint I pulled in Canada and Germany who have better national strategies. India and China were chosen for their population size (even when leveled for cases per million I was expecting to see more from their data) and Japan has a pretty well-established mask culture. As you look at death and test rates below the picture continues to develop.
 
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-Israel-Case-Study_files/figure-html/widgets/widget_Israel_COVID_Cases_per_Million.html")`
 
-```{r Israel COVID Cases per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Israel_COVID_Cases_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
   rename(value = new_cases_smoothed_per_million) %>%
@@ -94,7 +95,7 @@ data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
 last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
 thm <- hc_theme_merge(
-  hc_theme_smpl(),
+  hc_theme_ffx(),
   hc_theme(colors = c("#800000", "#102156", "#d4622b",  "#45C0F5", 
                       "#AFDC00", "#85DFD0", "purple", "orange"),
            chart = list(backgroundColor = ""),
@@ -176,8 +177,9 @@ Researchers will talk about the lag time between a change in policy and the shif
 
 I was shocked to see the deaths per million *so high* in the UK. I honestly wonder if the US *not* being a higher number might be about improper/false attribution of cause of death. I've read anecdotes about folks in rest homes whose families assert they died from COVID-19 but their COD was listed as some other, more common cause. That said, the trend of the numbers in Israel after the new lockdown policy in mid September shows both the lagging response post-implementation *as well as* a rate the descends below those of the US and UK.
 
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-Israel-Case-Study_files/figure-html/widgets/widget_Israel_COVID_Deaths_per_Million.html")`
 
-```{r Israel COVID Deaths per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Israel_COVID_Deaths_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 data <- select(coviddata, date, location, new_deaths_smoothed_per_million) %>%
   rename(value = new_deaths_smoothed_per_million) %>%
@@ -193,7 +195,7 @@ data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
 last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
 thm <- hc_theme_merge(
-  hc_theme_smpl(),
+  hc_theme_ffx(),
   hc_theme(colors = c("#800000", "#102156", "#d4622b",  
                       "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
            chart = list(backgroundColor = ""),
@@ -272,7 +274,9 @@ frameWidget(widget, width = "100%", height = "36rem")
 
 While the tests per thousand is increasing, it's not nearly high enough. It's really interesting to see how Israel's testing jumped up at the same time that case rate spiked. The drop-off at the end I assume is lag in reporting that will eventually be back-filled, but I'll go to other sources if this data sub-set flattens out.
 
-```{r Israel COVID Tests per Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-Israel-Case-Study_files/figure-html/widgets/widget_Israel_COVID_Tests_per_Thousand.html")`
+
+```{r Israel_COVID_Tests_per_Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 data <- select(coviddata, date, location, new_tests_smoothed_per_thousand) %>%
   rename(value = new_tests_smoothed_per_thousand) %>%
@@ -286,7 +290,7 @@ data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
 last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
 thm <- hc_theme_merge(
-  hc_theme_smpl(),
+  hc_theme_ffx(),
   hc_theme(colors = c("#800000", "#102156", "#d4622b",  
                       "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
            chart = list(backgroundColor = ""),

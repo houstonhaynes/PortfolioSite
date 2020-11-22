@@ -160,7 +160,7 @@ Taking the accumulated events and summed population for all of Europe for Octobe
 
 ## Part 4: Population data
 
-Bringing in population data opens the door for driving more insights from the raw OWID data. In most public geo-related data there's a column for tying the data to other data sets. I found <a href="https://www.kaggle.com/tanuprabhu/population-by-country-2020" target=_blank">this document with 2020 population data</a>, which is a great starting point. But the bad news is that it didn't have the expected ISO codes for tying the countries listed in the population data back to the OWID data. So I "cheated" and simply mapped the "country" column names such that they matched the location names. It started with change "&" to "and" and substituting accented values for American standard replacements. 
+Bringing in population data opens the door for driving more insights from the raw OWID data. In most public geo-related data there's a column for tying the data to other data sets. I found <a href="https://www.kaggle.com/tanuprabhu/population-by-country-2020" target="_blank">this document with 2020 population data</a>, which is a great starting point. But the bad news is that it didn't have the expected ISO codes for tying the countries listed in the population data back to the OWID data. So I "cheated" and simply mapped the "country" column names such that they matched the location names. It started with change "&" to "and" and substituting accented values for American standard replacements. 
 
 `r blogdown::shortcode("fancybox", "/img", "data_PopulationByCountryEdits.png")`
 

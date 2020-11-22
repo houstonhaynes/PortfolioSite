@@ -38,9 +38,14 @@ iframe[src^="https://platform.twitter.com"] {
 }
 
 .filter-none,
-.widgetframe {
+.widgetframe,
+.fancybox-content {
     filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(100%) !important;
     -webkit-filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(100%) !important;
+}
+
+.fancybox-content {
+    border-radius: 8px;
 }
 
 iframe {

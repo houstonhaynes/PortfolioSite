@@ -102,7 +102,7 @@ This plot is a different view for the same time period, a stacked bar chart to r
 
 By matching cart IDs to final status for each cart, I was able to map the attrition rate to the time grain where the cart was created – showing which instances would eventually fall to the side.
 
-```{r Initial Win-Loss Over Time, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Initial_Win-Loss_Over_Time, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 series = list(
   list(
     name = 'Added',
@@ -315,7 +315,7 @@ Once the feed file was validated, a status byte was set that allowed the file to
 
 After the cache warming and partner feed changes (along with a few other API tweaks, primarily reduction of the number of requests made to gather up-sell and conversion marketing products) there were noticeable improvements in sell-through and user retention. These time charts show that overall cart creations increased for similar sales periods, and also that cart loss due to timeout had been reduced.
 
-```{r Cart Summary Win-Loss Initial Findings, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Cart_Summary_Win-Loss_Initial_Findings, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 series = list(
   list(
     name = 'Won',
@@ -355,7 +355,7 @@ Early deployments of the API focused on delivery to in-house mobile applications
 The second chart is derived some a server in a different time zone for the same day period (7AM West Coast/10AM East Coast) on a later date. And while the overall “shape” of the Cart Loss charts looks similar, once those are aggregated and reviewed against the cart transactions that were completed – the fuller picture emerges.
 
 
-```{r Win-Loss After API Feed Changes}
+```{r Win-Loss_After_API_Feed_Changes}
 series = list(
   list(
     name = 'Won',
@@ -393,7 +393,7 @@ frameWidget(hcWinLossAfter, width = "100%", height = "100%")
 
 Through a deeper understanding of the legacy commerce systems the API team found optimizations that could be brought to bear which yielded sizable system and financial performance improvements. When these issues were originally brought to senior management, the initial response was to simply increase the horizontal scale of the server infrastructure. While in most companies that would not be the measure of first resort, the long-standing technology groups at the company had always brought this option to the table as a reflex.
 
-```{r Final Result in Conversion Rate, echo=FALSE}
+```{r Final_Result_in_Conversion_Rate, echo=FALSE}
 series = list(
     list(
     name = 'Won',

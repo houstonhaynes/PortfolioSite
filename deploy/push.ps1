@@ -41,6 +41,9 @@ If ($environment -eq 'prd') {
 Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If (Get-Content $_.FullName | Select-String -Pattern '/figure-html//widgets/') 
            {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ }}
 
+Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If (Get-Content $_.FullName | Select-String -Pattern '"fill":false}') 
+           {(Get-Content $_ | ForEach {$_ -replace '"fill":false}', '"fill":true}'}) | Set-Content $_ }}
+
 # do the file push using azcopy sync function
 If ($environment -eq 'prd') {
     az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $prdString

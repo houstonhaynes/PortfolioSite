@@ -42,7 +42,7 @@ coviddata <- read.csv(URL)
 ```
 
 
-```{r Tweets from Faces of COVID, include=FALSE }
+```{r Tweets_from_Faces_of_COVID, include=FALSE }
 
 library(rtweet)
 library(stringr)
@@ -75,8 +75,8 @@ Having taken a turn with the data following <a href="/post/covid-19-israel-case-
 1) It's hard to *not* see those April numbers as terrifying for Canada's future, given that deaths lag cases, and 
 1) thinking of how *badly* things will go in the US in December after its Thanksgiving holiday in November.
 
-
-```{r Canada COVID Cases per Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-Canadian-Case-Study_files/figure-html/widgets/widget_Canada_COVID_Cases_per_Million.html")` 
+```{r Canada_COVID_Cases_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 data <- select(coviddata, date, location, 
                new_cases_smoothed_per_million, new_deaths_smoothed_per_million, stringency_index) %>%

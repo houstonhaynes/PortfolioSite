@@ -1,8 +1,10 @@
 ---
 title: "World Data Overview - Global Heat Maps"
 output:
+  self_contained: FALSE
   blogdown::html_page:
     dev: "svg"
+  keep_md: TRUE
 author: "Houston Haynes"
 date: '2018-11-08T14:59:43+05:30'
 featuredpath: img
@@ -27,37 +29,41 @@ editor_options:
 
 <div id="exercise-in-scale" class="section level1">
 <h1>Exercise in Scale</h1>
-<p>When I started working with the <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> COVID-19 data set I wanted to chart out a few things to get a <em>feel</em> for the data. I’ve done this work for quite a while and the first thing you often do is a form of <em>reality</em> check. In some cases I checked againtt other charts based on the same data and thought “that can’t be right” only to plot it myself and see it directly. (looking at you, <em>Europe</em>) As we all have witnessed this year experts have been sounding the alarm since early on. Pandemics are like locomotives, they’re difficult to stop once they gain momentum. The same goes for an effective responte.</p>
-<div id="htmlwidget-1" style="width:100%;height:100%;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New Cases by Continent.html","options":{"xdomain":"*","allowfullscreen":true,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p>When I started working with the <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> COVID-19 data set I wanted to chart out a few things to get a <em>feel</em> for the data. I’ve done this work for quite a while and the first thing you often do is a form of <em>reality</em> check. In some cases I checked againtt other charts based on the same data and thought “that can’t be right” only to plot it myself and see it directly. (looking at you, <em>Europe</em>) As we all have witnessed this year experts have been sounding the alarm since early on. Pandemics are like locomotives, they’re difficult to stop once they gain momentum. The same goes for an effective response.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Cases_by_Continent.html" %}}
+<div id="htmlwidget-1" style="width:100%;height:32rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New_Cases_by_Continent.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 {{% alert "info" "Working with the Report:" "Use the legend to highlight, show or hide a series. Hovering over bands in the chart reveals detail for a given date." %}}
 <p>So I took the data and plotted it on a map, to play on a day grain through time. The gradationt are pretty subtle at the start, and that’s because of the data getting <em>very</em> dark late in the range.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Cases_Per_Million.html" %}}
 <div id="htmlwidget-2" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global New Cases Per Million.html","options":{"xdomain":"*","allowfullscreen":true,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-{{% alert "info" "Working with the Report:" "Aside from the play/pause and date slider, the map is *zoomable*. Hovering over a country will highlight and show the value for the current position on the timeline. Hovering while playing back will show updating changes to the values for that country." %}}
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global_New_Cases_Per_Million.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+{{% alert "info" "Working with the report:" "Aside from the play/pause and date slider, the map is *zoomable*. Hovering over a country will highlight and show the value for the current position on the timeline. Hovering while playing back will show updating changes to the values for that country." %}}
 {{% alert "warning" "Bug Report:" "The play/pause button for the map charts *works* but the icons are currently not visible. A fix is being researched now. Thanks for understanding." %}}
 </div>
 <div id="daily-covid-mortality" class="section level1">
 <h1>Daily COVID Mortality</h1>
-<p>One of the things I expected was to see some “chop” in early data as reporting became more contistent. Here I was surprised to see irregular bumps in the “smoothed” data. Once South America is removed from the set then things look much less strange. Such as it is, the visuals tell a convincing story of where things are going as of November, and it’s <em>not</em> good.
-<div id="htmlwidget-3" style="width:100%;height:100%;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New Deaths by Continent.html","options":{"xdomain":"*","allowfullscreen":true,"lazyload":false}},"evals":[],"jsHooks":[]}</script></p>
+<p>One of the things I expected was to see some “chop” in early data as reporting became more contistent. Here I was surprised to see irregular bumps in the “smoothed” data. Once South America is removed from the set then things look much less strange. Such as it is, the visuals tell a convincing story of where things are going as of November, and it’s <em>not</em> good.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Deaths_by_Continent.html" %}}
+<div id="htmlwidget-3" style="width:100%;height:32rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New_Deaths_by_Continent.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <p>Again here - like the area chart - the direction of what’s happening in Europe is unmistakable. In fact it bothers me to the point that I’ll probably end up sourcing some other data just so I can sleep tonight. But one thing we can see and possibly discard is the sudden jump in values in South America. Per our area chart above which showed that as the offending portion of the data set that was skewing the result.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Deaths_Per_Million.html" %}}
 <div id="htmlwidget-4" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global New Deaths Per Million.html","options":{"xdomain":"*","allowfullscreen":true,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global_New_Deaths_Per_Million.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <div class="separator">
 Faces of COVID-19
 </div>
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1322199016285835264" %}}
+{{% tweet "1329212797859803138" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1315804445834272768" %}}
+{{% tweet "1313457487585128448" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1325943753941667847" %}}
+{{% tweet "1328397424579121152" %}}
 </div>
 </div>
 <figcaption class="caption">
@@ -69,11 +75,13 @@ The pandemic-related posts on this site are about more than data. <strong>Behind
 <div id="testing-testing-1-1-3" class="section level1">
 <h1>Testing, Testing, 1, 1, 3…</h1>
 <p>While spelunking through the data I thought I’d take a look at testing. The good news, the numbers are increasing.</p>
-<div id="htmlwidget-5" style="width:100%;height:100%;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New Tests by Continent.html","options":{"xdomain":"*","allowfullscreen":true,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Tests_by_Continent.html" %}}
+<div id="htmlwidget-5" style="width:100%;height:32rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New_Tests_by_Continent.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <p>Here’s the flip-side of the previous two reports - where the numbers go <em>green</em> as they go higher. But again, it runt the risk of painting an inaccurate picture to show less than 5 tests per 1,000 people as a positive indication. That value should be much, much higher - but in this case relative values matter.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Tests_Per_Thousand.html" %}}
 <div id="htmlwidget-6" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global New Tests Per Thousand.html","options":{"xdomain":"*","allowfullscreen":true,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-6">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global_New_Tests_Per_Thousand.html","options":{"xdomain":"*","allowfullscreen":true,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <div id="how-the-resports-were-built" class="section level2">
 <h2>How the resports were built</h2>
 <p>The area charts are relatively straightforward. The only data munging task was summing the values by continent and date. After that it was mainly about formatting and some tweaks to keep the display clean.</p>

@@ -40,10 +40,13 @@ editor_options:
 <div id="the-charts" class="section level1">
 <h1>The Charts</h1>
 <p>After some edits and surfacing state labels for tooltips (which pop up when you hover over any of the counties in the chart) I re-rendered the reports here for more detailed review. Like the other reports that pull data from OWID and JHU these will continue to shift and change as new cumulative case numbers are added in. And likewise, when there’s an update to the mask wearing surveys there will be new data there as well. Once I have a better view of the full time COVID time series data set I’ll shift to a weighted average for the past few weeks or month, or match the case counts to the time range for the survey period. But for now this provides a valuable, if slowly-moving snapshot.</p>
-<p><div id="htmlwidget-1" style="width:100%;height:36rem;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-US-masks-vs-cases_files/figure-html//widgets/widget_Cumulative Cases Pop Leveled.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-<div id="htmlwidget-2" style="width:100%;height:36rem;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/COVID-19-US-masks-vs-cases_files/figure-html//widgets/widget_Mask Percentage by County.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script></p>
+{{% alert "info" "Working with the reports:" "Hovering over a county will highlight and show the value for its respective metric." %}}
+{{% fancybox-iframe "/post/COVID-19-US-masks-vs-cases_files/figure-html/widgets/widget_Cumulative_Cases_Pop_Leveled.html" %}}
+<p><div id="htmlwidget-1" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-US-masks-vs-cases_files/figure-html//widgets/widget_Cumulative_Cases_Pop_Leveled.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+{{% fancybox-iframe "/post/COVID-19-US-masks-vs-cases_files/figure-html/widgets/widget_Mask_Prcentage_by_County.html" %}}</p>
+<div id="htmlwidget-2" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/COVID-19-US-masks-vs-cases_files/figure-html//widgets/widget_Mask_Prcentage_by_County.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <div id="exceptions-worth-noting" class="section level2">
 <h2>Exceptions Worth Noting</h2>
 <p>It should be noted that the NYT found there to be some marginal variance in the actual level of mask wearers and the reported answers from the survey.</p>
@@ -59,13 +62,13 @@ Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1323369291786473472" %}}
+{{% tweet "1322652228415639552" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1313879258981437442" %}}
+{{% tweet "1320855226409046016" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1313522294308909056" %}}
+{{% tweet "1314294495840624641" %}}
 </div>
 </div>
 <figcaption class="caption">
@@ -93,7 +96,8 @@ counties <-
 
 county_pop <- select(counties, fips, state, population)
 
-mask_URL <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv"
+mask_URL <- 
+  "https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv"
 
 mask_data <- read.csv(mask_URL)
 
@@ -106,7 +110,8 @@ mask_data <-
   left_join(county_pop, fips = fips) %>%
   rename(location = state)
 
-last_updated <- paste("Source: New York Times  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+last_updated <- paste("Source: New York Times  -  Report Last Updated:"
+                        ,  format(Sys.time(), "%a %b %d %Y %X"))
 
 # end setup code chunk
 
@@ -116,7 +121,8 @@ widget <- hcmap("countries/us/us-all-all",
       name = "Percentage that always wears masks in public",
       join = "fips") %>%
   hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
-  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public", align = "center") %>%
+  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public"
+            , align = "center") %>%
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
@@ -146,7 +152,8 @@ counties <-
 
 county_pop <- select(counties, fips, state, population)
 
-US_COVID_data <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv"
+US_COVID_data <- 
+  "https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv"
 
 us_data <- read.csv(US_COVID_data)
 
@@ -163,7 +170,8 @@ us_data_map <-
   ungroup() %>%
   rename(location = state)
 
-last_updated <- paste("Source: New York Times  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+last_updated <- paste("Source: New York Times  -  Report Last Updated:"
+                        ,  format(Sys.time(), "%a %b %d %Y %X"))
 
 # end setup code chunk
 
@@ -173,7 +181,8 @@ widget <- hcmap("countries/us/us-all-all",
       name = "Percentage that always wears masks in public",
       join = "fips") %>%
   hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
-  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public", align = "center") %>%
+  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public"
+            , align = "center") %>%
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,

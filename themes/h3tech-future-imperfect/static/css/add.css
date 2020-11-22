@@ -213,6 +213,12 @@ a#clear-dark-mode {
     background: #FFF !important;
 }
 
+.fancybox-slide--iframe .fancybox-content {
+    max-width: 90% !important;
+    max-height: 90% !important;
+    margin: 0;
+}
+
 .modal-backdrop {
     background: #FFF !important;
     opacity: 95% !important;
@@ -422,6 +428,6 @@ a#back-to-top:hover {
 }
 
 .widgetframe {
-    margin-top: 1rem;
+    margin-top: .25rem;
     margin-bottom: 2rem;
 }
