@@ -31,7 +31,7 @@ editor_options:
 <h1>Exercise in Scale</h1>
 <p>When I started working with the <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> COVID-19 data set I wanted to chart out a few things to get a <em>feel</em> for the data. I’ve done this work for quite a while and the first thing you often do is a form of <em>reality</em> check. In some cases I checked againtt other charts based on the same data and thought “that can’t be right” only to plot it myself and see it directly. (looking at you, <em>Europe</em>) As we all have witnessed this year experts have been sounding the alarm since early on. Pandemics are like locomotives, they’re difficult to stop once they gain momentum. The same goes for an effective response.</p>
 {{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Cases_by_Continent.html" %}}
-<div id="htmlwidget-1" style="width:100%;height:32rem;" class="widgetframe html-widget"></div>
+<div id="htmlwidget-1" style="width:100%;height:26rem;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New_Cases_by_Continent.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 {{% alert "info" "Working with the Report:" "Use the legend to highlight, show or hide a series. Hovering over bands in the chart reveals detail for a given date." %}}
 <p>So I took the data and plotted it on a map, to play on a day grain through time. The gradationt are pretty subtle at the start, and that’s because of the data getting <em>very</em> dark late in the range.</p>
@@ -45,7 +45,7 @@ editor_options:
 <h1>Daily COVID Mortality</h1>
 <p>One of the things I expected was to see some “chop” in early data as reporting became more contistent. Here I was surprised to see irregular bumps in the “smoothed” data. Once South America is removed from the set then things look much less strange. Such as it is, the visuals tell a convincing story of where things are going as of November, and it’s <em>not</em> good.</p>
 {{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Deaths_by_Continent.html" %}}
-<div id="htmlwidget-3" style="width:100%;height:32rem;" class="widgetframe html-widget"></div>
+<div id="htmlwidget-3" style="width:100%;height:26rem;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New_Deaths_by_Continent.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <p>Again here - like the area chart - the direction of what’s happening in Europe is unmistakable. In fact it bothers me to the point that I’ll probably end up sourcing some other data just so I can sleep tonight. But one thing we can see and possibly discard is the sudden jump in values in South America. Per our area chart above which showed that as the offending portion of the data set that was skewing the result.</p>
 {{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Deaths_Per_Million.html" %}}
@@ -57,13 +57,13 @@ Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1318529901582974976" %}}
+{{% tweet "1322704914112499714" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1320764629325238286" %}}
+{{% tweet "1318008971387523073" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1326328792835502080" %}}
+{{% tweet "1327280062928850944" %}}
 </div>
 </div>
 <figcaption class="caption">
@@ -76,12 +76,12 @@ The pandemic-related posts on this site are about more than data. <strong>Behind
 <h1>Testing, Testing, 1, 1, 3…</h1>
 <p>While spelunking through the data I thought I’d take a look at testing. The good news, the numbers are increasing.</p>
 {{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Tests_by_Continent.html" %}}
-<div id="htmlwidget-5" style="width:100%;height:32rem;" class="widgetframe html-widget"></div>
+<div id="htmlwidget-5" style="width:100%;height:26rem;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-5">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New_Tests_by_Continent.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <p>Here’s the flip-side of the previous two reports - where the numbers go <em>green</em> as they go higher. But again, it runt the risk of painting an inaccurate picture to show less than 5 tests per 1,000 people as a positive indication. That value should be much, much higher - but in this case relative values matter.</p>
 {{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Tests_Per_Thousand.html" %}}
 <div id="htmlwidget-6" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global_New_Tests_Per_Thousand.html","options":{"xdomain":"*","allowfullscreen":true,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-6">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global_New_Tests_Per_Thousand.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <div id="how-the-resports-were-built" class="section level2">
 <h2>How the resports were built</h2>
 <p>The area charts are relatively straightforward. The only data munging task was summing the values by continent and date. After that it was mainly about formatting and some tweaks to keep the display clean.</p>
@@ -186,7 +186,7 @@ widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, la
   hc_yAxis(title = list(enabled = FALSE)) %>%
   hc_xAxis(title = list(enabled = FALSE))
 
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))</code></pre>
+frameWidget(widget, width="100%", height="26rem")</code></pre>
 <p>The map charts were more complex. Aside from tying together the geojson map to the data (by joining iso-a3 in the map data to the iso_code value from the source data) there was building the sequence of data itself. This wasn’t immediately apparent but <a href="https://jkuntt.com/blog/posts/2016-04-12-adding-motion-to-choropleths/" target="_blank">this tutorial</a> was a great help.</p>
 <button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code2">
 View the Code behind the First Map Chart
@@ -341,7 +341,7 @@ widget <- highchart(type = "map") %>%
              position = list(align = "left", x = 10, y = -5))
 
 
-frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))</code></pre>
+frameWidget(widget, width="100%", height="40rem")</code></pre>
 </div>
 </div>
 <div id="further-analysis" class="section level1">

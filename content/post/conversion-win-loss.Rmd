@@ -143,7 +143,7 @@ hcWinLossInitial <- highchart() %>%
       stacking = 'normal', marker = 'none')) %>% 
   hc_add_theme(hc_theme_smpl())
 
-frameWidget(hcWinLossInitial, width = "100%", height = "100%")
+frameWidget(hcWinLossInitial, width = "100%", height = "20rem")
 ```
 
 
@@ -201,7 +201,7 @@ hcWinLossInitial <- highchart() %>%
       stacking = 'normal', marker = 'none')) %>% 
   hc_add_theme(hc_theme_smpl())
 
-frameWidget(hcWinLossInitial, width = "100%", height = "100%")</code></pre>
+frameWidget(hcWinLossInitial, width = "100%", height = "20rem)</code></pre>
 
 Bear in mind that the cart could have been lost at any point during the countdown period – up to 5 minutes after the item was initially added to the cart. The visualization here is designed to show correlation to the time slot where the cart was created versus the loss rate.
 
@@ -347,7 +347,7 @@ hcWinLossBefore <- highchart() %>%
       stacking = 'normal', marker = 'none')) %>% 
   hc_add_theme(hc_theme_smpl())
 
-frameWidget(hcWinLossBefore, width = "100%", height = "100%")
+frameWidget(hcWinLossBefore, width = "100%", height = "20rem")
 ```
 
 Early deployments of the API focused on delivery to in-house mobile applications, we later supported Apple, RIM, Facebook and other partners that would increase user activity by 40% overall and cart creation activity by 15%. As one might expect, executives were most encouraged by the conversion rate. While it still was not in the targeted 30%+ range, the findings were trending in the right direction.
@@ -387,7 +387,7 @@ hcWinLossAfter <- highchart() %>%
       stacking = 'normal', marker = 'none')) %>% 
   hc_add_theme(hc_theme_smpl())
 
-frameWidget(hcWinLossAfter, width = "100%", height = "100%")
+frameWidget(hcWinLossAfter, width = "100%", height = "20rem")
 ```
 
 
@@ -427,7 +427,7 @@ hcConversionRate <- highchart() %>%
       marker = 'none', stacking = 'normal')) %>% 
   hc_add_theme(hc_theme_smpl())
 
-frameWidget(hcConversionRate, width = "100%", height = "100%")
+frameWidget(hcConversionRate, width = "100%", height = "20rem")
 ```
 
 In that legacy context this is not a surprise, as some of the systems at that company date back to the late 1970s. Horizontal scaling was (and in this case – is) the only option for technology of that generation. In this case we found new and useful ways to “pierce the veil” and work more efficiently in and around the existing solution stack. From that point we continued to refine the API layer – and likewise – measured changes in system and user behavior in a way that provided new insight to IT and marketing executives.

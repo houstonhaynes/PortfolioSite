@@ -132,7 +132,7 @@ widget <- highchart(type = "stock") %>%
     ))
   ) 
 
-frameWidget(widget, width = "100%", height = "36rem")
+frameWidget(widget, width="100%", height="36rem")
 
 ```
 

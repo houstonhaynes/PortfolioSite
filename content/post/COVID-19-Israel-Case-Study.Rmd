@@ -165,7 +165,7 @@ widget <- highchart(type = "stock") %>%
     y = 0
     ) 
 
-frameWidget(widget, width = "100%", height = "36rem")
+frameWidget(widget, width="100%", height="32rem")
 
 ```
 
@@ -266,7 +266,7 @@ widget <- highchart(type = "stock") %>%
     ) 
   
 
-frameWidget(widget, width = "100%", height = "36rem")
+frameWidget(widget, width="100%", height="32rem")
 
 ```
 
@@ -361,7 +361,7 @@ widget <- highchart(type = "stock") %>%
     ) 
   
 
-frameWidget(widget, width = "100%", height = "36rem")
+frameWidget(widget, width="100%", height="32rem")
 
 ```
 
@@ -468,7 +468,7 @@ widget <- highchart(type = "stock") %>%
     y = 0
     ) 
 
-frameWidget(widget, width = "100%", height = "36rem")</code></pre>
+frameWidget(widget, width="100%", height="32rem")</code></pre>
 
 The file from "Our World in Data" is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You'll see the creation of an initial *data* dataframe, which in each case selects on of the dozen or more columns in the original set. Then the *wide* version of the table is created to split out each country-based time series into its own column. That *wide* dataframe is then converted to an *xts* or extended time series dataframe.
 

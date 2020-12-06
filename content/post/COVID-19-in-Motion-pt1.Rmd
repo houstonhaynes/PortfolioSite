@@ -176,8 +176,7 @@ widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, la
   hc_yAxis(title = list(enabled = FALSE)) %>%
   hc_xAxis(title = list(enabled = FALSE))
 
-frameWidget(widget,  width = "100%", height = "32rem")
-
+frameWidget(widget, width="100%", height="26rem")
 
 ```
 
@@ -331,7 +330,7 @@ widget <- highchart(type = "map") %>%
   hc_legend(enabled = FALSE) 
 
 
-frameWidget(widget,  width = "100%", height = "40rem")
+frameWidget(widget, width="100%", height="40rem")
 
 ```
 
@@ -439,8 +438,7 @@ widget <- hchart(data, "area", hcaes(x = date, y = ndpmrm, group = continent, la
   hc_yAxis(title = list(enabled = FALSE)) %>%
   hc_xAxis(title = list(enabled = FALSE))
 
-frameWidget(widget,  width = "100%", height = "32rem")
-
+frameWidget(widget, width="100%", height="26rem")
 
 ```
 
@@ -589,7 +587,7 @@ widget <- highchart(type = "map") %>%
              position = list(align = "left", x = 10, y = -5))
 
 
-frameWidget(widget,  width = "100%", height = "40rem")
+frameWidget(widget, width="100%", height="40rem")
 
 ```
 
@@ -704,8 +702,7 @@ widget <- hchart(data, "area", hcaes(x = date, y = ntptrm, group = continent, la
   hc_yAxis(title = list(enabled = FALSE)) %>%
   hc_xAxis(title = list(enabled = FALSE))
 
-frameWidget(widget,  width = "100%", height = "32rem")
-
+frameWidget(widget, width="100%", height="26rem")
 
 ```
 
@@ -853,8 +850,7 @@ widget <- highchart(type = "map") %>%
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
 
-
-frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))
+frameWidget(widget, width="100%", height="40rem")
 
 ```
 
@@ -962,7 +958,7 @@ widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, la
   hc_yAxis(title = list(enabled = FALSE)) %>%
   hc_xAxis(title = list(enabled = FALSE))
 
-frameWidget(widget,  width = "100%", height = "100%", options=frameOptions(allowfullscreen = T))</code></pre>
+frameWidget(widget, width="100%", height="26rem")</code></pre>
 
 The map charts were more complex. Aside from tying together the geojson map to the data (by joining iso-a3 in the map data to the iso_code value from the source data) there was building the sequence of data itself. This wasn't immediately apparent but <a href="https://jkuntt.com/blog/posts/2016-04-12-adding-motion-to-choropleths/" target="_blank">this tutorial</a> was a great help.
 
@@ -1118,7 +1114,7 @@ widget <- highchart(type = "map") %>%
              position = list(align = "left", x = 10, y = -5))
 
 
-frameWidget(widget,  width = "100%", height = "40rem", options=frameOptions(allowfullscreen = T))</code></pre>
+frameWidget(widget, width="100%", height="40rem")</code></pre>
 
 # Further analysis
 

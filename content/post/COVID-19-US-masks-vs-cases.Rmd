@@ -148,7 +148,7 @@ widget <- hcmap("countries/us/us-all-all",
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
 
-frameWidget(widget, height="40rem", width="100%")
+frameWidget(widget, width="100%", height="40rem")
 
 ```
 `r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-US-masks-vs-cases_files/figure-html/widgets/widget_Mask_Prcentage_by_County.html")`
@@ -174,7 +174,7 @@ widget <- hcmap("countries/us/us-all-all",
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
 
-frameWidget(widget, height="40rem", width="100%")
+frameWidget(widget, width="100%", height="40rem")
 ```
 
 ## Exceptions Worth Noting
@@ -253,7 +253,7 @@ widget <- hcmap("countries/us/us-all-all",
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
 
-frameWidget(widget, width = "100%", height = "36rem")</code></pre>
+frameWidget(widget, height="100%", width="40rem")</code></pre>
 
 <button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code2">View the Code behind the Second Chart</button>
 
@@ -313,7 +313,7 @@ widget <- hcmap("countries/us/us-all-all",
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
 
-frameWidget(widget, width = "100%", height = "36rem")</code></pre>
+frameWidget(widget, height="100%", width="40rem")</code></pre>
 
 # Further analysis
 

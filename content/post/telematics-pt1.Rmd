@@ -1,5 +1,5 @@
 ---
-title: "Telematics in Two Lines of Code - and other Beautiful Lies"
+title: "Telematics in Two Lines of Code"
 output:
   blogdown::html_page:
     toc: true
@@ -7,13 +7,13 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2019-10-07T14:59:43+05:30'
+date: '2020-12-06T14:59:43+05:30'
 featuredpath: img
 featured: "Telematics.png"
 ogfeatured: "H3_og_wide_Telematics.png"
 emblem: iot.png
-description: On scaling a nation-wide telematics platform to the cloud
-draft: true
+description: On creating a serverless cloud solution for vehicle data
+draft: false
 tags:
 - MongoDB
 - EC2

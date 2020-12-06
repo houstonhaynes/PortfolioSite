@@ -35,7 +35,7 @@ editor_options:
 <h2>Comparison Countries</h2>
 <p>I was fairly arbitrary in my selection of countries to compare to Israel’s data. I picked US and UK because the response in general has been <em>so poor</em> from a policy perspective. And as counterpoint I pulled in Canada and Germany who have better national strategies. India and China were chosen for their population size (even when leveled for cases per million I was expecting to see more from their data) and Japan has a pretty well-established mask culture. As you look at death and test rates below the picture continues to develop.</p>
 {{% fancybox-iframe "/post/COVID-19-Israel-Case-Study_files/figure-html/widgets/widget_Israel_COVID_Cases_per_Million.html" %}}
-<div id="htmlwidget-1" style="width:100%;height:36rem;" class="widgetframe html-widget"></div>
+<div id="htmlwidget-1" style="width:100%;height:32rem;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-Israel-Case-Study_files/figure-html//widgets/widget_Israel_COVID_Cases_per_Million.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 {{% alert "info" "Working with the Report:" "Use the legend on the right to highlight, show or hide a series. Use the bar at the bottom or zoom controls at the top to change the time range of the report." %}}
 <p>Researchers will talk about the lag time between a change in policy and the shift in incident rates, but seldom will you see a more clear example. And of course the final piece to this mosaic is that the case rate in Israel moves <em>below</em> the UK, US, Germany and Canada as of the latest date (Nov 9) as of this writing.</p>
@@ -44,14 +44,14 @@ editor_options:
 <h2>Deaths per Million</h2>
 <p>I was shocked to see the deaths per million <em>so high</em> in the UK. I honestly wonder if the US <em>not</em> being a higher number might be about improper/false attribution of cause of death. I’ve read anecdotes about folks in rest homes whose families assert they died from COVID-19 but their COD was listed as some other, more common cause. That said, the trend of the numbers in Israel after the new lockdown policy in mid September shows both the lagging response post-implementation <em>as well as</em> a rate the descends below those of the US and UK.</p>
 {{% fancybox-iframe "/post/COVID-19-Israel-Case-Study_files/figure-html/widgets/widget_Israel_COVID_Deaths_per_Million.html" %}}
-<div id="htmlwidget-2" style="width:100%;height:36rem;" class="widgetframe html-widget"></div>
+<div id="htmlwidget-2" style="width:100%;height:32rem;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/COVID-19-Israel-Case-Study_files/figure-html//widgets/widget_Israel_COVID_Deaths_per_Million.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="tests-per-thousand" class="section level2">
 <h2>Tests per Thousand</h2>
 <p>While the tests per thousand is increasing, it’s not nearly high enough. It’s really interesting to see how Israel’s testing jumped up at the same time that case rate spiked. The drop-off at the end I assume is lag in reporting that will eventually be back-filled, but I’ll go to other sources if this data sub-set flattens out.</p>
 {{% fancybox-iframe "/post/COVID-19-Israel-Case-Study_files/figure-html/widgets/widget_Israel_COVID_Tests_per_Thousand.html" %}}
-<div id="htmlwidget-3" style="width:100%;height:36rem;" class="widgetframe html-widget"></div>
+<div id="htmlwidget-3" style="width:100%;height:32rem;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3">{"x":{"url":"/post/COVID-19-Israel-Case-Study_files/figure-html//widgets/widget_Israel_COVID_Tests_per_Thousand.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
@@ -158,7 +158,7 @@ widget <- highchart(type = "stock") %>%
     y = 0
     ) 
 
-frameWidget(widget, width = "100%", height = "36rem")</code></pre>
+frameWidget(widget, width="100%", height="32rem")</code></pre>
 <p>The file from “Our World in Data” is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You’ll see the creation of an initial <em>data</em> dataframe, which in each case selects on of the dozen or more columns in the original set. Then the <em>wide</em> version of the table is created to split out each country-based time series into its own column. That <em>wide</em> dataframe is then converted to an <em>xts</em> or extended time series dataframe.</p>
 <p>Each report is largely the same. The only factors that are changed is the selected metric (new cases/million, new deaths/million, new tests/thousand) and of course the titles. The <em>plotLines</em> and <em>plotBands</em> are largely manually generated - from dates I found in the wikipedia page mentioned above. The one plotBand date that is dynamically set is the end date which always uses the last date of the current report range. Once there’s a change in policy then that will again require some hand-curated edits. Until then the daily reports will continue to ‘stretch’ that last <em>plotBand</em> as the data grows.</p>
 </div>
@@ -171,13 +171,13 @@ Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1320462793800404997" %}}
+{{% tweet "1329967768297467904" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1323290017662316544" %}}
+{{% tweet "1333138663094374400" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1328337028937895936" %}}
+{{% tweet "1333954034722607105" %}}
 </div>
 </div>
 <figcaption class="caption">
