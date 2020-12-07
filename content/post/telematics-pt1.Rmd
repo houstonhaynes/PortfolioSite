@@ -1,8 +1,8 @@
 ---
-title: "Telematics in Two Lines of Code"
+title: "Telematics with Two Lines of Code: Seeking Simplicity"
 output:
   blogdown::html_page:
-    toc: true
+    toc: false
     toc_depth: 1
     fig_width: 8
     dev: "svg"
@@ -12,11 +12,13 @@ featuredpath: img
 featured: "Telematics.png"
 ogfeatured: "H3_og_wide_Telematics.png"
 emblem: iot.png
-description: On creating a serverless cloud solution for vehicle data
+description: Unpacking a vehicle telemetry solution from the code-side out
 draft: false
+weight: 1
 tags:
-- MongoDB
-- EC2
+- CosmosDB
+- Azure Functions
+- Android
 - Mobile
 - Telematics
 - IoT
@@ -37,3 +39,420 @@ library(highcharter)
 library(widgetframe)
 ```
 
+# Whistling Past the Parking Lot
+
+Any time I see someone mention "low code" I'm reflexively skeptical. Along those lines, the title of this article series is offered with a wink and a smile. There are many, many lines of code in this project - and fortunately for both you and me I *did not* have to create them all. But that's partly the point I'm making with this series of blog entries - that the underlying tools can now allow your own effort to focus on the *business* problem and less on base instrumentation.
+
+<div class="separator">Telematics: Vehicles as large IoT devices</div>
+<figure>
+<div class="row">
+  <div class="col-md-4"><img class="rounded bordered img-fluid filter-none" src="/img/car/IMG_20180902_124634.jpg"/></div>
+  <div class="col-md-4"><img class="rounded bordered img-fluid filter-none" src="/img/car/20191203_145325.jpg"/></div>
+  <div class="col-md-4"><img class="rounded bordered img-fluid filter-none" src="/img/car/20191202_155054.jpg"/></div>
+</div>
+<hr>
+</figure>
+
+My work history includes a litany of embedded, IoT and telematics projects. It includes a stint working on mobile and "private cloud" for PHEVs and EVs at Honda, at a time when their telematics group was working on broadening support for standard vehicles in future model years. That had a great influence *both* on my reasoning for building my own solution and informed some of the choices and compromises I made along the way. But I'll save anecdotes on that part of my work history for another entry, as here I want to focus on the actual code I used to land the data into the cloud store, and the resulting options on offer from those choices.
+
+# Going Serverless
+
+I'll start with the two lines of code that made this entry point *so* attractive and work outward from there. One of the concepts I wanted to demonstrate with this solution was that it didn't require a tremendous amount of infrastructure on the "server side" in order for it to operate. Much of what I had seen at Honda was just too much heavy-handed tooling, which was already buckling under a relatively limited fleet-scaled workload. Here I'm taking an HTTPS GET sent from an aftermarket Android head unit I installed, calling into an Azure Function App - which then parsed and sent it into a document store in CosmosDB. The "two" lines to perform this task are:
+
+<figure><figcaption class="caption">C# snippet: extract distinct query key/value pairs from URI</figcaption>
+<pre><code class="csharp">IDictionary<string, string> reqQueryPairs = req.GetQueryNameValuePairs()
+        .Distinct()
+        .ToDictionary(x => x.Key, x => x.Value);
+</code></pre>
+</figure>
+
+and...
+
+<figure><figcaption class="caption">C # snippet: assign the final dictionary to the output object</figcaption>
+<pre><code class="csharp">reqDocument = reqQueryPairs;</code></pre>
+</figure>
+
+...which is pretty remarkable on its face. To take a parameterized HTTP request of (nearly) arbitrary length and turn it into a JSON document is fairly perfunctory, but in this case it saves a tremendous amount of hassle in the "standard pattern" of modeling a variable data set into structured table storage. I'll get into that a bit below. Even with the additional handling and the HTTP response the entire function is still only a handful of instructions.
+
+<figure><figcaption class="caption">Full C# Function processing TorqueBHP data into CosmosDB</figcaption>
+<pre><code class="csharp">#r "Newtonsoft.Json"
+using System;
+using System.Net;
+using Newtonsoft.Json;
+
+public static HttpResponseMessage Run(HttpRequestMessage req, 
+                                      out object reqDocument, TraceWriter log)
+{
+    IDictionary<string, string> reqQueryPairs = req.GetQueryNameValuePairs()
+        .Distinct()
+        .ToDictionary(x => x.Key, x => x.Value);
+
+    reqQueryPairs["id"] = reqQueryPairs["session"] + "_" + reqQueryPairs["time"];
+
+    if (reqQueryPairs.ContainsKey("kff1005"))
+        reqQueryPairs.Add("_type", "data");
+    else if (reqQueryPairs.ContainsKey("defaultUnitff1005"))
+        reqQueryPairs.Add("_type", "units");
+    else if (reqQueryPairs.ContainsKey("userUnitff1005"))
+        reqQueryPairs.Add("_type", "labels");
+    else
+        reqQueryPairs.Add("_type", "profile");       
+
+    reqDocument = reqQueryPairs;
+
+    if (reqQueryPairs != null) {
+        return req.CreateResponse(HttpStatusCode.OK);
+    }
+    else {
+        return req.CreateResponse(HttpStatusCode.BadRequest);
+    }
+}</code></pre>
+</figure>
+
+As I show in the following sections, the TorqueBHP app provided an interesting data pattern that required a bit of extra parsing. I ended up *not* involving most of the non-data records, but I still wanted to save them in case I opted to use them later. For ideas on how to store the data I looked into a few other ToqueBHP homebrew solutions on GitHub (one uses MySQL and the other InfluxDB) which led me to the less-is-more-approach - to use a "pseudo-table" technique and structure the data as it was queried out of the store. Below I outline how Torque produces and sends data, and the examples below show how the code above helps organize data coming through. 
+
+# TorqueBHP
+
+On the "client side" I leaned heavily on the <a href="https://play.google.com/store/apps/details?id=org.prowl.torque&hl=en_US&gl=US" target="_blank">TorqueBHP Android app</a>, which not only gathered data from a Bluetooth module attached to my car's <a href="https://en.wikipedia.org/wiki/On-board_diagnostics" target="_blank">OBD port</a>, but it also took data from the Android device sensors and calculated a handful of running values. While I plan to go into more detail with a later entry, the highlight reel is that TorqueBHP is used by car enthusiasts of all stripes - from those doing simple troubleshooting to weekend gear-heads looking to optimize their own powertrain customizations.  But the most important feature (to *me*) was the ability to set a custom URL to redirect where the app sent its data to the cloud. 
+
+# CosmosDB
+
+It seems odd to write "keep things simple" when dealing with inherently complex systems such as vehicle telemetry, but it's a matter of perspective. To skip ahead a bit, ToqueBHP sends a handful of "records" at the start of each session that I store with different "_type" values so that they can be excluded from data queries. But it's also instructive of the way this could operate well at scale. In the case of multiple users (I'm a customer base of one at the moment) this approach could support a wide varity of user-selected fields to store, all *without* having to risk the fragmentation of myriad "user" data tables and the like. It also gives **me** the option to change the data stored later on in the life of the project. If there's something additional I wish to select and store, then all I have to do is add it in the TorqueBHP setup screen and know that the document store will just "handle it" as one more key/value pair without issue.
+
+## Message types
+
+Looking at the cascading *if/then/else* statement above you'll see that I had to categorize some of the records coming through from the TorqueBHP app. This was both to selectively exclude certain records while processing the data, but it also gave a window into how this solution could scale. 
+
+### Profile
+
+This is the first of three header records that are transmitted when the application has acquired the Bluetooth OBD unit and starts reading data. While I'm operating the app in a built-in Android-based head unit in my car, for those TorqueBHP users that bring their mobile device to multiple cars this can be handy, as the session can then be tied to whichever vehicle they're operating at the time. Simply change the vehicle profile selected in the app of *off they go*...
+
+<pre><code class="javascript">{
+  "id": "1537301720334_1537301785251",
+  "eml": "h3techsme@gmail.com",
+  "v": "8",
+  "session": "21371d265b5711b289344b479f583909",
+  "time": "1537301785251",
+  "profileName": "Crosstour",
+  "profileFuelType": "0",
+  "profileWeight": "2440.0",
+  "profileVe": "85.0",
+  "profileFuelCost": "0.22190451622009277",
+  "_type": "profile"
+}
+</code></pre>
+
+Notice here it also records the fuel cost, which the app *still* provides a running tally of the expense within the app, but provides it here for reference. I almost *never* change that value, but for those being more diligent about what they pay at the pump it can provide a reliable expense metric.
+
+### Units
+
+This is another header entry that maps in certain labels based on whether the user selects metric or imperial units for their purposes. I ignore this not only since my reflex to is do "late binding" to convert any values at the visualization layer, but there are also some bugs in TorqueBHP where certain choices of Imperial/Metric *do not change the value*. So in my case I either convert on querying the data or simply allow the user to choose their preferred conversion in the visual.
+
+<pre><code class="javascript">{
+  "id": "1537301720334_1537301785261",
+  "eml": "h3techsme@gmail.com",
+  "v": "8",
+  "session": "21371d265b5711b289344b479f583909",
+  "time": "1537301785261",
+  "defaultUnitff1005": "°",
+  "defaultUnitff1006": "°",
+  "defaultUnitff1001": "km/h",
+  "defaultUnitff1007": "",
+  "defaultUnitff1260": "s",
+  "defaultUnit47": " ",
+  "defaultUnitff124d": ":1",
+  "defaultUnitff1249": ":1",
+  "defaultUnitff1272": "km/h",
+  "defaultUnit33": "kPa",
+  "defaultUnit3c": "°C",
+  "defaultUnitff126a": "km",
+  "defaultUnit05": "°C",
+  "defaultUnit04": " ",
+  "defaultUnit43": " ",
+  "defaultUnit0c": "rpm",
+  "defaultUnitff125c": "cost",
+  "defaultUnitff125d": "l/hr",
+  "defaultUnit2f": " ",
+  "defaultUnitff1271": "l",
+  "defaultUnitff1239": "m",
+  "defaultUnitff1010": "m",
+  "defaultUnitff123b": "°",
+  "defaultUnitff123a": "",
+  "defaultUnitff1237": "km/h",
+  "defaultUnitff1226": "hp",
+  "defaultUnit0f": "°C",
+  "defaultUnitff1201": "mpg",
+  "defaultUnitff5201": "mpg",
+  "defaultUnit45": " ",
+  "defaultUnit0d": "km/h",
+  "defaultUnit0e": "°",
+  "defaultUnitff1225": "ft-lb",
+  "defaultUnitff1205": "mpg",
+  "defaultUnit42": "V",
+  "_type": "units"
+}
+</code></pre>
+
+### Labels
+
+Again this header is more for the OEM Torque mapping application, which is based on logic I'm not really concerned with. But I understand why they chose this method, especially in the case where a user sets up their own custom measurements. The OBD on my Honda Crosstour is pretty tightly described so I don't have that kind of latitude here, but it goes to show how comprehensive ToqueBHP is in its embrace of a wide varity of years, makes and models of vehicles.
+
+<pre><code class="javascript">{
+  "id": "1537309925479_1537309935785",
+  "eml": "h3techsme@gmail.com",
+  "v": "8",
+  "session": "21371d265b5711b289344b479f583909",
+  "time": "1537309935785",
+  "userUnitff1005": "°",
+  "userUnitff1006": "°",
+  "userUnitff1001": "mph",
+  "userUnitff1007": "",
+  "userUnitff1260": "s",
+  "userShortNameff1260": "40-60mph",
+  "userFullNameff1260": "40-60mph Time",
+  "userUnit47": " ",
+  "userShortName47": "A THR2",
+  "userFullName47": "Absolute Throttle Position B",
+  "userUnitff124d": ":1",
+  "userShortNameff124d": "AFR(c)",
+  "userFullNameff124d": "Air Fuel Ratio(Commanded)",
+  "userUnitff1249": ":1",
+  "userShortNameff1249": "AFR(m)",
+  "userFullNameff1249": "Air Fuel Ratio(Measured)",
+  "userUnitff1272": "mph",
+  "userShortNameff1272": "Trip Speed",
+  "userFullNameff1272": "Average trip speed(whilst stopped or moving)",
+  "userUnit33": "psi",
+  "userShortName33": "Baro",
+  "userFullName33": "Barometric pressure (from vehicle)",
+  "userUnit3c": "°F",
+  "userShortName3c": "Cat B1S1",
+  "userFullName3c": "Catalyst Temperature (Bank 1,Sensor 1)",
+  "userUnitff126a": "miles",
+  "userShortNameff126a": "Dist Empt.",
+  "userFullNameff126a": "Distance to empty (Estimated)",
+  "userUnit05": "°F",
+  "userShortName05": "Coolant",
+  "userFullName05": "Engine Coolant Temperature",
+  "userUnit04": " ",
+  "userShortName04": "Load",
+  "userFullName04": "Engine Load",
+  "userUnit43": " ",
+  "userShortName43": "Abs Load",
+  "userFullName43": "Engine Load(Absolute)",
+  "userUnit0c": "rpm",
+  "userShortName0c": "Revs",
+  "userFullName0c": "Engine RPM",
+  "userUnitff125c": "cost",
+  "userShortNameff125c": "Fuel Cost",
+  "userFullNameff125c": "Fuel cost (trip)",
+  "userUnitff125d": "gal/hr",
+  "userShortNameff125d": "Fuel Flow",
+  "userFullNameff125d": "Fuel flow rate/hour",
+  "userUnit2f": " ",
+  "userShortName2f": "Fuel",
+  "userFullName2f": "Fuel Level (From Engine ECU)",
+  "userUnitff1271": "gal",
+  "userShortNameff1271": "Fuel Used",
+  "userFullNameff1271": "Fuel used (trip)",
+  "userUnitff1239": "ft",
+  "userShortNameff1239": "GPS Acc",
+  "userFullNameff1239": "GPS Accuracy",
+  "userUnitff1010": "ft",
+  "userShortNameff1010": "GPS Height",
+  "userFullNameff1010": "GPS Altitude",
+  "userUnitff123b": "°",
+  "userShortNameff123b": "GPS Brng",
+  "userFullNameff123b": "GPS Bearing",
+  "userShortNameff1006": "GPSLat",
+  "userFullNameff1006": "GPS Latitude",
+  "userShortNameff1005": "GPSLon",
+  "userFullNameff1005": "GPS Longitude",
+  "userUnitff123a": "",
+  "userShortNameff123a": "GPS Sat",
+  "userFullNameff123a": "GPS Satellites",
+  "userUnitff1237": "mph",
+  "userShortNameff1237": "Spd Diff",
+  "userFullNameff1237": "GPS vs OBD Speed difference",
+  "userUnitff1226": "hp",
+  "userShortNameff1226": "HP",
+  "userFullNameff1226": "Horsepower (At the wheels)",
+  "userUnit0f": "°F",
+  "userShortName0f": "Intake",
+  "userFullName0f": "Intake Air Temperature",
+  "userUnitff1201": "mpg",
+  "userShortNameff1201": "MPG",
+  "userFullNameff1201": "Miles Per Gallon(Instant)",
+  "userUnitff5201": "mpg",
+  "userShortNameff5201": "MPG(avg)",
+  "userFullNameff5201": "Miles Per Gallon(Long Term Average)",
+  "userUnit45": " ",
+  "userShortName45": "R THR",
+  "userFullName45": "Relative Throttle Position",
+  "userShortNameff1001": "GPS Spd",
+  "userFullNameff1001": "Speed (GPS)",
+  "userUnit0d": "mph",
+  "userShortName0d": "Speed",
+  "userFullName0d": "Speed (OBD)",
+  "userUnit0e": "°",
+  "userShortName0e": "Timing Adv",
+  "userFullName0e": "Timing Advance",
+  "userUnitff1225": "Nm",
+  "userShortNameff1225": "Torque",
+  "userFullNameff1225": "Torque",
+  "userUnitff1205": "mpg",
+  "userShortNameff1205": "Trip MPG",
+  "userFullNameff1205": "Trip average MPG",
+  "userUnit42": "V",
+  "userShortName42": "Volts(CM)",
+  "userFullName42": "Voltage (Control Module)",
+  "_type": "labels"
+}
+</code></pre>
+
+### Data
+
+This is the centerpiece of what I'm looking for - the data. Again here I'm just mapping key/value pairs as string and recording the document in CosmosDB. You'll note that the keys are all encoded to a pattern that "only TorqueBHP knows" but because I've also recorded the header messages those can be mapped out. But since I'm usually just pulling a session into a dataframe in R I simply map the keys on query.
+
+<pre><code class="javascript">{
+  "id": "1537276466910_1537276484639",
+  "eml": "h3techsme@gmail.com",
+  "v": "8",
+  "session": "21371d265b5711b289344b479f583909",
+  "time": "1537276484639",
+  "kff1005": "-118.26100733333332",
+  "kff1006": "34.14987433333333",
+  "kff1001": "32.960434",
+  "kff1007": "270.62",
+  "k47": "31.37255",
+  "kff124d": "14.746206",
+  "kff1249": "14.9705105",
+  "kff1272": "21.153847",
+  "k33": "99.0",
+  "k3c": "470.2",
+  "kff126a": "252.86359",
+  "k5": "66.0",
+  "k4": "22.745098",
+  "k43": "16.470589",
+  "kc": "1075.0",
+  "kff125c": "0.004107208",
+  "kff125d": "2.1962292",
+  "k2f": "28.235294",
+  "kff1271": "0.02222827",
+  "kff1239": "1.83",
+  "kff1010": "162.0",
+  "kff123b": "270.62",
+  "kff123a": "8.0",
+  "kff1237": "2.7587013",
+  "kf": "28.0",
+  "kff1201": "34.704124",
+  "kff5201": "22.134771",
+  "k45": "4.3137255",
+  "kd": "33.0",
+  "ke": "7.0",
+  "kff1205": "16.913288",
+  "k42": "14.09",
+  "_type": "data"
+}
+</code></pre>
+
+## Structure on Query
+
+So between TorqueBHP's purpose-built naming convention and the fact that I need to read most of the values as numeric, I chose to simply change the keys to my own shorthand at query time... 
+
+<figure><figcaption class="caption">CosmosDB base "SQL" query for data</figcaption>
+<pre><code class="sql">SELECT c.id AS id, 
+StringToNumber(c.time) AS timeStamp,
+TimestampToDateTime(StringToNumber(c.time)) AS dateTime,
+StringToNumber(c.kff1005) AS longitude,
+StringToNumber(c.kff1006) AS latitude,
+StringToNumber(c.kff1001) AS kmPerHour,
+StringToNumber(c.kff1249) AS airFuelRatio,
+StringToNumber(c.kff1272) AS speedAvg,
+StringToNumber(c.k3c) AS catalystTemp,
+StringToNumber(c.kff126a) AS dis2Empty,
+StringToNumber(c.k5) AS coolantTemp,
+StringToNumber(c.k4) AS engineLoad,
+StringToNumber(c.k43) AS engLoadAbsolute,
+StringToNumber(c.kc) AS rpm,
+StringToNumber(c.k125c) AS fuelCost,
+StringToNumber(c.k125d) AS fuelFlowRatePerHr,
+StringToNumber(c.k2f) AS fuelLevel,
+StringToNumber(c.kff1271) AS fuelUsed,
+StringToNumber(c.kff1239) AS gpsAccuracy,
+StringToNumber(c.kff1010) AS gpsAltitude,
+StringToNumber(c.kff123b) AS gpsBearing,
+StringToNumber(c.kff123a) AS gpsSattelites,
+StringToNumber(c.kff1237) AS gpsOBDSpeedDiff,
+StringToNumber(c.kff1226) AS horsepower,
+StringToNumber(c.kf) AS airIntakeTemp,
+StringToNumber(c.kff1201) AS MPG,
+StringToNumber(c.kff5201) AS MPGAvg,
+StringToNumber(c.k45) AS relThrottlePos,
+StringToNumber(c.kd) AS speedOBD,
+StringToNumber(c.ke) AS timingAdvance,
+StringToNumber(c.kff1225) AS torque,
+StringToNumber(c.kff1205) AS tripMPG,
+StringToNumber(c.k42) AS volts 
+FROM c WHERE c._type = "data"
+ AND c.session = "21371d265b5711b289344b479f583909" 
+</code></pre></figure>
+
+...which yields this more human-readable and more machine-usable result.
+
+<pre><code class="javascript">{
+  "id": "1537276466910_1537276484639",
+  "timeStamp": 1537276484639,
+  "dateTime": "2018-09-18T13:14:44.6390000Z",
+  "longitude": -118.26100733333332,
+  "latitude": 34.14987433333333,
+  "kmPerHour": 32.960434,
+  "airFuelRatio": 14.9705105,
+  "speedAvg": 21.153847,
+  "catalystTemp": 470.2,
+  "dis2Empty": 252.86359,
+  "coolantTemp": 66,
+  "engineLoad": 22.745098,
+  "engLoadAbsolute": 16.470589,
+  "rpm": 1075,
+  "fuelLevel": 28.235294,
+  "fuelUsed": 0.02222827,
+  "gpsAccuracy": 1.83,
+  "gpsAltitude": 162,
+  "gpsBearing": 270.62,
+  "gpsSattelites": 8,
+  "gpsOBDSpeedDiff": 2.7587013,
+  "airIntakeTemp": 28,
+  "MPG": 34.704124,
+  "MPGAvg": 22.134771,
+  "relThrottlePos": 4.3137255,
+  "speedOBD": 33,
+  "timingAdvance": 7,
+  "tripMPG": 16.913288,
+  "volts": 14.09
+}</code></pre>
+
+From here the fun **really** begins. There are some "down the road" (pun!) tweaks to the corpus of data that leverages CosmosDB's geospacial capabilities, but I'll save that for a later entry.
+
+## A Note On Cadence and Data Volume
+
+ToqueBHP allows the user to select the sample interval for recording data, both locally to the mobile device and for sending *up* to their service (or to a custom endpoint, as in this case). At Honda they pre-configured the EV/PHEV vehicles to send data every five minutes that the vehicle is running. I thought that was too broad. And on the other end of the spectrum there were gear-heads that were spinning up ToqueBHP to capture data many times per second while they check data during short-interval acceleration. That of course is *way* too much data and not all that useful for this case. So I opted for a one-minute interval to start, and then would optimize from that point. This meant a truly minimal burden on the Azure Function App, and it would be *kept warm* by the steady stream of data coming up every 60 seconds. This would in-effect *lose* some visibility during acceleration which I think is useful for how a standard gasoline engine performs. But this is another case of not allowing the good to become the enemy of the perfect.
+
+# Further Considerations
+
+This is a good start, but there *are* gaps and blind spots. With OBD II you are limited to the data provided at that port by the vehicle's internal computer. This of course is a function of the year and make of the vehicle, as well as the car company's willingness to present that data absent of special service equipment. 
+
+With EV and PHEV vehicles power and range are the critical consideration. That can be influenced by driving style, tire air pressure, climate control engagement and several additional factors. And the same goes for standard gasoline based vehicles, although with less direct concern for vehicle range. As for my Honda, there are temperature readings for inside and outside the car that register on the dashboard, but the data is not available through the OBD II port. And it's similar with tire pressure - the warning light on the dash lights up when the pressure goes to emergency level, but a per-tire pressure-level read is not available. The same goes for whether air conditioning is engaged. I was accustomed to having **all** of this data in EV and PHEV vehicles. But again I don't want to get into the situation of making the good the enemy of the perfect, but it has left some additional to-do items in capturing and transmitting more car data than is available via OBD.
+
+That - as they say - is another project for another time.
+
+# Teaser: The Hardware
+
+Along those lines - this teaser image (which I posted on Twitter and LinkedIn) is somewhat of a joke to myself. That center circuit board image is a lesson to *not* mess with surface mount components unless *absolutely* necessary. I was bypassing some unnecessary JFETs in the wiring for the steering wheel controls (for volume, mute, etc) and it worked out fine - but looked like a mess on the board. I've since re-tooled my workbench to be more SMC friendly but it's an object lesson in taking your wins where you can find them. The end result is a very OEM (original equipment manufacture) like experience, where everything *just works* when I turn on the car and the Android head unit connects to the Bluetooth OBD unit and starts sending up data. And I like the touchscreen interface, even though it's only a fraction of the size and functionality of the Tesla "standard" it's pretty great for a 10-year-old car.
+
+This adventure isn't over, as there still are hardware and software elements to advance *under the hood*.
+
+
+<figure class="figure text-center pb-3 pt-3">
+    <img class="rounded bordered img-fluid filter-none" src="/img/car/Telematics_BeforeAfter.png"/>
+</figure>
