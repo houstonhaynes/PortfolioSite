@@ -10,6 +10,7 @@ date: '2018-07-30T14:59:43+05:30'
 featuredpath: img
 featured: world-map-black.png
 ogfeatured: H3_og_wide_world-map-black.png
+emblem: barchart.png
 description: A cloud-based monitor for consolidation heuristics
 draft: false
 tags:
@@ -165,7 +166,7 @@ As shown on the previous page, another key metric is CPU level for the main appl
 Note that the “SERVER” column has a somewhat-human-readable “HFMxxx” indicator for each entry. This is another substring function based on the actual server name as recorded in the database, shortened here to simplify the presentation of the CPU legend in PowerBI. (Like previous examples, the highlighted datetime values are substituted as part of the SSIS process, read in from the project-level parameters that are set before run-time)
 
 
-```{r "Concurrency of Hyperion Processes"}
+```{r Concurrency_of_Hyperion_Processes}
 series = list(
   list(
     name = 'Consolidations',

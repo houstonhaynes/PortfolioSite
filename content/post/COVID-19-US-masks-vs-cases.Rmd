@@ -1,0 +1,320 @@
+---
+title: "COVID-19 US Data - Inverse Correlation of Masks vs Cases"
+output:
+  blogdown::html_page:
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-11-17T14:59:43+05:30'
+featuredpath: img
+featured: COVID-19-US.png
+ogfeatured: H3_og_wide_COVID-19-US.png
+emblem: health.png
+description: Cumlative, population-leveled case data versus public mask percentage
+draft: false
+tags:
+- COVID-19
+categories: 
+- Sidebar
+weight: 2
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup and file loads, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+library(tidyverse)
+library(highcharter)
+library(widgetframe)
+library(lubridate)
+
+counties <- read.csv("../../data/us_county.csv", header = TRUE)
+
+counties <-
+  counties %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
+
+county_pop <- select(counties, fips, state, population)
+
+US_COVID_data <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv"
+
+us_data <- read.csv(US_COVID_data)
+
+us_data_map <- 
+  us_data %>%
+  filter(fips != "") %>%
+  mutate(date = ymd(date)) %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0')) %>%
+  select(date, fips, state, county, cases, deaths)  %>%
+  left_join(county_pop, fips = fips) %>%
+  arrange(fips, date) %>%
+  mutate(ncpht = ((cases / population) * 100000)) %>%
+  mutate(ndpht = ((deaths / population) * 100000)) %>%
+  ungroup() %>%
+  rename(location = state)
+
+mask_URL <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv"
+
+mask_data <- read.csv(mask_URL)
+
+mask_data <- 
+  mask_data %>%
+  mutate(COUNTYFP = str_pad(COUNTYFP, 5, side = 'left', pad = '0'))  %>%
+  select(COUNTYFP, NEVER, RARELY, SOMETIMES, FREQUENTLY, ALWAYS) %>%
+  mutate(always_pct = (ALWAYS * 100)) %>%
+  rename(fips = COUNTYFP) %>%
+  left_join(county_pop, fips = fips) %>%
+  rename(location = state)
+
+last_updated <- paste("Source: New York Times - Report Last Updated:", format(Sys.time(), "%a %b %d %Y %X"))
+```
+
+```{r Tweets_from_Faces_of_COVID, include=FALSE }
+
+library(rtweet)
+library(stringr)
+library(dplyr)
+
+appname <- "H3 Tech Blog"
+contumer_key <- "Tb5d892Ozn7W3EP2uvm5RVQPH"
+contumer_secret <- "i094J3ewdwxm1KKmY3n4hnJ5ygxwwrl2cjvcfYWCv4VjQwOHHh"
+access_key <- "4434818952-MGJ5dPTsqmtm5sQHR3w2ebpDVt14wYsQeWBN9Bw"
+access_secret <- "p5sI2H0Z8YeZ8Tiyvv8ivb6R6fYmPP7VgqoNkjEGgDBUm"
+
+token <- create_token(
+  appname, 
+  contumer_key, 
+  contumer_secret,
+  access_key,
+  access_secret)
+
+COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
+  filter(str_detect(text, 'died of COVID'))
+
+COVIDtweets <- sample(COVIDtweets$status_id)
+
+thm <- hc_theme_merge(
+  hc_theme_ffx(),
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
+
+
+```
+
+# Contrast and Compare
+
+Wearing masks __more__ often means __fewer__ COVID-19 cases. It's that simple, and it couldn't be more clear in the data.
+
+I started looking into US data with the latest cumulative counts for likely and confirmed COVID-19 cases and deaths compiled by the <a href="https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html" target="_blank">New York Times</a>. Aside from the split between "likely" and "confirmed" cases (the latter coming from a very specific postmortem test) I also wanted to look at the survey data collected on public mask wearing. 
+
+I had suspected that there would be an inverse correlation but I *didn't* expect it to come up this quickly, or that it would be *such* a clear, stark result. I still have quite a bit of refinement work to do on presenting the report. And I *also* want to start looking at time series data, in order to use a weighted average that matches the time when the mask-wearing surveys are conducted. Right now I'm simply taking the full count, but when the mask guidelines change and compliance shifts I want to be sure I *also* evaluate changes in case rate. 
+
+## Animated GIF
+
+I was so struck by the clear inverse correlation between masks and cases that I made an animated GIF with the contrasting charts cycling back and forth. 
+
+`r blogdown::shortcode("fancybox", "/img", "US_Masks_Cases.gif")`
+
+# The Charts
+
+After some edits and surfacing state labels for tooltips (which pop up when you hover over any of the counties in the chart) I re-rendered the reports here for more detailed review. Like the other reports that pull data from OWID and JHU these will continue to shift and change as new cumulative case numbers are added in. And likewise, when there's an update to the mask wearing surveys there will be new data there as well. Once I have a better view of the full time COVID time series data set I'll shift to a weighted average for the past few weeks or month, or match the case counts to the time range for the survey period. But for now this provides a valuable, if slowly-moving snapshot.
+
+`r blogdown::shortcode("alert", "info", "Working with the reports:", "Hovering over a county will highlight and show the value for its respective metric.")`
+
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-US-masks-vs-cases_files/figure-html/widgets/widget_Cumulative_Cases_Pop_Leveled.html")`
+
+```{r Cumulative_Cases_Pop_Leveled, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE  }
+
+widget <- hcmap("countries/us/us-all-all",
+      data = us_data_map,
+      value = "ncpht",
+      join = "fips",
+      name = "Cumulative Cases per 100 000",
+      tooltip = list(pointFormat = "State: {point.location}<br> {point.county} County: {point.value:.2f}")) %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "US Cumulative Cases by County", align = "center") %>%
+  hc_subtitle(text = "per 100,000 Population", align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_colorAxis(minColor = "white", maxColor = "#800000") %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_credits(enabled = TRUE,
+             text = last_updated,
+             position = list(align = "left", x = 10, y = -5))
+
+frameWidget(widget, width="100%", height="40rem")
+
+```
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-US-masks-vs-cases_files/figure-html/widgets/widget_Mask_Prcentage_by_County.html")`
+
+```{r Mask_Prcentage_by_County, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+widget <- hcmap("countries/us/us-all-all",
+      data = mask_data,
+      value = "always_pct",
+      name = "Percentage that always wears masks in public",
+      join = "fips") %>%
+  hc_add_theme(thm) %>%
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+  hc_title(text = "Percentage of Mask Wearing in Public", align = "center") %>%
+  hc_subtitle(text = "Respondants Claiming to Always Wear a Mask", align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
+  hc_legend(enabled = FALSE) %>%
+  hc_credits(enabled = TRUE,
+             text = last_updated,
+             position = list(align = "left", x = 10, y = -5))
+
+frameWidget(widget, width="100%", height="40rem")
+```
+
+## Exceptions Worth Noting
+
+It should be noted that the NYT found there to be some marginal variance in the actual level of mask wearers and the reported answers from the survey. 
+
+<blockquote class="blockquote">
+  <p class="mb-0">Researchers who hand-counted Wisconsin grocery shoppers in May and June found about 40 percent of shoppers wore masks, a level that is lower than the 45 percent who said they always wore masks in the recent Dynata sample (another 24 percent said they frequently wore masks).</p></blockquote>
+  
+They noted that it didn't affect the result in aggregate. But it bears further scrutiny as more emphasis on masks is placed by public officials and the "virtue signal" of answering the questionnaires/surveys widen the gap with actual use.
+
+<div class="separator">Faces of COVID-19</div>
+<figure>
+<div class="row">
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[1])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[2])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[3])`</div>
+</div>
+<figcaption class="caption">The pandemic-related posts on this site are about more than data. <strong>Behind every number is a person, a family and a community.</strong> As reports are refreshed, new selectiont will also be chosen at random. To see how this is done, <a href="/post/faces-of-covid">see this sidebar</a>.</figcaption>
+<hr>
+</figure>
+
+## The code behind the reports
+
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code1">View the Code behind the First Chart</button>
+
+<pre id="code1" class="collapse"><code class="r"># begin setup code chunk
+library(tidyverse)
+library(highcharter)
+library(widgetframe)
+library(lubridate)
+
+counties <- read.csv("../../data/us_county.csv", header = TRUE)
+
+counties <-
+  counties %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
+
+county_pop <- select(counties, fips, state, population)
+
+mask_URL <- 
+  "https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv"
+
+mask_data <- read.csv(mask_URL)
+
+mask_data <- 
+  mask_data %>%
+  mutate(COUNTYFP = str_pad(COUNTYFP, 5, side = 'left', pad = '0'))  %>%
+  select(COUNTYFP, NEVER, RARELY, SOMETIMES, FREQUENTLY, ALWAYS) %>%
+  mutate(always_pct = (ALWAYS * 100)) %>%
+  rename(fips = COUNTYFP) %>%
+  left_join(county_pop, fips = fips) %>%
+  rename(location = state)
+
+last_updated <- paste("Source: New York Times  -  Report Last Updated:"
+                        ,  format(Sys.time(), "%a %b %d %Y %X"))
+
+# end setup code chunk
+
+widget <- hcmap("countries/us/us-all-all",
+      data = mask_data,
+      value = "always_pct",
+      name = "Percentage that always wears masks in public",
+      join = "fips") %>%
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public"
+            , align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
+  hc_legend(layout = "vertical", verticalAlign = "top",
+            align = "right", valueDecimals = 0) %>%
+  hc_credits(enabled = TRUE,
+             text = last_updated,
+             position = list(align = "left", x = 10, y = -5))
+
+frameWidget(widget, height="100%", width="40rem")</code></pre>
+
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code2">View the Code behind the Second Chart</button>
+
+<pre id="code2" class="collapse"><code class="r"># begin setup code chunk
+library(tidyverse)
+library(highcharter)
+library(widgetframe)
+library(lubridate)
+
+counties <- read.csv("../../data/us_county.csv", header = TRUE)
+
+counties <-
+  counties %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
+
+county_pop <- select(counties, fips, state, population)
+
+US_COVID_data <- 
+  "https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv"
+
+us_data <- read.csv(US_COVID_data)
+
+us_data_map <- 
+  us_data %>%
+  filter(fips != "") %>%
+  mutate(date = ymd(date)) %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0')) %>%
+  select(date, fips, state, county, cases, deaths)  %>%
+  left_join(county_pop, fips = fips) %>%
+  arrange(fips, date) %>%
+  mutate(ncpht = ((cases / population) * 100000)) %>%
+  mutate(ndpht = ((deaths / population) * 100000)) %>%
+  ungroup() %>%
+  rename(location = state)
+
+last_updated <- paste("Source: New York Times  -  Report Last Updated:"
+                        ,  format(Sys.time(), "%a %b %d %Y %X"))
+
+# end setup code chunk
+
+widget <- hcmap("countries/us/us-all-all",
+      data = mask_data,
+      value = "always_pct",
+      name = "Percentage that always wears masks in public",
+      join = "fips") %>%
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public"
+            , align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
+  hc_legend(layout = "vertical", verticalAlign = "top",
+            align = "right", valueDecimals = 0) %>%
+  hc_credits(enabled = TRUE,
+             text = last_updated,
+             position = list(align = "left", x = 10, y = -5))
+
+frameWidget(widget, height="100%", width="40rem")</code></pre>
+
+# Further analysis
+
+As I mentioned above, the focus will eventually shift to the time series data, as opposed to the latest cumulative data files. There will be more detailed reporting as well. Right now the data looks bleak, but there **is** a *silver lining* here - on how following simple guidelines and hygiene protocols can limit the spread of infection and save lives.

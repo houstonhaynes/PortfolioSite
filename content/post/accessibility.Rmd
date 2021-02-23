@@ -11,6 +11,7 @@ date: '2020-10-11T15:59:43+05:30'
 featuredpath: img
 featured: accessibility.png
 ogfeatured: H3_og_wide_accessibility.png
+emblem: sitemap.png
 description: Creating an adaptive "dark mode" switch using CSS, JavaScript and Bootstrap
 draft: false
 tags:
@@ -21,8 +22,8 @@ tags:
 - a11y
 - Dark Mode
 categories: 
-- Sidebar
-weight: 1
+- Deep Dive
+weight: 4
 editor_options: 
   chunk_output_type: inline
 ---
@@ -185,8 +186,8 @@ I take advantage of Hugo's built-in templates for Vimeo and Twitter post embeds.
 <figure><figcaption class="caption">Vimeo and Twitter 'exclusion' in dark.css</figcaption>
 <pre><code class="css">iframe[src^="https://player.vimeo.com/video"],
 iframe[src^="https://platform.twitter.com"] {
-    filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
-    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
+    filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(95%);
+    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(95%);
 }</code></pre>
 </figure>
 

@@ -33,11 +33,22 @@ img.small:not(.dark-theme-ok) {
 
 iframe[src^="https://player.vimeo.com/video"],
 iframe[src^="https://platform.twitter.com"] {
-    filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
-    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(75%) contrast(90%);
+    filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(95%);
+    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(95%);
 }
 
-.filter-none {
+.filter-none,
+.widgetframe,
+.fancybox-content {
     filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(100%) !important;
     -webkit-filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(100%) !important;
+}
+
+.fancybox-content {
+    border-radius: 8px;
+}
+
+iframe {
+    border-radius: 8px;
+    background-color: black !important;
 }

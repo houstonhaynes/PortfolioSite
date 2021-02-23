@@ -1,0 +1,160 @@
+---
+title: "Canada: Possible post-Thanksgiving Outbreak"
+output:
+  blogdown::html_page:
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-11-13T14:59:43+05:30'
+featuredpath: img
+featured: COVID-19.png
+ogfeatured: H3_og_wide_COVID-19.png
+emblem: health.png
+description: COVID-19 in Motion - a preamble to a Thanksgiving outbreak in the US?
+draft: false
+tags:
+- COVID-19
+- R
+- highcharts
+categories: 
+- Sidebar
+weight: 3
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup and file loads, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+library(highcharter)
+library(tidyverse)
+library(lubridate)
+library(widgetframe)
+library(xts)
+library(jsonlite)
+
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+coviddata <- read.csv(URL)
+
+```
+
+
+```{r Tweets_from_Faces_of_COVID, include=FALSE }
+
+library(rtweet)
+library(stringr)
+library(dplyr)
+
+appname <- "H3 Tech Blog"
+consumer_key <- "Tb5d892Ozn7W3EP2uvm5RVQPH"
+consumer_secret <- "i094J3ewdwxm1KKmY3n4hnJ5ygxwwrl2cjvcfYWCv4VjQwOHHh"
+access_key <- "4434818952-MGJ5dPTsqmtm5sQHR3w2ebpDVt14wYsQeWBN9Bw"
+access_secret <- "p5sI2H0Z8YeZ8Tiyvv8ivb6R6fYmPP7VgqoNkjEGgDBUm"
+
+token <- create_token(
+  appname, 
+  consumer_key, 
+  consumer_secret,
+  access_key,
+  access_secret)
+
+COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
+  filter(str_detect(text, 'died of COVID'))
+
+COVIDtweets <- sample(COVIDtweets$status_id)
+
+```
+
+# History Repeats
+
+Having taken a turn with the data following <a href="/post/covid-19-israel-case-study">Israel's increase in mask-wearing compliance</a>, I decided to look at the data in Canada after someone warned me about their Thanksgiving showing an ominous trend. Again, here I'm using <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> as a source. I decided to map cases and deaths per million on separate axes in order to see them scaled separately. And it's just as scary as I thought. That lagging indicator is frightening on two levels:
+
+1) It's hard to *not* see those April numbers as terrifying for Canada's future, given that deaths lag cases, and 
+1) thinking of how *badly* things will go in the US in December after its Thanksgiving holiday in November.
+
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-Canadian-Case-Study_files/figure-html/widgets/widget_Canada_COVID_Cases_per_Million.html")` 
+```{r Canada_COVID_Cases_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+data <- select(coviddata, date, location, 
+               new_cases_smoothed_per_million, new_deaths_smoothed_per_million, stringency_index) %>%
+  filter(location == "Canada", date >= "2020-03-01") %>%
+  mutate(new_cases_smoothed_per_million = ifelse(is.na(new_cases_smoothed_per_million),
+                                                 0, new_cases_smoothed_per_million)) %>%
+  mutate(new_deaths_smoothed_per_million = ifelse(is.na(new_deaths_smoothed_per_million),
+                                                 0, new_deaths_smoothed_per_million)) %>%
+  mutate(stringency_index = ifelse(is.na(stringency_index),
+                                                 0, stringency_index)) %>%
+  mutate(date = ymd(date)) %>%
+  select(date, new_cases_smoothed_per_million, new_deaths_smoothed_per_million, 
+         stringency_index)
+
+data_xts <- xts(data[,-1], order.by = data$date)
+
+#head(data_xts, 100)
+
+last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+
+thm <- hc_theme_merge(
+  hc_theme_bloom(),
+  hc_theme(colors = c("#800000", "#4D6278"),
+           chart = list(backgroundColor = ""),
+           title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Ubuntu")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
+
+widget <- highchart(type = "stock") %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "Global New Cases/Deaths per Million - Canada as Case Study", align = "center") %>%
+  #hc_subtitle(text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_credits(enabled = TRUE, 
+             text = last_updated, 
+             position = list(align = "left", x = 10, y = -5)) %>%
+  hc_add_series(data_xts$new_cases_smoothed_per_million, 
+                type = "area", name = "Daily Cases per Million", yAxis = 0) %>%
+  hc_add_yAxis(nid = 1L, title = list(text = "Cases per Million"), relative = 2) %>%
+  hc_add_series(data_xts$new_deaths_smoothed_per_million, 
+                type = "area", name = "Daily Deaths per Million", yAxis = 1) %>%
+  hc_add_yAxis(nid = 2L, title = list(text = "Deaths per Million"), relative = 1) %>%
+  hc_tooltip(valueDecimals = 2) %>%
+  hc_xAxis(type = "datetime", labels = list(format = '{value:%b %d}'),
+    plotLines = list(list(
+      label = list(text = "Thanksgiving"),
+      color = "#F49100",
+      width = 4,
+      value = datetime_to_timestamp(as.Date('2020-10-12', tz = 'UTC'))
+    ))
+  ) 
+
+frameWidget(widget, width="100%", height="36rem")
+
+```
+
+## Super-spreader events more common than originally thought
+
+MIT has just completed <a href="https://www.weforum.org/agenda/2020/11/covid19-super-spreading-global-disease-transmission/" target="_blank">a range of studies of COVID-19 along with other SARS/MERS events</a> and found that super-spreader events (where more than 6 people are infected by one person) are more common than original estimated.
+
+<blockquote class="blockquote">
+  <p class="mb-0">“Super-spreading events are likely more important than most of us had initially realized. Even though they are extreme events, they are probable and thus are likely occurring at a higher frequency than we thought. If we can control the super-spreading events, we have a much greater chance of getting this pandemic under control,” says James Collins, the Termeer Professor of Medical Engineering and Science in MIT’s Institute for Medical Engineering and Science (IMES) and Department of Biological Engineering and the senior author of the new study.</p>
+</blockquote>
+
+There are many rural medical systems that are already on the brink in the US. To have a massive surge of cases after Thanksgiving would be a disaster. I hope people see this and realize they need to stay put and hunker down.
+
+<div class="separator">Faces of COVID-19</div>
+<figure>
+<div class="row">
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[1])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[2])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[3])`</div>
+</div>
+<figcaption class="caption">The pandemic-related posts on this site are about more than data. <strong>Behind every number is a person, a family and a community.</strong> As reports are refreshed, new selections will also be chosen at random. To see how this is done, <a href="/post/faces-of-covid">see this sidebar</a>.</figcaption>
+<hr>
+</figure>
+
+

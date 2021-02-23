@@ -10,6 +10,7 @@ date: '2018-07-30T14:59:43+05:30'
 featuredpath: img
 featured: world-map-black.png
 ogfeatured: H3_og_wide_world-map-black.png
+emblem: barchart.png
 description: A cloud-based monitor for consolidation heuristics
 draft: false
 tags:
@@ -27,6 +28,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
 <script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
 <script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
@@ -134,7 +136,7 @@ ORDER  BY starttime ASC </code></pre>
 {{% fancybox-dark-theme-ok "/img" "image013.png" %}}
 <p>Note that the “SERVER” column has a somewhat-human-readable “HFMxxx” indicator for each entry. This is another substring function based on the actual server name as recorded in the database, shortened here to simplify the presentation of the CPU legend in PowerBI. (Like previous examples, the highlighted datetime values are substituted as part of the SSIS process, read in from the project-level parameters that are set before run-time)</p>
 <div id="htmlwidget-1" style="width:100%;height:50%;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/hyperion-global-consolidaton_files/figure-html//widgets/widget_Concurrency of Hyperion Processes.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/hyperion-global-consolidaton_files/figure-html//widgets/widget_Concurrency_of_Hyperion_Processes.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <p>This is the portion of the process which has the most technical “inner workings”. Up to this point SSIS has been used mainly for parameter substitution to collect data through queries. This section will show how C# scripting is used to construct the concurrency table. Here is an example of the final result with calculated values. From that, a stepped area can be plotted. This supports analysis of user activity against server demand. To produce the table with various integer counts at each second, we must first know when each event starts and completes. We already have this data collected in the LIST_CONS table, so the process here derives the data from that table.</p>
 <pre><code class="csharp">for (DateTime date = CurrentRow; CurrentRow <= PeriodEnd; CurrentRow = CurrentRow.AddSeconds(1.0)) {
  if ((CurrentRow >= CONS_StartTime) && (CurrentRow <= CONS_EndTime)) {

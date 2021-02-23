@@ -3,7 +3,7 @@ languageCode = "en-us"
 title = "H3 Tech Hub"
 theme = "h3tech-future-imperfect"
 preserveTaxonomyNames = true
-paginate = 4
+paginate = 5
 disqusShortname = ""
 googleAnalytics = "UA-122964326-1"
 pluralizeListTitles = false
@@ -59,14 +59,14 @@ enableGitInfo = true
   # files by adding the value, "default".
   # customCSS            = ["default", "/path/to/file"]
   # customJS             = ["default", "/path/to/file"]
-  customCSS             = ["default", "/css/add.css", "/css/skeleton-alerts.css", "/css/loading.css", "/css/loading-btn.css"]
-  customJS              = ["default", "/js/encodeMarkup.js", "/js/contact.js", "/js/dark-mode-listener.js", "/js/iFrameResizer.min.js", "/js/iframeResizer.contentWindow.min.js", "/js/hideGitInfoInProd.js"]
+  customCSS             = ["default", "/css/add.css"]
+  customJS              = ["default", "/js/encodeMarkup.js", "/js/dark-mode-listener.js", "/js/iFrameResizer.min.js", "/js/iframeResizer.contentWindow.min.js", "/js/hideGitInfoInProd.js"]
 
   # options for highlight.js (version, additional languages, and theme)
   disable_highlight = false # set to true to disable Highlight
   highlightjsVersion = "10.1.1"
   highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
-  highlightjsLang = ["r", "yaml", "html", "ini", "http", "javascript", "css", "apache", "sql", "groovy", "java", "csharp", "django"]
+  highlightjsLang = ["r", "yaml", "html", "ini", "http", "javascript", "css", "apache", "sql", "groovy", "java", "csharp", "django","powershell"]
   highlightjsTheme = "vs"
   MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs/"
   MathJaxVersion = "2.7.1"
@@ -107,7 +107,6 @@ enableGitInfo = true
 
 [params.postAmount]
 # Sets the number of recent posts to show in the sidebar. The default value is 5.
-    sidebar = 3
 
 [params.Vitae]
     postcount = 10
@@ -137,12 +136,18 @@ enableGitInfo = true
   url = "/categories/deep dive/"
   identifier = "fas fa-chalkboard-teacher"
   weight = 3
+  
+[[menu.main]]
+  name = "COVID-19"
+  url = "/tags/covid-19/"
+  identifier = "fas fa-virus"
+  weight = 4
 
 #[[menu.main]]
 #  name = "Perspective"
 #  url = "/categories/perspective/"
 #  identifier = "fas fa-telescope"
-#  weight = 4
+#  weight = 5
   
 #[[menu.main]]
 #  name = "Contact"
