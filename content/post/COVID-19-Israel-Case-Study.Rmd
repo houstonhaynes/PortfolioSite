@@ -150,10 +150,10 @@ widget <- highchart(type = "stock") %>%
     )),
     plotBands = list(
       list(
-        label = list(text = "New nationwide<br />lockdown policy", align = "left"),
+        label = list(text = "New nationwide<br />lockdown policy", align = "center"),
         color = "rgba(100, 0, 0, 0.1)",
         from = datetime_to_timestamp(as.Date('2020-09-13', tz = 'UTC')),
-        to = datetime_to_timestamp(as.Date(end(data_xts), tz = 'UTC'))
+        to = datetime_to_timestamp(as.Date('2021-02-07', tz = 'UTC'))
       )
     )
   ) %>%

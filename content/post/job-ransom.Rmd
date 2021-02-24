@@ -1,5 +1,5 @@
 ---
-title: "Toward Better Hiring"
+title: "Is Your Job Req a Ransom Note?"
 output:
   blogdown::html_page:
     toc: false
@@ -11,19 +11,20 @@ date: '2021-02-04T15:59:43+05:30'
 featuredpath: img
 featured: job-ransom.png
 ogfeatured: H3_og_wide_job-ransom.png
-emblem: sitemap.png
-description: Does your hiring process start with a ransom note?
+emblem: bullhorn.png
+description: Wreck the hiring process - wreck your company
 draft: false
 tags:
 - hiring
 - team building
 - leadership
+- opportunity
 categories: 
 - Perspective
-weight: 4
+weight: 1
 editor_options: 
   chunk_output_type: inline
 ---
 # This is a test.
 
-## and it's all a test
+## and it's all a test.
