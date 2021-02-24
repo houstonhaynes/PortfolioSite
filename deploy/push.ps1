@@ -39,17 +39,29 @@ If ($environment -eq 'prd') {
 
 # iframe embed bug the widgetframe R package - this is the workaround
 Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If (Get-Content $_.FullName | Select-String -Pattern '/figure-html//widgets/') 
+<<<<<<< HEAD
+           {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ }
+           }
+<#
+=======
            {(Get-Content $_ | ForEach {$_ -replace '/figure-html//widgets/', '/figure-html/widgets/'}) | Set-Content $_ }}
 
 Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If (Get-Content $_.FullName | Select-String -Pattern '"fill":false}') 
            {(Get-Content $_ | ForEach {$_ -replace '"fill":false}', '"fill":true}'}) | Set-Content $_ }}
 
 # do the file push using azcopy sync function
+>>>>>>> 1a3678ae80dbc1c2cb5ed49bb8d31c9b78e8a045
 If ($environment -eq 'prd') {
     az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $prdString
 } else {
     az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $intString
 }
 
+<<<<<<< HEAD
+az cdn endpoint purge -g h3tech -n h3techdevCDN$environment --profile-name h3tech --content-paths '/*'
+
+#>
+=======
 # invalidate the CDN cache so that new files show on the site
 az cdn endpoint purge -g h3tech -n h3techdevCDN$environment --profile-name h3tech --content-paths '/*'
+>>>>>>> 1a3678ae80dbc1c2cb5ed49bb8d31c9b78e8a045
