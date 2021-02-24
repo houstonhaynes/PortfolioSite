@@ -143,11 +143,11 @@ enableGitInfo = true
   identifier = "fas fa-virus"
   weight = 4
 
-#[[menu.main]]
-#  name = "Perspective"
-#  url = "/categories/perspective/"
-#  identifier = "fas fa-telescope"
-#  weight = 5
+[[menu.main]]
+  name = "Perspective"
+  url = "/categories/perspective/"
+  identifier = "fas fa-telescope"
+  weight = 5
   
 #[[menu.main]]
 #  name = "Contact"
