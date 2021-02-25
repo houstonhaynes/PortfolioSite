@@ -1,5 +1,5 @@
 ---
-title: "Is Your Job Req a Ransom Note?"
+title: Does Your Job Opening Read Like A Ransom Note?
 output:
   blogdown::html_page:
     toc: false
@@ -12,8 +12,8 @@ featuredpath: img
 featured: job-ransom.png
 ogfeatured: H3_og_wide_job-ransom.png
 emblem: bullhorn.png
-description: Wreck the hiring process - wreck your company
-draft: false
+description: A poorly worded req will wreck the hiring process, and possibly wreck your company
+draft: true
 tags:
 - hiring
 - team building
@@ -21,7 +21,7 @@ tags:
 - opportunity
 categories: 
 - Perspective
-weight: 1
+weight: 99
 editor_options: 
   chunk_output_type: inline
 ---

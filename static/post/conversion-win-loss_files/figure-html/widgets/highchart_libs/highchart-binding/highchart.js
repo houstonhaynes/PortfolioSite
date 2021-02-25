@@ -219,17 +219,6 @@ if (HTMLWidgets.shinyMode) {
     
     var chart = $("#" + msg.id).highcharts();
     
-<<<<<<< HEAD
-    /* http://stackoverflow.com/questions/18445784/ */
-    var chart = $("#" +el.id).highcharts();
-    var w = chart.renderTo.clientWidth; 
-    var h = chart.renderTo.clientHeight; 
-    chart.setSize(w, h); 
-
-  }
-
-});
-=======
     chart.get(msg.idSeries).addPoint(msg.point, msg.redraw, msg.shift, msg.animation);
     
   });
@@ -244,4 +233,3 @@ if (HTMLWidgets.shinyMode) {
   
   
 }
->>>>>>> 1a3678ae80dbc1c2cb5ed49bb8d31c9b78e8a045

@@ -60,7 +60,7 @@ enableGitInfo = true
   # customCSS            = ["default", "/path/to/file"]
   # customJS             = ["default", "/path/to/file"]
   customCSS             = ["default", "/css/add.css"]
-  customJS              = ["default", "/js/encodeMarkup.js", "/js/dark-mode-listener.js", "/js/iFrameResizer.min.js", "/js/iframeResizer.contentWindow.min.js", "/js/hideGitInfoInProd.js"]
+  customJS              = ["default", "/js/encodeMarkup.js", "/js/iFrameResizer.min.js", "/js/iframeResizer.contentWindow.min.js", "/js/hideGitInfoInProd.js", "/js/dark-mode-listener.js", "/js/contact.js"]
 
   # options for highlight.js (version, additional languages, and theme)
   disable_highlight = false # set to true to disable Highlight
@@ -126,13 +126,13 @@ enableGitInfo = true
   weight = 7
 
 [[menu.main]]
-  name = "Sidebar"
+  name = "Sidebars"
   url = "/categories/sidebar/"
   identifier = "fas fa-digital-tachograph"
   weight = 2
 
 [[menu.main]]
-  name = "Deep Dive"
+  name = "Deep Dives"
   url = "/categories/deep dive/"
   identifier = "fas fa-chalkboard-teacher"
   weight = 3
@@ -143,17 +143,17 @@ enableGitInfo = true
   identifier = "fas fa-virus"
   weight = 4
 
-[[menu.main]]
-  name = "Perspective"
-  url = "/categories/perspective/"
-  identifier = "fas fa-telescope"
-  weight = 5
-  
 #[[menu.main]]
-#  name = "Contact"
-#  url = "/contact/"
-#  identifier = "fas fa-envelope"
-#  weight = 98
+#  name = "Perspective"
+#  url = "/categories/perspective/"
+#  identifier = "fas fa-telescope"
+#  weight = 5
+  
+[[menu.main]]
+  name = "Contact"
+  url = "/contact/"
+  identifier = "fas fa-envelope"
+  weight = 98
 
 [[menu.main]]
   name = "Tags"
