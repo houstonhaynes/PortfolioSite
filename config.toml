@@ -91,7 +91,7 @@ enableGitInfo = true
 [params.intro]
   header    = "Tech Blog"
 
-  paragraph = "Sidebars & Deep Dives<br>in Software &amp; Hardware<br><i class='fas fa-brain'></i> Big Data, ML, Music <i class='fas fa-music'></i><br><i class='fas fa-camera-movie'></i> Media, IoT &amp; Cloud <i class='fas fa-cloud'></i>"
+  paragraph = "Sidebars & Deep Dives<br><i class='fas fa-cogs'></i> Distributed Systems<br><i class='fas fa-brain'></i> Cognitive Computing<br><i class='fas fa-camera-movie'></i> Media, IoT &amp; Cloud <i class='fas fa-cloud'></i>"
 
   about     = "My roles have ranged from solder jockey to CTO. This site touches on those travels but focuses on current areas of interest. While this is primarily a development blog I will offer perspectives on management, leadership, diversity and reducing toxicity in tech culture. "
   # This appears at the top of the sidebar above params.intro.header.
@@ -143,11 +143,11 @@ enableGitInfo = true
   identifier = "fas fa-virus"
   weight = 4
 
-#[[menu.main]]
-#  name = "Perspective"
-#  url = "/categories/perspective/"
-#  identifier = "fas fa-telescope"
-#  weight = 5
+[[menu.main]]
+  name = "Perspectives"
+  url = "/categories/perspective/"
+  identifier = "fas fa-telescope"
+  weight = 5
   
 [[menu.main]]
   name = "Contact"
@@ -210,4 +210,4 @@ enableGitInfo = true
   orcid            = ""
   researchgate     = ""
   # Email
-  email            = "ds@h3tech.io"
+  email            = ""

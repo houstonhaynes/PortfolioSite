@@ -2499,12 +2499,15 @@ body {
 
 @media screen and (min-width: 980px) {
     #header .menu {
-        display: none;
+        display: block;
     }
 }
 
-@media screen and (max-width: 980px) {
+@media screen {
     #header .links {
+        display: none;
+    }
+    #header h1 {
         display: none;
     }
 }
@@ -2598,8 +2601,8 @@ body.is-menu-visible #wrapper {
 
 #sidebar {
     margin-right: 3em;
-    min-width: 18em;
-    width: 22em;
+    min-width: 10rem;
+    width: 22rem;
 }
 
 #sidebar>* {
