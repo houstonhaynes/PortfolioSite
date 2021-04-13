@@ -12,7 +12,7 @@ featuredpath: img
 featured: adaptivedesign.png
 ogfeatured: H3_og_wide_adaptivedesign.png
 emblem: perspective.png
-description: Moving Beyond Agile with Broader Systems Thinking in Software Based Systems
+description: Moving Beyond Agile Software with Systems Thinking As a Design Principal
 draft: true
 tags:
 - Accessibility
@@ -28,9 +28,24 @@ editor_options:
 ---
 # TL;DR
 
-The purpose of "Adaptive Design for Software" [AD4S] is to move beyond coding opinions and establish a path for evaluating the consequences of decisions over and within complex software solutions. The goal of AD4S is to provide fertile ground for teams to evaluate and potentially avoid costly mistakes in performance, scale, security as well as mitigate legal and regulatory risks. It makes room to consider unintended harms and related ethical considerations - particularly those ripple effects that emerge due to the current fashion of "move fast and break things" in internet technology companies. The intent is to form an honest contract between intended users, business leaders and engineering teams that recognize the true cost and actual consequences for their product decisions. AD4S is to be developed as a community-led project. I have reserved a handful of useful TLDs [adaptivedesign.software, ad4s.org, ad4s.net, etc.] and will be considering several options for creating non-profit and open-source resources to partner with like-minded companies and individuals that wish to contribute further.
+Adaptive Design for Software [AD4S] is born out of my successes and failures through 20+ years of building software and managing teams from start-ups to multi-national conglomerates. AD4S is a rubric for evaluating decisions within complex software while maintaining a create-then-evaluate posture. It provides descriptive and prescriptive guidance for teams to evaluate for and avoid costly mistakes in user experience, performance, scale, security as well as mitigate legal and regulatory risks. It also provides a declarative framework for anticipating potential unintended harms and related ethical considerations - particularly those ripple effects that constantly surface in "move fast and break things" culture. 
 
-# Everything Old Is New Again
+The intent of AD4S is to form a good faith covenant between the various constituencies that build, maintain and use the software. Think of it as version management for higher-order product design. Through curation of an AD4S ledger, a constructively shared agreement is established between business leaders, customers as well as other affected groups along with the engineering teams that support the systems they build and maintain. 
+
+AD4S aspires to make measurable the true cost and actual consequences of product design decisions. In order to make it useful to as many organizations as possible it is conceived as a community-led project, which will pose many challenges and opportunities. For that purpose a handful of useful TLDs have been reserved. [adaptivedesign.software, ad4s.org, ad4s.net, etc.] The next step is to establish the proper location for contributions to be collected and receive comments from the broader community. The result will be a clearinghouse of information where concepts and course-corrections can be mapped out. The hope and expectation is that organizations and individual contributors of good faith will help cultivate AD4S precepts and help build an actionable, responsive and responsibility-minded compendium for crafting better software.
+
+## Everything Old Is New Again
+
+
+## When a flex is not a reflex
+
+## Best Practices vs Good Practice - a GxP approach
+
+## Natural Tensions in Systems Design
+
+## Good design and proper engineering is everyone's business
+
+## Inexperience is the Worst Teacher
 
 ## Lessons from 'The Two Bobs'
 

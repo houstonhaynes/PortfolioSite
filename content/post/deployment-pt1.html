@@ -85,13 +85,17 @@ blogdown::build_site(method = "html", run_hugo = "FALSE")
 q("no")</code></pre>
 </figure>
 <p>The parameter that triggers this is optional. There are times when <em>only</em> a Hugo-level build (the <em>second</em> scriplet) is required, such as updates to Hugo partials, CSS or JavaScript. If I don’t need to re-generate everything for the site that I can simply run the <em>Push</em> script without the “Rmd” parameter. The “run_hugo = ‘FALSE’” puts the responsibility on the subsequent hugo_cmd which builds the site assets based on the assigned <em>baseURL</em>.</p>
-<p>The following R script again sets the working directory, runs the hugo command with the baseURL parameter and then instructs the process to run without prompting.</p>
+<p>The following R script again sets the working directory, runs the hugo command with the baseURL parameter and then instructs the process to run without prompting. Again here the split of the ‘prd’ and ‘int’ version of the hugo command is for two reasons:</p>
+<ol style="list-style-type: decimal">
+<li>the difference in the baseUrl, and</li>
+<li>the ‘int’ script includes a second parameter that includes draft entries (‘-D’).</li>
+</ol>
 <figure>
 <figcaption class="caption">
 build-int.R - runs a headless R session to complete site build
 </figcaption>
 <pre><code class="r">setwd ("c:/repo/portfoliosite")
-blogdown::hugo_cmd(shQuote(c('-b', 'https://int.h3tech.dev')))
+blogdown::hugo_cmd(shQuote(c('-b', 'https://int.h3tech.dev', '-D')))
 q("no")</code></pre>
 </figure>
 </div>
