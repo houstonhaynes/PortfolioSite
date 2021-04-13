@@ -481,6 +481,7 @@ hr.major {
     letter-spacing: 0.25em;
     text-transform: uppercase;
     white-space: nowrap;
+    float: center;
 }
 
 .author .name,
