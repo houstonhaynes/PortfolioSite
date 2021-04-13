@@ -1,0 +1,72 @@
+---
+title: "Adaptive Design for Software"
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2021-04-11T15:59:43+05:30'
+featuredpath: img
+featured: adaptivedesign.png
+ogfeatured: H3_og_wide_adaptivedesign.png
+emblem: perspective.png
+description: Moving Beyond Agile with Broader Systems Thinking in Software Based Systems
+draft: true
+tags:
+- Accessibility
+- a11y
+- Design
+- Domain Driven Design
+- DDD
+categories: 
+- Perspective
+weight: 1
+editor_options: 
+  chunk_output_type: inline
+---
+# TL;DR
+
+The purpose of "Adaptive Design for Software" [AD4S] is to move beyond coding opinions and establish a path for evaluating the consequences of decisions over and within complex software solutions. The goal of AD4S is to provide fertile ground for teams to evaluate and potentially avoid costly mistakes in performance, scale, security as well as mitigate legal and regulatory risks. It makes room to consider unintended harms and related ethical considerations - particularly those ripple effects that emerge due to the current fashion of "move fast and break things" in internet technology companies. The intent is to form an honest contract between intended users, business leaders and engineering teams that recognize the true cost and actual consequences for their product decisions. AD4S is to be developed as a community-led project. I have reserved a handful of useful TLDs [adaptivedesign.software, ad4s.org, ad4s.net, etc.] and will be considering several options for creating non-profit and open-source resources to partner with like-minded companies and individuals that wish to contribute further.
+
+# Everything Old Is New Again
+
+## Lessons from 'The Two Bobs'
+
+## Moving Beyond Agile Software
+
+## DDD and higher-order software design
+
+## Are Regulated Systems All That Different?
+
+# Software Engineering as a Practice
+
+## Risk Calculation
+
+### Finance
+
+### Automotive
+
+### Telecom
+
+### Global Manufacturing
+
+### Healthcare
+
+# Avoiding the Slippery Slopes
+
+## No Analysis Paralysis
+
+## It's not a framework
+
+## It's not a shortcut
+
+## Checklists are for experts
+
+# Privacy
+
+# Security
+
+# Ethics
+
