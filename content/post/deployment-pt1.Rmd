@@ -86,7 +86,7 @@ The parameter that triggers this is optional. There are times when *only* a Hugo
 The following R script again sets the working directory, runs the hugo command with the baseURL parameter and then instructs the process to run without prompting. Again here the split of the 'prd' and 'int' version of the hugo command is for two reasons: 
 
 1) the difference in the baseUrl, and 
-1) the 'int' script includes a second parameter that includes draft entries ('-D').
+1) the 'int' script adds a second parameter to publish draft entries ('-D').
 
 <figure><figcaption class="caption">build-int.R - runs a headless R session to complete site build</figcaption>
 <pre><code class="r">setwd ("c:/repo/portfoliosite")
