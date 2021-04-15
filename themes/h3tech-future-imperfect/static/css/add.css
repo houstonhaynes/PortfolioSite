@@ -431,8 +431,3 @@ a#back-to-top:hover {
     margin-top: .25rem;
     margin-bottom: 2rem;
 }
-
-.card-img-top {
-    width: 100% !important;
-    height: auto !important;
-}

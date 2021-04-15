@@ -34,8 +34,7 @@ The intent of AD4S is to establish the shared responsibilities among the various
 
 AD4S aspires to make measurable the **true cost** and actual consequences of product engineering decisions. In order to make it useful to as many organizations as possible it is conceived as a community-led project, which will pose many challenges and opportunities. For that purpose a handful of useful TLDs have been reserved. [adaptivedesign.software, ad4s.org, ad4s.net, etc.] The next step is to establish the proper location for contributions to be collected and receive comments from the broader community. The result will be a clearinghouse of information where concepts and course-corrections can be mapped out. The hope and expectation is that organizations and individual contributors of good faith will help cultivate AD4S precepts and help build an actionable, responsive and responsibility-minded compendium for crafting better software.
 
-
-<h3>-- Outline -- </h3>
+<h2 style="text-align:center;">-- Outline --</h2>
 
 # Everything Old Is New Again
 There are natural innovation and implementation cycles in software architecture. It's been that way since the 1970s. With the proliferation of commoditized compute and storage, patterns once thought untenable are now seeing renewed interest. But there's a dark side to progress. Due to the "surface area" of digital technologies the threats to data security have grown exponentially. Many of the intentionally naive patterns from earlier eras existed in an inherently bounded context - of limited access and confined compute space (a system used and maintained at a specific location with limited or no internet access) As those early architectural ideas are re-imagined for the information age, so too must shielding and resiliency be re-imagined for those patterns to be useful in a forward-looking digital landscape.
