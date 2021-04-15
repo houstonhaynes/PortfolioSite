@@ -82,6 +82,8 @@ Software is the digital infrastructure of our lives. When you're in a vehicle go
 
 ### The realities of GDPR, CCPA and related standards and practices
 
+`r blogdown::shortcode("ext-link-card", "https://fortune.com/2021/04/02/aclu-shares-data-facebook-third-parties-digital-privacy")` 
+
 # The "So what" Factor
 
 ## Is this an internal or external-facing process - both?
@@ -151,5 +153,11 @@ Not every problem requires a software engineering "fix". Aside from the up-front
 ## Cautionary Tales
 
 # In closing
+
+## Further Reading
+
+`r blogdown::shortcode("ext-link-card", "https://abbycovert.com/make-sense/")`
+
+
 
 Geez - have you really read this far?
