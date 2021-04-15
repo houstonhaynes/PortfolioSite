@@ -1,6 +1,6 @@
 {{ with getJSON (printf "https://api.microlink.io/?url=%s" (.Get 0 )) }}
 <div class="card centered" style="max-width:36rem;width:100%;margin-bottom:2rem;">
-    <div class="card-header" style="letter-spacing:.15rem;">
+    <div class="card-header font-weight-bold" style="letter-spacing:.15rem;">
         <a href="{{ .data.url }}" target="_blank">{{ .data.title | title }}</a>
     </div>
     <div class="card-body">
@@ -13,8 +13,7 @@
     </div>
     <div class="card-footer">
         <div class="font-italic text-muted">
-            {{ with .data.author }}Author: {{ . }}{{ end }}{{ if and .data.author .data.publisher}},
-            {{ end }}{{ with .data.publisher }}Publisher: {{ . }}{{ end }} {{ with .data.date }}, Date: {{ dateFormat "January 1, 2006" . }}{{ end }}</div>
+            {{ with .data.author }}Author: {{ . }}{{ end }}{{ if and .data.author .data.publisher}}{{ end }}{{ with .data.publisher }}, Publisher: {{ . }}{{ end }} {{ with .data.date }}, Date: {{ dateFormat "January 1, 2006" . }}{{ end }}</div>
     </div>
 </div>
 {{ end }}
