@@ -431,3 +431,7 @@ a#back-to-top:hover {
     margin-top: .25rem;
     margin-bottom: 2rem;
 }
+
+.card {
+    border-radius: 1rem;
+}
