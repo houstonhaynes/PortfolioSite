@@ -43,46 +43,67 @@ There are natural innovation and implementation cycles in software architecture.
 
 ## Good design and proper engineering is everyone's business
 
-## Best Practices vs Good Practice - a GxP approach
+## Every Company has its own Domain Specific Language
 
-## Natural Tensions in Systems Design
+### Mapping business lexicon to design entities
 
-## Realize the Power of Outlining Known Unknowns
+## Reducing the Barriers to Entry
 
-## Avoiding loaded terms and buzzword bingo
+## Complexity: Essential vs Accidental vs Incidental
+
+### Managing Modes of Failure
+
+### The Lessons Are Everywhere
+
+### 'Work Product' vs 'Status Product'
+
+# Best Practices vs Good Practice - a GxP approach
+
+### Natural Tensions in Systems Design
+
+### Realize the Power of Outlining Known Unknowns
+
+### Avoiding conflicting & loaded terms (buzzword bingo)
 
 ## Fragile Software - Inexperience is the Worst Teacher
 
-## Beyond Agile Development
+### Beyond Agile Development
 
-## Saying 'yes' to consistency, 'no' to dogma
+### Saying 'yes' to consistency, 'no' to dogma
 
 ## Avoiding unforced errors
 
-#### Discord
+`r blogdown::shortcode("header-centered", "3", "Case Study: Discord")`
 
 `r blogdown::shortcode("tweet", "1382018677026000897")`
+<p>&nbsp;</p>
 
-#### WhatsApp
+`r blogdown::shortcode("header-centered", "3", "Case Study: WhatsApp")`
 
 `r blogdown::shortcode("tweet", "1382452553233797120")`
+<p>&nbsp;</p>
 
-#### Slack
+`r blogdown::shortcode("header-centered", "3", "Case Study: Slack")`
 
 `r blogdown::shortcode("tweet", "1375030200745000960")`
-
-# Considering Software Design & Engineering as a Practice
-
-#### Compare Software Design to legal, medical, civil engineering
-Software is the digital infrastructure of our lives. When you're in a vehicle going over a bridge, you want the engineers who built it to be more qualified than "some socially mal-adapted guy who dropped out of Harvard".
+<p>&nbsp;</p>
 
 ## DDD and higher-order software design
 
 ## Are Regulated Systems All That Different From Commercial systems?
 
-### The realities of GDPR, CCPA and related standards and practices
+# Regarding Software Design as a Practice
+
+## Evaluate Software Design as a peer to Other Disciplines
+Software is the digital infrastructure of our lives. When you're in a vehicle going over a bridge, you want the engineers who built it to be more qualified than "some socially mal-adapted guy who dropped out of Harvard".
+#### legal, medical, construction & civil engineering
+
+<p>&nbsp;</p>
+
+### GDPR, CCPA and related standards and regulations
 
 `r blogdown::shortcode("ext-link-card", "https://fortune.com/2021/04/02/aclu-shares-data-facebook-third-parties-digital-privacy")` 
+<p>&nbsp;</p>
 
 # The "So what" Factor
 
@@ -106,9 +127,13 @@ Software is the digital infrastructure of our lives. When you're in a vehicle go
 
 ## Security
 
+`r blogdown::shortcode("ext-link-card", "https://traced.app/2021/04/13/whatsapp-status-loophole-is-aiding-cyberstalkers")`
+<p>&nbsp;</p>
+
 ## Ethics and Algorithmic Accountability
 
 `r blogdown::shortcode("tweet", "1382426863008681986")`
+<p>&nbsp;</p>
 
 # What Led Me To This Point
 
@@ -127,6 +152,7 @@ Software is the digital infrastructure of our lives. When you're in a vehicle go
 #### Healthcare
 
 `r blogdown::shortcode("ext-link-card", "https://www.imt.ie/news/health-researchers-blocked-by-gdpr-12-04-2021")`
+<p>&nbsp;</p>
 
 ## Risk Calculation - a CVE-inspired model
 
@@ -157,6 +183,14 @@ Not every problem requires a software engineering "fix". Aside from the up-front
 ## Further Reading
 
 `r blogdown::shortcode("ext-link-card", "https://abbycovert.com/make-sense/")`
+<p>&nbsp;</p>
+
+`r blogdown::shortcode("ext-link-card", "https://www.infoq.com/articles/C4-architecture-model/")`
+<p>&nbsp;</p>
+
+`r blogdown::shortcode("ext-link-card", "https://structurizr.com/")`
+<p>&nbsp;</p>
+
 
 
 
