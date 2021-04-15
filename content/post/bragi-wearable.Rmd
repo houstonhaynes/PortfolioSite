@@ -21,6 +21,8 @@ tags:
 - IoT
 - health
 - fitness
+- mobile
+- Bragi
 categories: 
 - Sidebar
 editor_options: 
