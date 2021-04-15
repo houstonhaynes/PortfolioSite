@@ -40,6 +40,8 @@ library(highcharter)
 library(widgetframe)
 ```
 
+`r blogdown::shortcode("alert-timecapsule", "dark", "Time Capsule:", "This entry is from my work to bring a Kickstarter project to life several years ago. As Bragi has moved on to becoming a bespoke software provider for other hardware manufacturers, I've also moved on to other interests in micro-controllers and IoT projects. This entry remains as part of the archive to mark a treadstone on the winding path to a more connected future.")`
+
 `r blogdown::shortcode("img-post-filter-none", "/img", "Squat_blue_earpiece.jpg", "Houston on squat rack with Bragi Dash", "right")`As mentioned in my Vitae the Bragi Dash is part of my foray into N-of-1 measurements, using myself as a test subject. The Dash was a compelling device, not only because of its audio quality, but also because of the promise that it held as an “all conditions” activity monitor. It’s waterproof – and its use as a swim monitor was particularly enticing. Aside from the built-in position/motion sensors, it also had a pulse oximeter – a sensor that could directly measure the oxygen levels in the blood using infrared sensors in the ear canal. While most of the public interest was in its use as a heart rate monitor, I’m interested in the oximeter. So I signed on as a developer for the Dash, so that I could gain early access to its APIs and develop an app that could monitor and analyze blood oximetry data. But I didn’t arrive at this point directly, and as usual – the project has slowed due to external factors.
 
 ## Bonking into a problem (or two)
