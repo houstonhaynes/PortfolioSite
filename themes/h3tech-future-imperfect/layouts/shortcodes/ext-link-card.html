@@ -1,5 +1,5 @@
 {{ with getJSON (printf "https://api.microlink.io/?url=%s" (.Get 0 )) }}
-<div class="card centered" style="width:32rem;margin-bottom:2rem;">
+<div class="card centered" style="max-width:32rem;width:100%;margin-bottom:2rem;">
     <div class="card-header">
         <div>
             <div>
@@ -9,16 +9,16 @@
     </div>
     <div class="card-body">
         {{ with .data.image }}
-        <img src="{{ .url }}" alt="" class="card-img-bottom rounded mb-2">
+        <img src="{{ .url }}" alt="" class="card-img-top rounded mb-2">
         {{ end }}
         <div class="mt-2">
                 {{ with .data.description }}<caption style="margin-top:2rem;">{{ . | htmlUnescape | markdownify }}</caption>{{ end }}
         </div>
     </div>
     <div class="card-footer">
-        <div class="yx-attribution">
-            {{ with .data.author }}{{ . }}{{ end }}{{ if and .data.author .data.publisher}},
-            {{ end }}{{ with .data.publisher }}<cite>{{ . }}</cite>{{ end }}</div>
+        <div class="font-italic text-muted">
+            {{ with .data.author }}Author: {{ . }}{{ end }}{{ if and .data.author .data.publisher}},
+            {{ end }}{{ with .data.publisher }}<cite>Publisher: {{ . }}</cite>{{ end }}</div>
     </div>
 </div>
 {{ end }}

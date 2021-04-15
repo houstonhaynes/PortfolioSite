@@ -40,8 +40,6 @@ AD4S aspires to make measurable the **true cost** and actual consequences of pro
 # Everything Old Is New Again
 There are natural innovation and implementation cycles in software architecture. It's been that way since the 1970s. With the proliferation of commoditized compute and storage, patterns once thought untenable are now seeing renewed interest. But there's a dark side to progress. Due to the "surface area" of digital technologies the threats to data security have grown exponentially. Many of the intentionally naive patterns from earlier eras existed in an inherently bounded context - of limited access and confined compute space (a system used and maintained at a specific location with limited or no internet access) As those early architectural ideas are re-imagined for the information age, so too must shielding and resiliency be re-imagined for those patterns to be useful in a forward-looking digital landscape.
 
-[hat tip to Peter Frank for this reference] https://www.scmagazine.com/home/security-news/vulnerabilities/namewreck-is-the-latest-collision-between-tcp-ip-and-the-standards-process/
-
 `r blogdown::shortcode("ext-link-card", "https://www.scmagazine.com/home/security-news/vulnerabilities/namewreck-is-the-latest-collision-between-tcp-ip-and-the-standards-process")` 
 
 ## Good design and proper engineering is everyone's business
