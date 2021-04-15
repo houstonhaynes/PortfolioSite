@@ -12,7 +12,7 @@ featuredpath: img
 featured: adaptivedesign.png
 ogfeatured: H3_og_wide_adaptivedesign.png
 emblem: perspective.png
-description: Moving Beyond Agile Using Systems Thinking and Adaptive Management
+description: Moving Beyond Agile SDLCs Using Systems Thinking and Adaptive Management
 draft: true
 tags:
 - Accessibility
@@ -61,7 +61,7 @@ There are natural innovation and implementation cycles in software architecture.
 
 #### Discord
 
-`r blogdown::shortcode("tweet-single", "1382018677026000897")`
+`r blogdown::shortcode("tweet", "1382018677026000897")`
 
 #### WhatsApp
 
@@ -124,13 +124,15 @@ Software is the digital infrastructure of our lives. When you're in a vehicle go
 
 #### Healthcare
 
+`r blogdown::shortcode("ext-link-card", "https://www.imt.ie/news/health-researchers-blocked-by-gdpr-12-04-2021")`
+
 ## Risk Calculation - a CVE-inspired model
 
 Not every problem requires a software engineering "fix". Aside from the up-front costs, those over-engineered solutions can sometimes open up side doors to other problems that quickly spin out into their own engineering quagmires. Sometimes it's more cost/time effective to put a remediation procedure in place and document it as part of the solution. That's why a 'risk' type in solution management is key to surfacing that shared responsibility across engineering, operations, legal and other business groups.
 
 [Embed/integrate doc from 2009] https://int.h3tech.dev/pdf/HHaynes_2009_simpleCVE_model_for_issue_mgmt.pdf
 
-## Recognizing the Earned and Inherent Limitations of Agile
+## Earned & Inherent Limitations of Agile Software Development
 
 # Meta-process: Designing AD4S
 
