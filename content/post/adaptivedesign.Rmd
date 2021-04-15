@@ -43,6 +43,8 @@ There are natural innovation and implementation cycles in software architecture.
 
 ## Good design and proper engineering is everyone's business
 
+## Limit the expense of revisiting complex decisions
+
 ## Every Company has its own Domain Specific Language
 
 ### Mapping business lexicon to design entities
@@ -51,11 +53,15 @@ There are natural innovation and implementation cycles in software architecture.
 
 ## Complexity: Essential vs Accidental vs Incidental
 
+## Redistributing Risk
+
 ### Managing Modes of Failure
+
+## Making the Instrumentation Easier to Change
 
 ### The Lessons Are Everywhere
 
-### 'Work Product' vs 'Status Product'
+### Artifacts: Work vs Design vs Status
 
 # Best Practices vs Good Practice - a GxP approach
 
