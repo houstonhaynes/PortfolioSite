@@ -25,4 +25,4 @@ editor_options:
 ---
 # This is a test.
 
-## and it's all a test.
+## and it's all a test
