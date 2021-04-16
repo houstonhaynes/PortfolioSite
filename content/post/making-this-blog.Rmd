@@ -1,0 +1,99 @@
+---
+title: "Notes On How I Made This blog"
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2021-04-15T14:59:43+05:30'
+featuredpath: img
+featured: h3sitehex.png
+ogfeatured: H3_og_wide_h3sitehex.png
+description: Using Rmarkdown, blogdown, Hugo and Azure Infrastructure to build a responsive site
+draft: true
+tags:
+- R
+- blogdown
+- Hugo
+- RStudio
+- Azure
+categories: 
+- Deep Dive
+weight: 1
+editor_options: 
+  chunk_output_type: inline
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+
+library(jsonlite)
+library(highcharter)
+library(widgetframe)
+```
+
+I have written several sidebars on portions of this blog, but now it's time to round out the bigger picture. These breadcrumbs are to help others who may choose a similar technology path, but to be honest it's also for my future self. Throughout this entry you'll find links to tools and tech I used to build and improve the site. And of course there are cross-site links to some of the relevant sidebars with more detailed explanation on components I've built/modded along the way. 
+
+# Beginning with the End in Mind
+
+The most recent addition to the site was *not* built in R or blogdown, but with Hugo. That's part of the charm of this approach - using the right tool for the job. It's really the culmination of one of the more important lessons I (unintentionally) re-learned while fleshing out this site: that there's a difference between being "full stack" in an enterprise setting compared to the same monicker for public-facing software. While R has a reputation for being born out of academia, a considerable amount of community effort has been put into scaffolding 
+<p>&nbsp;</p>
+`r blogdown::shortcode("fancybox", "/img", "H3Tech_site_card.png")`
+ While Hugo has several internal shortcodes for embedding 
+
+## R - a DSL for Data
+
+### R markdown - The familiar and the new
+
+### Blogdown and Hugo
+
+### MathJax and LaTeX
+
+
+<pre><code>$$
+\begin{aligned}
+\LARGE\overline{p}_\text{SM} &= \LARGE\frac { \normalsize{p} \small{_M} \normalsize + p{ \small_M -1} + \cdots + p_{M \normalsize-(n-1)^{}}}{n}\\
+                       &= \LARGE\frac1n \sum_{i=0}^{n-1} p_{ \small{M} \normalsize{-i}}
+\end{aligned}
+$$</code></pre><p>&nbsp;</p>
+$$
+\begin{aligned}
+\LARGE\overline{p}_\text{SM} &= \LARGE\frac { \normalsize{p} \small{_M} \normalsize + p{ \small_M -1} + \cdots + p_{M \normalsize-(n-1)^{}}}{n}\\
+                       &= \LARGE\frac1n \sum_{i=0}^{n-1} p_{ \small{M} \normalsize{-i}}
+\end{aligned}
+$$
+<p>&nbsp;</p>
+
+## tidyverse for care and feeding of data
+
+<pre><code class="r">  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3))</code></pre>
+<p>&nbsp;</p>
+`r blogdown::shortcode("fancybox", "/img", "data_originalCOVID_ncRawAndRM_NA.png")`
+
+
+## Code markup
+
+## Site template
+
+## Custom Hugo shortcodes
+
+
+## Tailored OpenGraph settings
+
+
+## Serverless Backplane - Contact Form
+
+
+## Nits - PowerShell to the rescue
+
+
+# Moving on
+
+`r blogdown::shortcode("tweet-single", "1361249733667221505")`
+<p>&nbsp;</p>
+

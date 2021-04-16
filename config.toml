@@ -15,7 +15,7 @@ enableGitInfo = true
 
 [params]
   # Sets the meta tag description
-  description          = "Houston H. Haynes Sidebars & Deep Dives in Software & Hardware - Cognitive Computing, IoT & Cloud"
+  description          = "Sidebars & Deep Dives in Software & Hardware - Cognitive Computing, IoT & Cloud"
   # Sets the navbarTitle that appears in the top left of the navigation bar
   navbarTitle          = "Navigation"
   # Sets where "View More Posts" links
