@@ -51,5 +51,5 @@ iframe[src^="https://platform.twitter.com"] {
 
 iframe {
     border-radius: 8px;
-    background-color: black !important;
+    background-color: #7a67e6 !important;
 }
