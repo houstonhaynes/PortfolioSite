@@ -61,24 +61,34 @@ editor_options:
 <div id="complexity-essential-vs-accidental-vs-incidental" class="section level2">
 <h2>Complexity: Essential vs Accidental vs Incidental</h2>
 </div>
+</div>
+<div id="cap-theorem" class="section level1">
+<h1>CAP Theorem</h1>
+<div id="choosing-on-a-gradient---the-brewer-exception" class="section level2">
+<h2>Choosing On a Gradient - the Brewer exception</h2>
+<p>“Choosing any two” between consistency, availability and partition tolerance is <em>not</em> an real choice, but it’s a rhetorical device to remind software engineers that those choices lurk at every level in a solution. By extension, architectural patterns make those choices of how those factors are weighed and balanced against each other. And even where the architect is not <em>intentionally</em> looking at those factors, technology decisions reveal implied balancing of how they view the CAP theorem in the context of system under their purview. Recognizing the various shades/gradients and triangulating between them is key to a resilient architecture.</p>
+</div>
 <div id="redistributing-risk" class="section level2">
 <h2>Redistributing Risk</h2>
-<div id="managing-modes-of-failure" class="section level3">
-<h3>Managing Modes of Failure</h3>
 </div>
+<div id="managing-modes-of-failure" class="section level2">
+<h2>Managing Modes of Failure</h2>
 </div>
 <div id="making-the-instrumentation-easier-to-change" class="section level2">
 <h2>Making the Instrumentation Easier to Change</h2>
+</div>
+<div id="fault-and-resource-isolation" class="section level2">
+<h2>Fault and Resource Isolation</h2>
+</div>
+</div>
+<div id="best-practices-vs-good-practice---a-gxp-approach" class="section level1">
+<h1>Best Practices vs Good Practice - a GxP approach</h1>
 <div id="the-lessons-are-everywhere" class="section level3">
 <h3>The Lessons Are Everywhere</h3>
 </div>
 <div id="artifacts-work-vs-design-vs-status" class="section level3">
 <h3>Artifacts: Work vs Design vs Status</h3>
 </div>
-</div>
-</div>
-<div id="best-practices-vs-good-practice---a-gxp-approach" class="section level1">
-<h1>Best Practices vs Good Practice - a GxP approach</h1>
 <div id="natural-tensions-in-systems-design" class="section level3">
 <h3>Natural Tensions in Systems Design</h3>
 </div>
@@ -95,25 +105,26 @@ editor_options:
 </div>
 <div id="saying-yes-to-consistency-no-to-dogma" class="section level3">
 <h3>Saying ‘yes’ to consistency, ‘no’ to dogma</h3>
+<div id="reactiveisnotenough"/>
+
 </div>
 </div>
-<div id="avoiding-unforced-errors" class="section level2">
-<h2>Avoiding unforced errors</h2>
+<div id="being-reactive-is-not-enough" class="section level2">
+<h2>Being Reactive is not enough</h2>
+<p>The {{% url-link "reactive manifesto" "https://www.reactivemanifesto.org/" %}} makes progress over agile patterns and practices but still suffers from a form navel-gazing. Its self-concern imbues an unhealthy projection onto a systems users which in-effect is an abdication of responsibility. It naively creates a tautological loop where it only responds to directed input - and fails to take any notice of larger contextual boundaries in which the system <em>should</em> (and in certain legal contexts, must) operate. This includes governance and compliance, privacy, ethics, accessibility, inclusion and sustainability. It rather naively assumes that there will be no contention between competing interests of users (and system managers) and therefore makes no attempt to be the arbiter of where and how certain compromises are to be made. It also assumes that there’s no potential avenues for misuse or abuse, which as we’re all well aware is a very dangerous assumption. What if the business managers or marketing team asks the engineers to change the system to behave in a way that’s illegal? It has this tacit assumpton if constituencies don’t specifically <em>ask</em> for these things to be considered - and therefore expresses no interest in addressing those broader systemic concerns.</p>
+<p>A system has to be smarter than “there could be rakes is in the yard” only for the handle to smack the users/engineers/legal team in the face at every step.
+{{% youtube "aRq1Ksh-32g" %}}
+<br>
+And the world of large systems software is full of examples of exactly that happening time and again.</p>
+</div>
+<div id="case-studies-in-unforced-errors" class="section level2">
+<h2>Case Studies in Unforced Errors</h2>
 {{% header-centered "3" "Case Study: Discord" %}}
 {{% tweet "1382018677026000897" %}}
-<p>
- 
-</p>
 {{% header-centered "3" "Case Study: WhatsApp" %}}
 {{% tweet "1382452553233797120" %}}
-<p>
- 
-</p>
 {{% header-centered "3" "Case Study: Slack" %}}
 {{% tweet "1375030200745000960" %}}
-<p>
- 
-</p>
 </div>
 <div id="ddd-and-higher-order-software-design" class="section level2">
 <h2>DDD and higher-order software design</h2>
@@ -136,9 +147,6 @@ editor_options:
 <div id="gdpr-ccpa-and-related-standards-and-regulations" class="section level3">
 <h3>GDPR, CCPA and related standards and regulations</h3>
 {{% ext-link-card "https://fortune.com/2021/04/02/aclu-shares-data-facebook-third-parties-digital-privacy" %}}
-<p>
- 
-</p>
 </div>
 </div>
 </div>

@@ -53,17 +53,25 @@ There are natural innovation and implementation cycles in software architecture.
 
 ## Complexity: Essential vs Accidental vs Incidental
 
+# CAP Theorem
+
+## Choosing On a Gradient - the Brewer exception
+
+"Choosing any two" between consistency, availability and partition tolerance is *not* an real choice, but it's a rhetorical device to remind software engineers that those choices lurk at every level in a solution. By extension, architectural patterns make those choices of how those factors are weighed and balanced against each other. And even where the architect is not *intentionally* looking at those factors, technology decisions reveal implied balancing of how they view the CAP theorem in the context of system under their purview. Recognizing the various shades/gradients and triangulating between them is key to a resilient architecture.
+
 ## Redistributing Risk
 
-### Managing Modes of Failure
+## Managing Modes of Failure
 
 ## Making the Instrumentation Easier to Change
+
+## Fault and Resource Isolation
+
+# Best Practices vs Good Practice - a GxP approach
 
 ### The Lessons Are Everywhere
 
 ### Artifacts: Work vs Design vs Status
-
-# Best Practices vs Good Practice - a GxP approach
 
 ### Natural Tensions in Systems Design
 
@@ -77,22 +85,30 @@ There are natural innovation and implementation cycles in software architecture.
 
 ### Saying 'yes' to consistency, 'no' to dogma
 
-## Avoiding unforced errors
+<div id="reactiveisnotenough"/>
+
+## Being Reactive is not enough
+
+The `r blogdown::shortcode("url-link", "reactive manifesto", "https://www.reactivemanifesto.org/")` makes progress over agile patterns and practices but still suffers from a form navel-gazing. Its self-concern imbues an unhealthy projection onto a systems users which in-effect is an abdication of responsibility. It naively creates a tautological loop where it only responds to directed input - and fails to take any notice of larger contextual boundaries in which the system *should* (and in certain legal contexts, must) operate. This includes governance and compliance, privacy, ethics, accessibility, inclusion and sustainability. It rather naively assumes that there will be no contention between competing interests of users (and system managers) and therefore makes no attempt to be the arbiter of where and how certain compromises are to be made. It also assumes that there's no potential avenues for misuse or abuse, which as we're all well aware is a very dangerous assumption. What if the business managers or marketing team asks the engineers to change the system to behave in a way that's illegal? It has this tacit assumpton if constituencies don't specifically *ask* for these things to be considered - and therefore expresses no interest in addressing those broader systemic concerns.
+
+A system has to be smarter than "there could be rakes is in the yard" only for the handle to smack the users/engineers/legal team in the face at every step.
+`r blogdown::shortcode("youtube", "aRq1Ksh-32g")`
+<br>
+And the world of large systems software is full of examples of exactly that happening time and again.
+
+## Case Studies in Unforced Errors
 
 `r blogdown::shortcode("header-centered", "3", "Case Study: Discord")`
 
 `r blogdown::shortcode("tweet", "1382018677026000897")`
-<p>&nbsp;</p>
 
 `r blogdown::shortcode("header-centered", "3", "Case Study: WhatsApp")`
 
 `r blogdown::shortcode("tweet", "1382452553233797120")`
-<p>&nbsp;</p>
 
 `r blogdown::shortcode("header-centered", "3", "Case Study: Slack")`
 
 `r blogdown::shortcode("tweet", "1375030200745000960")`
-<p>&nbsp;</p>
 
 ## DDD and higher-order software design
 
@@ -110,7 +126,6 @@ Software is the digital infrastructure of our lives. When you're in a vehicle go
 ### GDPR, CCPA and related standards and regulations
 
 `r blogdown::shortcode("ext-link-card", "https://fortune.com/2021/04/02/aclu-shares-data-facebook-third-parties-digital-privacy")` 
-<p>&nbsp;</p>
 
 # The "So what" Factor
 

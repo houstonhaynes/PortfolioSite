@@ -37,11 +37,11 @@ library(highcharter)
 library(widgetframe)
 ```
 
-I have written several sidebars on portions of this blog, but now it's time to round out the bigger picture. These breadcrumbs are to help others who may choose a similar technology path, but to be honest it's also for my future self. Throughout this entry you'll find links to tools and tech I used to build and improve the site. And of course there are cross-site links to some of the relevant sidebars with more detailed explanation on components I've built/modded along the way. 
+I have written several sidebars on portions of this blog, and this rounds out the larger picture. These breadcrumbs are to help others who may choose a similar technology path, but to be honest it's also for my future self. In this post you'll find links to tools and tech I used to build and improve the site. And of course there are cross-site links to some of the relevant sidebars with more detailed explanation on components I've built/modded along the way. 
 
 # Beginning with the End in Mind
 
-The most recent addition to the site was *not* built in R or blogdown, but with Hugo. That's part of the charm of this approach - using the right tool for the job. It's really the culmination of one of the more important lessons I (unintentionally) re-learned while fleshing out this site: that there's a difference between being "full stack" in an enterprise setting compared to the same monicker for public-facing software. While R has a reputation for being born out of academia, a considerable amount of community effort has been put into scaffolding 
+The most recent addition to this site [see below] was *not* built in R or blogdown, but with Hugo. That's part of the challenge and charm of this approach - using the right tool for the job also means being a bit of a polyglot. It has also been an object lesson I (unintentionally) re-learned while fleshing out this site: there's a difference between being "full stack" in an enterprise setting versus public-facing software. While R has a reputation for being born out of academia, a considerable amount of community effort has been put into scaffolding web page rendering out of blogdown. 
 <p>&nbsp;</p>
 `r blogdown::shortcode("fancybox", "/img", "H3Tech_site_card.png")`
  While Hugo has several internal shortcodes for embedding 
@@ -50,7 +50,7 @@ The most recent addition to the site was *not* built in R or blogdown, but with 
 
 ### R markdown - The familiar and the new
 
-### Blogdown and Hugo
+### Blogdown & Hugo
 
 ### MathJax and LaTeX
 
