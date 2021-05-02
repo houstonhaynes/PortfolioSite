@@ -28,12 +28,25 @@
     {{ end }}
   </section>
 
+  <!-- AD4S List -->
+
+  <nav class="sidebar-nav">
+    <header>
+        <h3>AD4S Posts</h3>
+    </header>
+{{- $var := .Scratch -}}
+{{ range where .Site.AllPages "Category" "Perspective" }}
+{{- $var.Add "taxa" (slice .RelPermalink) -}}
+{{ end }}
+</nav>
+
+
   <!-- Posts List -->
 
   <section class="recent-posts">
     <div class="mini-posts">
       <header>
-        <h3>Recent Posts</h3>
+        <h3>Other Selected Posts</h3>
       </header>
       <div class="posts-container">
         {{ $.Scratch.Set "recentPosts" .Site.Pages }}
@@ -42,7 +55,7 @@
           {{ with .Site.Params.postAmount.sidebar }}
             {{ $.Scratch.Set "postLimit" . }}
           {{ else }}
-            {{ $.Scratch.Set "postLimit" 5 }}
+            {{ $.Scratch.Set "postLimit" 3 }}
           {{ end }}
 
           {{ range first ($.Scratch.Get "postLimit") (shuffle (where (where (where ($.Scratch.Get "recentPosts") "Type" "post") "Title" "!=" .Title ) "Title" "!=" "Post")) }}
