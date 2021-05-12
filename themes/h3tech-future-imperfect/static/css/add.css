@@ -339,6 +339,21 @@ div.time-capsule:before {
     vertical-align: middle;
 }
 
+div.perspective {
+    display: table;
+}
+
+div.perspective:before {
+    font-family: "FontAwesome 5 Pro Solid";
+    font-weight: 900;
+    content: '\f5ad';
+    font-size: 2rem;
+    width: 4rem;
+    height: 4rem;
+    display: table-cell;
+    vertical-align: middle;
+}
+
 div.alert-warning {
     display: table;
 }
@@ -438,6 +453,10 @@ a#back-to-top:hover {
 
 h1 {
     margin-top: 2rem !important;
+}
+
+.post>header .title h1 {
+    margin-top: 0rem !important;
 }
 
 h2 {

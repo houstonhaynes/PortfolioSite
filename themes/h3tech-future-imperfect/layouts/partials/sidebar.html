@@ -28,19 +28,6 @@
     {{ end }}
   </section>
 
-  <!-- AD4S List -->
-
-  <nav class="sidebar-nav">
-    <header>
-        <h3>AD4S Posts</h3>
-    </header>
-{{- $var := .Scratch -}}
-{{ range where .Site.AllPages "Category" "Perspective" }}
-{{- $var.Add "taxa" (slice .RelPermalink) -}}
-{{ end }}
-</nav>
-
-
   <!-- Posts List -->
 
   <section class="recent-posts">

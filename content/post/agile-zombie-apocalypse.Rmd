@@ -1,0 +1,80 @@
+---
+title: How Agile Jumped the Shark into a Zombie Apocalypse
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2020-12-04T15:59:43+05:30'
+featuredpath: img
+featured: XP-zombies_square.png
+ogfeatured: XP_zombies.png
+emblem: perspective.png
+description: An Shakespearean tragedy in several acts
+draft: true
+tags:
+- XP
+- agile
+categories: 
+- Perspective
+weight: 2
+editor_options: 
+  chunk_output_type: inline
+---
+# TL;DR
+
+If you've spent any amount of time in this field you will have noticed a "lost-and-found" cycle of various topics in software engineering. Well-worn subjects are revived like zombies in a genre movie, and "agility" is no stranger to that phenomenon. Through the years the discourse on agile patterns and practices has been both the beneficiary and victim of a recurrent novelty effect. And to be fair everyone in tech goes through a "discovery catharsis" around agile at some point in their career. With that, each generation (or iteration) of developers lose another vestige of lean software development to history. Eventually the essential meaning of "agile" in software development *itself* has been lost, that it has outlived its utility.
+
+While in today's technology landscape it's easy to dismiss "agile" as a by-gone era, it would be foolish to discard the sound elements of lean software engineering simply because it was caught up in appropriated labels and antiquated buzzwords. It's useful to take a pause to review *where* agile came from and *how* it gained such a strong foothold, and from that perspective determine which parts to reform, disband or retrench as current demands dictate.
+
+`r blogdown::shortcode("fancybox", "/img", "XP-zombies.png")`
+
+## How, Where and When Did Agile Come From?
+
+The title of this post - by design - is a mixed metaphor that typifies what has happened to "agile". The term `r blogdown::shortcode("url-link", "jumping the shark", "https://en.wikipedia.org/wiki/Jumping_the_shark")` originated in pop culture and here it certainly fits the bill. It's the dual concern of trying to remain relevant while also attempting to reinforce its aphorisms - the tension between those two competing interests can fragment any long-lived concept. More to the point "agile" as a success story was more an accident of emergent history than a result of design intent. While the agile manifesto might have sprung from a small conclave of senior software engineers, its outsized growth in popularity was a reaction to other, more established patterns - `r blogdown::shortcode("url-link", "Six Sigma", "https://qz.com/work/1635960/whatever-happened-to-six-sigma/")` and XP - eXtreme Programming primary among them. 
+
+As the article on Six Sigma outlines - its popularity was piggy-backing on the wave of Welch-ism and its reflexive slavish devotion to efficiency at the expense of innovation. eXtreme Programming was a dual citizen - both an outgrowth of and reaction to Earned Value Management. While XP was more of kindred spirit to what we think of today as "agile" it had some `r blogdown::shortcode("url-link", "fairly specific ideas", "http://www.coldewey.com/publikationen/conferences/oopsla2001/agileWorkshop/hendrickson.html")` about what could and more importantly *could not* work in the process of adhering to its patterns.
+
+And before *either* of those frameworks there was Kanban. Like Six Sigma, kanban grew out of manufacturing practice (some attributions go as far back as 1940's post-war Toyota) and like XP it had some hard *and often unspoken* dependencies. Principal among them was the assumption that everyone in the working group had to be equally adept at both the delivery and the process in order for it to be truly effective. And like `r blogdown::shortcode("url-link", "SCRUM", "https://sngyuchao.medium.com/scrum-why-it-doesnt-work-b9d193942a42")`, it more-or-less blindly accepted unspoken common goals as the driver for short-term delivery, expecting long-arc concerns to "work themselves out" in due course. Since the advent of those other agile-ish labels kanban has morphed into more of a chameleon, and much like other popular frameworks has become a Rorschach test for whichever role is running the working group.
+
+`r blogdown::shortcode("fancybox", "/img", "night-king.png")`
+
+## How, Where and When Did Agile Go Wrong?
+
+As with `r blogdown::shortcode("url-link", "SAFe", "https://tomgeraghty.co.uk/index.php/a-short-critique-of-safe")`, the process tends to take on whatever shape is pre-disposed by the working group. And while that is sold as a virtuous result of adopting that process, it also has some inherent short-comings when the underlying problem space in the software is really a symptom of a larger organizational issue - almost *always* a facet of SAFe project charters. Digital transformation is as much about organizational change than modifying those software systems that are ostensibly a reflection of the company's strengths and weaknesses. In environments where those monikers flourish they're often used to whistle past or severely discount technical debts - a perverse incentive for both "buyer" and "seller". The "ask me no questions and I'll tell you no lies" social contract in these types of projects often doom them from the start - as successful projects are based on competency, truth and trust.
+
+### A Label Doesn't Automatically Inform the Process
+
+Just because you *refer* to "agile" doesn't make it so. As I've mentioned before, much of my early inculcation with lean software engineering was informed by my time at `r blogdown::shortcode("url-link", "TherapyEdge", "/vitae/early-years/#TherapyEdge", "_self")`. While XP was a "lighthouse" for how we worked, there was no dogmatic devotion to it. It was a common admonishment from Bob Cymbalski that you *may* choose to *not* carry on all practices, but you couldn't actively work against any one of them without consequences. And to be sure, while it was often discussed as an embrace of the burdens it presented, in the context of a medical software device those practices were *also* viewed as a shield. Whether a contributor came from engineering, compliance or the medical team it was understood that each person had to be equally invested in curating the process as much as the product.
+
+### Fancier names as a faster path to your wallet
+
+In today's commercial process management landscape there's a kaleidoscope of labels and buzzwords designed to bedazzle the non-initiate. And while working groups will often brandish the newly minted (and often expensive) label of their process like a magic talisman, the *actual* practices can be performative or outright ignored. And just like "agile" itself this *isn't* a recent phenomenon. SCRUM has long been excused as a "lighter" version of XP, where the team had to guard for any shell games that may allow members to selectively discount or ignore whatever was deemed inconvenient. That's part of what's been lost over the years with "agile" as a term - the constant erosion. Simply glomming onto the phrase doesn't imbue software with superior properties. And far too often the misuse of agile has opened a side door for non-adept participants to unduly influence the outcome - to the detriment of the end product and its users. Without a healthy skeptical review of how processes are used the cadence and workload can manipulated to keep *very busy* contributors from noticing that the wrong motivations are running the show. Artificial urgency and superficial calendar management are used to obfuscate the truth, that subject matter experts have lost control of their project. Just like a bad zombie movie, all the flash and action scenes can't hide the fact that the director has lost the plot.
+
+## OK - so how do we fix it?
+
+The problem is *us*. The key, as I've been alluding to throughout this post, is that this is a *human* problem, **not** a technology problem. In many cases it's a situation wyhere everyone is acting in good faith, but mis-appropriating *which* portion of work should receive priority. This is because day-over-day and release-over-release process is a sub-domain of broader application lifecycle management.
+
+`r blogdown::shortcode("tweet", "1392154167486160896")`
+
+While I don't disagree with 
+
+### Competency before Virtuosity
+
+
+
+### Seeing Agile from its Foundations
+
+Essence and Accidents
+
+## Rediscovering Healthy Tensions in Engineering Process
+
+### New Metaphors
+
+Gardening -> Pruning.
+
+Engines -> Tolerances
+
+No matter what metaphor you use to make yourself the hero of your own story, put away the water skis and consider the work that *actually* moves the human elements of the narrative forward.
