@@ -10,7 +10,7 @@ featured: COVID-19.png
 ogfeatured: H3_og_wide_COVID-19.png
 emblem: health.png
 description: How did a early success story turn into tragedy
-draft: false
+draft: true
 tags:
 - COVID-19
 - R
