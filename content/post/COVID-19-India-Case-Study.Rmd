@@ -1,5 +1,5 @@
 ---
-title: "India - a Study in Waves"
+title: "India a Study in Waves"
 output:
   blogdown::html_page:
     dev: "svg"
