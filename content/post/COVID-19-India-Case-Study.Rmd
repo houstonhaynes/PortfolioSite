@@ -69,17 +69,17 @@ COVIDtweets <- sample(COVIDtweets$status_id)
 
 # A Crucible
 
-Having read several articles about <a href="https://www.wsj.com/articles/israels-second-lockdown-seems-to-be-working-better-than-its-first-11604235601" target="_blank">Israel's mask mandate</a> and how that showed marked results that I had to see for myself. It didn't disappoint. When leveled for cases-per-million the shape of the data is unmistakable. 
+Having read several articles about <a href="https://www.wsj.com/articles/Indias-second-lockdown-seems-to-be-working-better-than-its-first-11604235601" target="_blank">India's mask mandate</a> and how that showed marked results that I had to see for myself. It didn't disappoint. When leveled for cases-per-million the shape of the data is unmistakable. 
 
-The data came from <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> and made for ample analysis. That said, there are some data shapes that cause me to raise an eyebrow. However, the chart below is a really stark visual story. I added some plotlines to indicate dates of policy changes (gathered from a <a href="https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Israel" target="_blank">wiki page</a>) and the visual story is unmistakable. Not only does the case count per day *skyrocket* but it also *lags* the re-issuance of stricter guidelines.
+The data came from <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> and made for ample analysis. That said, there are some data shapes that cause me to raise an eyebrow. However, the chart below is a really stark visual story. I added some plotlines to indicate dates of policy changes (gathered from a <a href="https://en.wikipedia.org/wiki/COVID-19_pandemic_in_India" target="_blank">wiki page</a>) and the visual story is unmistakable. Not only does the case count per day *skyrocket* but it also *lags* the re-issuance of stricter guidelines.
 
 ## Comparison Countries
 
-I was fairly arbitrary in my selection of countries to compare to Israel's data. I picked US and UK because the response in general has been *so poor* from a policy perspective. And as counterpoint I pulled in Canada and Germany who have better national strategies. India and China were chosen for their population size (even when leveled for cases per million I was expecting to see more from their data) and Japan has a pretty well-established mask culture. As you look at death and test rates below the picture continues to develop.
+I was fairly arbitrary in my selection of countries to compare to India's data. I picked US and UK because the response in general has been *so poor* from a policy perspective. And as counterpoint I pulled in Canada and Germany who have better national strategies. India and China were chosen for their population size (even when leveled for cases per million I was expecting to see more from their data) and Japan has a pretty well-established mask culture. As you look at death and test rates below the picture continues to develop.
 
-`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-Israel-Case-Study_files/figure-html/widgets/widget_Israel_COVID_Cases_per_Million.html")`
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-India-Case-Study_files/figure-html/widgets/widget_India_COVID_Cases_per_Million.html")`
 
-```{r Israel_COVID_Cases_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r India_COVID_Cases_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
   rename(value = new_cases_smoothed_per_million) %>%
@@ -105,7 +105,7 @@ thm <- hc_theme_merge(
 
 widget <- highchart(type = "stock") %>%
   hc_add_theme(thm) %>%
-  hc_title(text = "Global New Cases per Million - Israel as Case Study", align = "center") %>%
+  hc_title(text = "Global New Cases per Million - India as Case Study", align = "center") %>%
   hc_subtitle(text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -114,7 +114,7 @@ widget <- highchart(type = "stock") %>%
   hc_credits(enabled = TRUE, 
              text = last_updated, 
              position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
   hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
   hc_add_series(data_xts$China, type = "line", name = "China") %>%
   hc_add_series(data_xts$India, type = "line", name = "India") %>%
@@ -171,15 +171,15 @@ frameWidget(widget, width="100%", height="32rem")
 
 `r blogdown::shortcode("alert", "info", "Working with the Report:", "Use the legend on the right to highlight, show or hide a series. Use the bar at the bottom or zoom controls at the top to change the time range of the report.")`
 
-Researchers will talk about the lag time between a change in policy and the shift in incident rates, but seldom will you see a more clear example. And of course the final piece to this mosaic is that the case rate in Israel moves *below* the UK, US, Germany and Canada as of the latest date (Nov 9) as of this writing.
+Researchers will talk about the lag time between a change in policy and the shift in incident rates, but seldom will you see a more clear example. And of course the final piece to this mosaic is that the case rate in India moves *below* the UK, US, Germany and Canada as of the latest date (Nov 9) as of this writing.
 
 ## Deaths per Million
 
-I was shocked to see the deaths per million *so high* in the UK. I honestly wonder if the US *not* being a higher number might be about improper/false attribution of cause of death. I've read anecdotes about folks in rest homes whose families assert they died from COVID-19 but their COD was listed as some other, more common cause. That said, the trend of the numbers in Israel after the new lockdown policy in mid September shows both the lagging response post-implementation *as well as* a rate the descends below those of the US and UK.
+I was shocked to see the deaths per million *so high* in the UK. I honestly wonder if the US *not* being a higher number might be about improper/false attribution of cause of death. I've read anecdotes about folks in rest homes whose families assert they died from COVID-19 but their COD was listed as some other, more common cause. That said, the trend of the numbers in India after the new lockdown policy in mid September shows both the lagging response post-implementation *as well as* a rate the descends below those of the US and UK.
 
-`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-Israel-Case-Study_files/figure-html/widgets/widget_Israel_COVID_Deaths_per_Million.html")`
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-India-Case-Study_files/figure-html/widgets/widget_India_COVID_Deaths_per_Million.html")`
 
-```{r Israel_COVID_Deaths_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r India_COVID_Deaths_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 data <- select(coviddata, date, location, new_deaths_smoothed_per_million) %>%
   rename(value = new_deaths_smoothed_per_million) %>%
@@ -205,7 +205,7 @@ thm <- hc_theme_merge(
 
 widget <- highchart(type = "stock") %>%
   hc_add_theme(thm) %>%
-  hc_title(text = "Global New Deaths per Million - Israel as Case Study", align = "center") %>%
+  hc_title(text = "Global New Deaths per Million - India as Case Study", align = "center") %>%
   hc_subtitle(text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -214,7 +214,7 @@ widget <- highchart(type = "stock") %>%
   hc_credits(enabled = TRUE, 
              text = last_updated, 
              position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
   hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
   hc_add_series(data_xts$China, type = "line", name = "China") %>%
   hc_add_series(data_xts$India, type = "line", name = "India") %>%
@@ -272,11 +272,11 @@ frameWidget(widget, width="100%", height="32rem")
 
 ## Tests per Thousand
 
-While the tests per thousand is increasing, it's not nearly high enough. It's really interesting to see how Israel's testing jumped up at the same time that case rate spiked. The drop-off at the end I assume is lag in reporting that will eventually be back-filled, but I'll go to other sources if this data sub-set flattens out.
+While the tests per thousand is increasing, it's not nearly high enough. It's really interesting to see how India's testing jumped up at the same time that case rate spiked. The drop-off at the end I assume is lag in reporting that will eventually be back-filled, but I'll go to other sources if this data sub-set flattens out.
 
-`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-Israel-Case-Study_files/figure-html/widgets/widget_Israel_COVID_Tests_per_Thousand.html")`
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-India-Case-Study_files/figure-html/widgets/widget_India_COVID_Tests_per_Thousand.html")`
 
-```{r Israel_COVID_Tests_per_Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r India_COVID_Tests_per_Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 data <- select(coviddata, date, location, new_tests_smoothed_per_thousand) %>%
   rename(value = new_tests_smoothed_per_thousand) %>%
@@ -300,7 +300,7 @@ thm <- hc_theme_merge(
 
 widget <- highchart(type = "stock") %>%
   hc_add_theme(thm) %>%
-  hc_title(text = "Global New Tests per Thousand - Israel as Case Study", align = "center") %>%
+  hc_title(text = "Global New Tests per Thousand - India as Case Study", align = "center") %>%
   hc_subtitle(text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -309,7 +309,7 @@ widget <- highchart(type = "stock") %>%
   hc_credits(enabled = TRUE, 
              text = last_updated, 
              position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
   hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
   hc_add_series(data_xts$China, type = "line", name = "China") %>%
   hc_add_series(data_xts$India, type = "line", name = "India") %>%
@@ -407,7 +407,7 @@ thm <- hc_theme_merge(
 
 widget <- highchart(type = "stock") %>%
   hc_add_theme(thm) %>%
-  hc_title(text = "Global New Cases per Million - Israel as Case Study", align = "center") %>%
+  hc_title(text = "Global New Cases per Million - India as Case Study", align = "center") %>%
   hc_subtitle(
     text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
     hc_chart(
@@ -417,7 +417,7 @@ widget <- highchart(type = "stock") %>%
   hc_credits(enabled = TRUE, 
              text = last_updated, 
              position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
+  hc_add_series(data_xts$India, type = "line", name = "India") %>%
   hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
   hc_add_series(data_xts$China, type = "line", name = "China") %>%
   hc_add_series(data_xts$India, type = "line", name = "India") %>%
@@ -476,7 +476,7 @@ Each report is largely the same. The only factors that are changed is the select
 
 # Continuing Research
 
-This isn't the only report I had planned for looking at this data, but given the recent press around Israel's changes in policy, and the dramatic effect that had on COVID incident rates, I had to see the data for myself. As more data is gathered and more interesting questions are posed to that data, other report types will surely follow.
+This isn't the only report I had planned for looking at this data, but given the recent press around India's changes in policy, and the dramatic effect that had on COVID incident rates, I had to see the data for myself. As more data is gathered and more interesting questions are posed to that data, other report types will surely follow.
 
 
 <div class="separator">Faces of COVID-19</div>
