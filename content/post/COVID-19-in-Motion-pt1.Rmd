@@ -159,8 +159,6 @@ data <- select(coviddata[with(coviddata, order(date, iso_code)),],
   mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
   ungroup()
 
-datatable(data)
-
 widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, labels = FALSE),
       tooltip = list(
         pointFormat = "{series.name}: {point.ncpmrm:.2f}")) %>%
