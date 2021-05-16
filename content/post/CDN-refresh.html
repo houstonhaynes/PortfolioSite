@@ -1,0 +1,72 @@
+---
+title: "How I learned to stop worrying and love the CDN"
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2020-06-29T14:59:43+05:30'
+featuredpath: img
+featured: Azure-CDN.png
+ogfeatured: H3_og_wide_Azure-CDN.png
+description: Creating an HTTP rules bypass to invalidate cached assets at deploy time
+draft: false
+tags:
+- Azure
+- CDN
+- Verizon
+categories: 
+- Sidebar
+weight: 5
+editor_options: 
+  chunk_output_type: inline
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="a-path-less-traveled" class="section level1">
+<h1>A Path Less Traveled</h1>
+<p>I love the concept of an R-blogdown based static web site - fast… simple… - OK, maybe <em>just</em> fast. There have been valid criticisms of static sites possessing an inherent “gateway drug” quality - a false sense of simplicity. But the idea really is to focus on the essential complexity of whatever you’re building, and skip past some of the incidental and accidental consequences of running the site on web server infrastructure.</p>
+<p>But what happens when the platform/services your site depends on changes underneath your site? That happened to me, or at least I <em>think</em> it happened that way. This site has been in this form for more than a year, and I’ve been using the same deployment method for that time - and has never failed, until recently. A few weeks ago I cam back to post some updates, and the deployments kept failing. But before I get too deep in the weeds I suppose a bit of background is in order.</p>
+<div id="verizon-premium-cdn-and-azure-static-sites" class="section level2">
+<h2>Verizon Premium CDN and Azure Static Sites</h2>
+<p>I’m long overdue to write a deep dive on how I put together this site. But the part that matters here surrounds two requirements that triggered the need for a CDN in my Azure sub:</p>
+<ol style="list-style-type: decimal">
+<li>My own SSL cert for a custom domain, and</li>
+<li>Specific “apex domain” routing for the top-level URL</li>
+</ol>
+<p>Azure Blob Store static site users have to implement those features in a {{% url-link "Verizon Premium CDN" "https://docs.microsoft.com/en-us/azure/cdn/cdn-verizon-premium-rules-engine-reference-features" %}}. And while that fancy name sounds expensive, for the size of my site the storage/instance costs amount to less than $1.00 per month. I’ve configured and managed global-scaled CDNs, but only for sites where the TTL was very short - two minutes or less. This is a situation where I didn’t care if the cache held on to assets for a year - because it’s a static site. The faster that content is delivered, the better - and invalidating the cache for an arbitrary short TTL doesn’t make sense. But this <em>also</em> puts the onus on the deployment process to ensure the cache is refreshed (or at least invalidated) every time there’s a deployment.</p>
+</div>
+<div id="the-symptom-and-furtive-steps-to-remedy" class="section level2">
+<h2>The Symptom, and Furtive Steps to Remedy</h2>
+<p>So when I returned to the site the behavior was oddly specific. Certain pages and assets were updating while others were remaining in the cache, even though I was refreshing at the top of the endpoint. And when I made API requests to invalidate <em>specific</em> pages and assets, they would continue to remain in the CDN. I toyed with the idea of setting a short TTL. But my reflex is to affirmatively set the state of the site during deploy, and check/test for it as part of a post-deploy process. The next step was to replicate all of my CDN settings to a new cache endoint, and it deployed cleanly! Horray! … only to be frustrated that on the NEXT deploy the same issue re-surfaced.</p>
+<p>[cue sad trombone]</p>
+</div>
+<div id="the-root-cause-and-the-cure" class="section level2">
+<h2>The Root Cause, and The Cure</h2>
+<p>It took a considerable amount of investigation to finally come back to something in the CDN that was blocking the invalidation of certain assets in cache. The net effect was that new versions of certain site assets (such as my index page, of all things) would not update until the time-to-live had lapsed. This was incredibly frustrating, since it has been rock solid up to the point that the issue was discovered.</p>
+<p>After some online spelunking I came to a discussion thread relating to a similar case, and the solution was to put a rule <em>on top of</em> each rule that essentially checked whether to skip processing. Basically <em>if</em> there was a purge request <em>then</em> skip the rule. This would in-effect put a bypass to the HTTP rules when a CDN cache invalidation request was coming in.</p>
+{{% fancybox-dark-theme-ok "/img" "CDN_purge_check.png" %}}
+<figure>
+<figcaption class="caption">
+CDN rule in XML format
+</figcaption>
+<pre><code class="xml"><rule>
+    <description>Redirect HTTP to HTTPS</description>
+    <match.request.request-header.wildcard name="User-Agent" result="nomatch" value="ECPurge/*" ignore-case="true">
+        <match.request.request-scheme.literal value="http">
+            <feature.url.url-redirect source="/0__CDN__/(.*)" destination="https://%{host}/$1" code="301"/>
+        </match.request.request-scheme.literal>
+    </match.request.request-header.wildcard>
+</rule></code></pre>
+</figure>
+<p>Honestly - in Verizon CDN parlance I’m not sure if it’s actually removing the files from the cache or simply marking them as invalid - but in either case, it works. Just be certain to put this <strong>IF</strong> statement at the top of every rule in the set you deploy.</p>
+</div>
+</div>
+<div id="lessons-learned" class="section level1">
+<h1>Lessons Learned</h1>
+<p>So it goes to show that being “on the PaaS level” is not automatically the simpler approach. When breaking changes occur it’s often anguishing to trace back to the cause of the issue. That said, I’m not exactly sure how cache refreshes <em>ever</em> worked. For now I’ll set it aside and get back to working directly on this site, where my focus should actually reside.</p>
+</div>

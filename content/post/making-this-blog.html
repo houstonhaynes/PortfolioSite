@@ -1,0 +1,104 @@
+---
+title: "Notes On How I Made This blog"
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2021-04-15T14:59:43+05:30'
+featuredpath: img
+featured: h3sitehex.png
+ogfeatured: H3_og_wide_h3sitehex.png
+description: Using Rmarkdown, blogdown, Hugo and Azure Infrastructure to build a responsive site
+draft: true
+tags:
+- R
+- blogdown
+- Hugo
+- RStudio
+- Azure
+categories: 
+- Deep Dive
+weight: 1
+editor_options: 
+  chunk_output_type: inline
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>I have written several sidebars on portions of this blog, and this rounds out the larger picture. These breadcrumbs are to help others who may choose a similar technology path, but to be honest it’s also for my future self. In this post you’ll find links to tools and tech I used to build and improve the site. And of course there are cross-site links to some of the relevant sidebars with more detailed explanation on components I’ve built/modded along the way.</p>
+<div id="beginning-with-the-end-in-mind" class="section level1">
+<h1>Beginning with the End in Mind</h1>
+The most recent addition to this site [see below] was <em>not</em> built in R or blogdown, but with Hugo. That’s part of the challenge and charm of this approach - using the right tool for the job also means being a bit of a polyglot. It has also been an object lesson I (unintentionally) re-learned while fleshing out this site: there’s a difference between being “full stack” in an enterprise setting versus public-facing software. While R has a reputation for being born out of academia, a considerable amount of community effort has been put into scaffolding web page rendering out of blogdown.
+<p>
+ 
+</p>
+<p>{{% fancybox "/img" "H3Tech_site_card.png" %}}
+While Hugo has several internal shortcodes for embedding</p>
+<div id="r---a-dsl-for-data" class="section level2">
+<h2>R - a DSL for Data</h2>
+<div id="r-markdown---the-familiar-and-the-new" class="section level3">
+<h3>R markdown - The familiar and the new</h3>
+</div>
+<div id="blogdown-hugo" class="section level3">
+<h3>Blogdown &amp; Hugo</h3>
+</div>
+<div id="mathjax-and-latex" class="section level3">
+<h3>MathJax and LaTeX</h3>
+<pre><code>$$
+\begin{aligned}
+\LARGE\overline{p}_\text{SM} &= \LARGE\frac { \normalsize{p} \small{_M} \normalsize + p{ \small_M -1} + \cdots + p_{M \normalsize-(n-1)^{}}}{n}\\
+                       &= \LARGE\frac1n \sum_{i=0}^{n-1} p_{ \small{M} \normalsize{-i}}
+\end{aligned}
+$$</code></pre>
+<p>
+ 
+</p>
+<span class="math display">\[
+\begin{aligned}
+\LARGE\overline{p}_\text{SM} &amp;= \LARGE\frac { \normalsize{p} \small{_M} \normalsize + p{ \small_M -1} + \cdots + p_{M \normalsize-(n-1)^{}}}{n}\\
+                       &amp;= \LARGE\frac1n \sum_{i=0}^{n-1} p_{ \small{M} \normalsize{-i}}
+\end{aligned}
+\]</span>
+<p>
+ 
+</p>
+</div>
+</div>
+<div id="tidyverse-for-care-and-feeding-of-data" class="section level2">
+<h2>tidyverse for care and feeding of data</h2>
+<pre><code class="r">  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3))</code></pre>
+<p>
+ 
+</p>
+{{% fancybox "/img" "data_originalCOVID_ncRawAndRM_NA.png" %}}
+</div>
+<div id="code-markup" class="section level2">
+<h2>Code markup</h2>
+</div>
+<div id="site-template" class="section level2">
+<h2>Site template</h2>
+</div>
+<div id="custom-hugo-shortcodes" class="section level2">
+<h2>Custom Hugo shortcodes</h2>
+</div>
+<div id="tailored-opengraph-settings" class="section level2">
+<h2>Tailored OpenGraph settings</h2>
+</div>
+<div id="serverless-backplane---contact-form" class="section level2">
+<h2>Serverless Backplane - Contact Form</h2>
+</div>
+<div id="nits---powershell-to-the-rescue" class="section level2">
+<h2>Nits - PowerShell to the rescue</h2>
+</div>
+</div>
+<div id="moving-on" class="section level1">
+<h1>Moving on</h1>
+{{% tweet-single "1361249733667221505" %}}
+<p>
+ 
+</p>
+</div>

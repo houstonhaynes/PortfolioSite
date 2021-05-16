@@ -1,0 +1,203 @@
+---
+title: "COVID-19 US Data - Inverse Correlation of Masks vs Cases"
+output:
+  blogdown::html_page:
+    dev: "svg"
+author: "Houston Haynes"
+date: '2018-11-17T14:59:43+05:30'
+featuredpath: img
+featured: COVID-19-US.png
+ogfeatured: H3_og_wide_COVID-19-US.png
+emblem: health.png
+description: Cumlative, population-leveled case data versus public mask percentage
+draft: false
+tags:
+- COVID-19
+categories: 
+- Sidebar
+weight: 3
+editor_options: 
+  chunk_output_type: inline
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
+<script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+
+
+<div id="contrast-and-compare" class="section level1">
+<h1>Contrast and Compare</h1>
+<p>Wearing masks <strong>more</strong> often means <strong>fewer</strong> COVID-19 cases. It’s that simple, and it couldn’t be more clear in the data.</p>
+<p>I started looking into US data with the latest cumulative counts for likely and confirmed COVID-19 cases and deaths compiled by the <a href="https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html" target="_blank">New York Times</a>. Aside from the split between “likely” and “confirmed” cases (the latter coming from a very specific postmortem test) I also wanted to look at the survey data collected on public mask wearing.</p>
+<p>I had suspected that there would be an inverse correlation but I <em>didn’t</em> expect it to come up this quickly, or that it would be <em>such</em> a clear, stark result. I still have quite a bit of refinement work to do on presenting the report. And I <em>also</em> want to start looking at time series data, in order to use a weighted average that matches the time when the mask-wearing surveys are conducted. Right now I’m simply taking the full count, but when the mask guidelines change and compliance shifts I want to be sure I <em>also</em> evaluate changes in case rate.</p>
+<div id="animated-gif" class="section level2">
+<h2>Animated GIF</h2>
+<p>I was so struck by the clear inverse correlation between masks and cases that I made an animated GIF with the contrasting charts cycling back and forth.</p>
+{{% fancybox "/img" "US_Masks_Cases.gif" %}}
+</div>
+</div>
+<div id="the-charts" class="section level1">
+<h1>The Charts</h1>
+<p>After some edits and surfacing state labels for tooltips (which pop up when you hover over any of the counties in the chart) I re-rendered the reports here for more detailed review. Like the other reports that pull data from OWID and JHU these will continue to shift and change as new cumulative case numbers are added in. And likewise, when there’s an update to the mask wearing surveys there will be new data there as well. Once I have a better view of the full time COVID time series data set I’ll shift to a weighted average for the past few weeks or month, or match the case counts to the time range for the survey period. But for now this provides a valuable, if slowly-moving snapshot.</p>
+{{% alert "info" "Working with the reports:" "Hovering over a county will highlight and show the value for its respective metric." %}}
+{{% fancybox-iframe "/post/COVID-19-US-masks-vs-cases_files/figure-html/widgets/widget_Cumulative_Cases_Pop_Leveled.html" %}}
+<p><div id="htmlwidget-1" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-US-masks-vs-cases_files/figure-html//widgets/widget_Cumulative_Cases_Pop_Leveled.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+{{% fancybox-iframe "/post/COVID-19-US-masks-vs-cases_files/figure-html/widgets/widget_Mask_Prcentage_by_County.html" %}}</p>
+<div id="htmlwidget-2" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/COVID-19-US-masks-vs-cases_files/figure-html//widgets/widget_Mask_Prcentage_by_County.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<div id="exceptions-worth-noting" class="section level2">
+<h2>Exceptions Worth Noting</h2>
+<p>It should be noted that the NYT found there to be some marginal variance in the actual level of mask wearers and the reported answers from the survey.</p>
+<blockquote class="blockquote">
+<p class="mb-0">
+Researchers who hand-counted Wisconsin grocery shoppers in May and June found about 40 percent of shoppers wore masks, a level that is lower than the 45 percent who said they always wore masks in the recent Dynata sample (another 24 percent said they frequently wore masks).
+</p>
+</blockquote>
+<p>They noted that it didn’t affect the result in aggregate. But it bears further scrutiny as more emphasis on masks is placed by public officials and the “virtue signal” of answering the questionnaires/surveys widen the gap with actual use.</p>
+<div class="separator">
+Faces of COVID-19
+</div>
+<figure>
+<div class="row">
+<div class="col-md-4">
+{{% tweet "1362190089271406593" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1370525013699219456" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1372895634991284229" %}}
+</div>
+</div>
+<figcaption class="caption">
+The pandemic-related posts on this site are about more than data. <strong>Behind every number is a person, a family and a community.</strong> As reports are refreshed, new selectiont will also be chosen at random. To see how this is done, <a href="/post/faces-of-covid">see this sidebar</a>.
+</figcaption>
+<hr>
+</figure>
+</div>
+<div id="the-code-behind-the-reports" class="section level2">
+<h2>The code behind the reports</h2>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code1">
+View the Code behind the First Chart
+</button>
+<pre id="code1" class="collapse"><code class="r"># begin setup code chunk
+library(tidyverse)
+library(highcharter)
+library(widgetframe)
+library(lubridate)
+
+counties <- read.csv("../../data/us_county.csv", header = TRUE)
+
+counties <-
+  counties %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
+
+county_pop <- select(counties, fips, state, population)
+
+mask_URL <- 
+  "https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv"
+
+mask_data <- read.csv(mask_URL)
+
+mask_data <- 
+  mask_data %>%
+  mutate(COUNTYFP = str_pad(COUNTYFP, 5, side = 'left', pad = '0'))  %>%
+  select(COUNTYFP, NEVER, RARELY, SOMETIMES, FREQUENTLY, ALWAYS) %>%
+  mutate(always_pct = (ALWAYS * 100)) %>%
+  rename(fips = COUNTYFP) %>%
+  left_join(county_pop, fips = fips) %>%
+  rename(location = state)
+
+last_updated <- paste("Source: New York Times  -  Report Last Updated:"
+                        ,  format(Sys.time(), "%a %b %d %Y %X"))
+
+# end setup code chunk
+
+widget <- hcmap("countries/us/us-all-all",
+      data = mask_data,
+      value = "always_pct",
+      name = "Percentage that always wears masks in public",
+      join = "fips") %>%
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public"
+            , align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
+  hc_legend(layout = "vertical", verticalAlign = "top",
+            align = "right", valueDecimals = 0) %>%
+  hc_credits(enabled = TRUE,
+             text = last_updated,
+             position = list(align = "left", x = 10, y = -5))
+
+frameWidget(widget, height="100%", width="40rem")</code></pre>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code2">
+View the Code behind the Second Chart
+</button>
+<pre id="code2" class="collapse"><code class="r"># begin setup code chunk
+library(tidyverse)
+library(highcharter)
+library(widgetframe)
+library(lubridate)
+
+counties <- read.csv("../../data/us_county.csv", header = TRUE)
+
+counties <-
+  counties %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
+
+county_pop <- select(counties, fips, state, population)
+
+US_COVID_data <- 
+  "https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv"
+
+us_data <- read.csv(US_COVID_data)
+
+us_data_map <- 
+  us_data %>%
+  filter(fips != "") %>%
+  mutate(date = ymd(date)) %>%
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0')) %>%
+  select(date, fips, state, county, cases, deaths)  %>%
+  left_join(county_pop, fips = fips) %>%
+  arrange(fips, date) %>%
+  mutate(ncpht = ((cases / population) * 100000)) %>%
+  mutate(ndpht = ((deaths / population) * 100000)) %>%
+  ungroup() %>%
+  rename(location = state)
+
+last_updated <- paste("Source: New York Times  -  Report Last Updated:"
+                        ,  format(Sys.time(), "%a %b %d %Y %X"))
+
+# end setup code chunk
+
+widget <- hcmap("countries/us/us-all-all",
+      data = mask_data,
+      value = "always_pct",
+      name = "Percentage that always wears masks in public",
+      join = "fips") %>%
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+  hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public"
+            , align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2) %>%
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
+  hc_legend(layout = "vertical", verticalAlign = "top",
+            align = "right", valueDecimals = 0) %>%
+  hc_credits(enabled = TRUE,
+             text = last_updated,
+             position = list(align = "left", x = 10, y = -5))
+
+frameWidget(widget, height="100%", width="40rem")</code></pre>
+</div>
+</div>
+<div id="further-analysis" class="section level1">
+<h1>Further analysis</h1>
+<p>As I mentioned above, the focus will eventually shift to the time series data, as opposed to the latest cumulative data files. There will be more detailed reporting as well. Right now the data looks bleak, but there <strong>is</strong> a <em>silver lining</em> here - on how following simple guidelines and hygiene protocols can limit the spread of infection and save lives.</p>
+</div>

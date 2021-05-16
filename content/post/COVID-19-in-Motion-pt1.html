@@ -1,0 +1,350 @@
+---
+title: "World Data Overview - Global Heat Maps"
+output:
+  self_contained: FALSE
+  blogdown::html_page:
+    dev: "svg"
+  keep_md: TRUE
+author: "Houston Haynes"
+date: '2018-11-08T14:59:43+05:30'
+featuredpath: img
+featured: COVID-19.png
+ogfeatured: H3_og_wide_COVID-19.png
+emblem: health.png
+description: COVID-19 in Motion - Animated Time Series for cases, deaths and testing
+draft: false
+tags:
+- COVID-19
+categories: 
+- Deep Dive
+editor_options: 
+  chunk_output_type: inline
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
+<script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+
+
+<div id="exercise-in-scale" class="section level1">
+<h1>Exercise in Scale</h1>
+<p>When I started working with the <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> COVID-19 data set I wanted to chart out a few things to get a <em>feel</em> for the data. I’ve done this work for quite a while and the first thing you often do is a form of <em>reality</em> check. In some cases I checked againtt other charts based on the same data and thought “that can’t be right” only to plot it myself and see it directly. (looking at you, <em>Europe</em>) As we all have witnessed this year experts have been sounding the alarm since early on. Pandemics are like locomotives, they’re difficult to stop once they gain momentum. The same goes for an effective response.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Cases_by_Continent.html" %}}
+<div id="htmlwidget-1" style="width:100%;height:26rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New_Cases_by_Continent.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+{{% alert "info" "Working with the Report:" "Use the legend to highlight, show or hide a series. Hovering over bands in the chart reveals detail for a given date." %}}
+<p>So I took the data and plotted it on a map, to play on a day grain through time. The gradationt are pretty subtle at the start, and that’s because of the data getting <em>very</em> dark late in the range.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Cases_Per_Million.html" %}}
+<div id="htmlwidget-2" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global_New_Cases_Per_Million.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+{{% alert "info" "Working with the report:" "Aside from the play/pause and date slider, the map is *zoomable*. Hovering over a country will highlight and show the value for the current position on the timeline. Hovering while playing back will show updating changes to the values for that country." %}}
+{{% alert "warning" "Bug Report:" "The play/pause button for the map charts *works* but the icons are currently not visible. A fix is being researched now. Thanks for understanding." %}}
+</div>
+<div id="daily-covid-mortality" class="section level1">
+<h1>Daily COVID Mortality</h1>
+<p>One of the things I expected was to see some “chop” in early data as reporting became more contistent. Here I was surprised to see irregular bumps in the “smoothed” data. Once South America is removed from the set then things look much less strange. Such as it is, the visuals tell a convincing story of where things are going as of November, and it’s <em>not</em> good.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Deaths_by_Continent.html" %}}
+<div id="htmlwidget-3" style="width:100%;height:26rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New_Deaths_by_Continent.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p>Again here - like the area chart - the direction of what’s happening in Europe is unmistakable. In fact it bothers me to the point that I’ll probably end up sourcing some other data just so I can sleep tonight. But one thing we can see and possibly discard is the sudden jump in values in South America. Per our area chart above which showed that as the offending portion of the data set that was skewing the result.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Deaths_Per_Million.html" %}}
+<div id="htmlwidget-4" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global_New_Deaths_Per_Million.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<div class="separator">
+Faces of COVID-19
+</div>
+<figure>
+<div class="row">
+<div class="col-md-4">
+{{% tweet "1370072032419975175" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1385669803390554114" %}}
+</div>
+<div class="col-md-4">
+{{% tweet "1378089859521376265" %}}
+</div>
+</div>
+<figcaption class="caption">
+The pandemic-related posts on this site are about more than data. <strong>Behind every number is a person, a family and a community.</strong> As reports are refreshed, new selectiont will also be chosen at random. To see how this is done, <a href="/post/faces-of-covid">see this sidebar</a>.
+</figcaption>
+<hr>
+</figure>
+</div>
+<div id="testing-testing-1-2-3" class="section level1">
+<h1>Testing, Testing, 1, 2, 3…</h1>
+<p>While spelunking through the data I thought I’d take a look at testing. The good news, the numbers are increasing.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Tests_by_Continent.html" %}}
+<div id="htmlwidget-5" style="width:100%;height:26rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_New_Tests_by_Continent.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p>Here’s the flip-side of the previous two reports - where the numbers go <em>green</em> as they go higher. But again, it runt the risk of painting an inaccurate picture to show less than 5 tests per 1,000 people as a positive indication. That value should be much, much higher - but in this case relative values matter.</p>
+{{% fancybox-iframe "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Tests_Per_Thousand.html" %}}
+<div id="htmlwidget-6" style="width:100%;height:40rem;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6">{"x":{"url":"/post/COVID-19-in-Motion-pt1_files/figure-html//widgets/widget_Global_New_Tests_Per_Thousand.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<div id="how-the-reports-were-built" class="section level2">
+<h2>How the reports were built</h2>
+<p>The area charts are relatively straightforward. The only data munging task was summing the values by continent and date. After that it was mainly about formatting and some tweaks to keep the display clean.</p>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code1">
+View the Code behind the First Area Chart
+</button>
+<pre id="code1" class="collapse"><code class="r"># begin setup code chunk
+library(highcharter)
+library(widgetframe)
+library(tidyverse)
+library(lubridate)
+library(xts)
+
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+coviddata <- read.csv(URL)
+
+# end setup code chunk
+
+pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
+               date, continent, location, new_cases)   %>%
+  filter(location != "International",
+         location != "World",
+         date > "2020-03-01") %>%
+  mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-07-18" &
+                                location == "Chile" &
+                                new_cases == 1057),
+                             57,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-07-24" &
+                                location == "Peru" &
+                                new_cases == 3887),
+                             187,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-08-14" &
+                                location == "Peru" &
+                                new_cases == 3935),
+                             235,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-09-07" &
+                                location == "Ecuador" &
+                                new_cases == 3800),
+                             38,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-09-07" &
+                                location == "Bolivia" &
+                                new_cases == 1610),
+                             61,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-10-02" &
+                                location == "Argentina" &
+                                new_cases == 3351),
+                            351,
+                            new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-10-09" &
+                                location == "Ecuador" &
+                                new_cases == 398),
+                            39,
+                            new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-10-09" &
+                                location == "Mexico" &
+                                new_cases == 3013),
+                            313,
+                            new_cases)) %>%
+  mutate(date = ymd(date)) %>%
+  left_join(pop, location = location) %>%
+  select(date, continent, new_cases, population) %>%
+  group_by(date, continent) %>%
+  summarize(new_cases = sum(new_cases), population = sum(population)) %>%
+  mutate(ncpm = ((new_cases / population) * 1000000)) %>%
+  group_by(date, continent) %>%
+  summarize(new_cases = sum(new_cases), ncpm = sum(ncpm)) %>%
+  group_by(continent) %>%
+  arrange(continent, date) %>%
+  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3)) %>%
+  mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
+  ungroup()
+
+#datatable(data)
+
+thm <- hc_theme_merge(
+  hc_theme_ffx(),
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
+
+widget <- hchart(data, "area", hcaes(x = date, y = ncpmrm, group = continent, labels = FALSE)) %>%
+  hc_plotOptions(series = list(stacking = 'normal')) %>%
+  hc_title(text = "World COVID Daily New Cases per Million (smoothed)", align = "center") %>%
+  hc_add_theme(thm) %>%
+  hc_subtitle(text = "Summed by continent :: Higher == BAD", align = "center")%>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_yAxis(title = list(enabled = FALSE)) %>%
+  hc_xAxis(title = list(enabled = FALSE))
+
+frameWidget(widget, width="100%", height="26rem")</code></pre>
+<p>The map charts were more complex. Aside from tying together the geojson map to the data (by joining iso-a3 in the map data to the iso_code value from the source data) there was building the sequence of data itself. This wasn’t immediately apparent but <a href="https://jkuntt.com/blog/posts/2016-04-12-adding-motion-to-choropleths/" target="_blank">this tutorial</a> was a great help.</p>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code2">
+View the Code behind the First Map Chart
+</button>
+<pre id="code2" class="collapse"><code class="r"># begin setup code chunk
+library(highcharter)
+library(widgetframe)
+library(tidyverse)
+library(lubridate)
+library(xts)
+
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+coviddata <- read.csv(URL)
+
+# end setup code chunk
+
+pop <- read.csv("../../data/population_by_country_2020.csv", header = TRUE)
+data <- select(coviddata[with(coviddata, order(date, iso_code)),], 
+               date, iso_code, location, new_cases)   %>%
+  filter(location != "International",
+         location != "World") %>%
+  mutate(new_cases = ifelse(is.na(new_cases), 0, new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-07-18" &
+                                location == "Chile" &
+                                new_cases == 1057),
+                             57,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-07-24" &
+                                location == "Peru" &
+                                new_cases == 3887),
+                             187,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-08-14" &
+                                location == "Peru" &
+                                new_cases == 3935),
+                             235,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-09-07" &
+                                location == "Ecuador" &
+                                new_cases == 3800),
+                             38,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-09-07" &
+                                location == "Bolivia" &
+                                new_cases == 1610),
+                             61,
+                             new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-10-02" &
+                                location == "Argentina" &
+                                new_cases == 3351),
+                            351,
+                            new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-10-09" &
+                                location == "Ecuador" &
+                                new_cases == 398),
+                            39,
+                            new_cases)) %>%
+  mutate(new_cases = ifelse((date == "2020-10-09" &
+                                location == "Mexico" &
+                                new_cases == 3013),
+                            313,
+                            new_cases)) %>%
+  mutate(date = ymd(date)) %>%
+  left_join(pop, location = location) %>%
+  select(date, iso_code, new_cases, population) %>%
+  group_by(date, iso_code, population) %>%
+  summarize(new_cases = sum(new_cases)) %>%
+  mutate(ncpm = ((new_cases / population) * 1000000)) %>%
+  group_by(iso_code) %>%
+  arrange(iso_code, date) %>%
+  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3)) %>%
+  mutate(ncpmrm = slider::slide_dbl(ncpm, mean, .before = 3, .after = 3)) %>%
+  ungroup() %>%
+  mutate_at(vars(ncpm, ncrm, ncpmrm), funs(round(., 2)))
+
+#datatable(data)
+
+
+ds <- data %>%
+  group_by(iso_code) %>%
+  do(item = list(
+    iso_code = first(.$iso_code),
+    sequence = .$ncpmrm,
+    ncpmrm = last(.$ncpmrm))) %>%
+  .$item
+
+#head(ds, 10)
+
+vec <- sort(unique(pull(data, date)))
+
+url <- "https://code.highcharts.com/mapdata/custom/world-robinson-highres.js"
+tmpfile <- tempfile(fileext = ".json")
+download.file(url, tmpfile)
+geo <- readLines(tmpfile)
+geo <- gsub(".* = ", "", geo)
+map <- jsonlite::fromJSON(geo, simplifyVector = FALSE)
+
+last_updated <- paste("Source: https://ourworldincata.org/  -  Report Last Updated:",
+                      format(Sys.time(), "%a %b %d %Y %X"))
+
+thm <- hc_theme_merge(
+  hc_theme_ffx(),
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Ubuntu")),
+           legenc = list(itemStyle = list(fontFamily ='Ubuntu'))))
+
+widget <- highchart(type = "map") %>%
+  hc_add_theme(thm) %>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_title(text = "Global COVID Daily New Cases per Million (smoothed)", align = "center") %>%
+  hc_subtitle(text = "Press play button or use slider to change date", align = "center") %>%
+  hc_add_series(data = ds,
+                name = "New Cases per Million",
+                mapData = map,
+                joinBy = c("iso-a3", "iso_code"),
+                borderWidth = 0.01) %>%
+  hc_colorAxis (min = 0 ,
+                max = 1000,
+                stops = color_stops(colors = viridisLite::inferno(20,
+                                                                begin = 0.1,
+                                                                direction = -1))) %>%
+  hc_motion (
+    enabled = TRUE,
+    startIndex = 23,
+    axisLabel = "date",
+    labels = vec,
+    updateInterval = 5,
+    playIcon = "fas fa-play",
+    pauseIcon = "fas fa-pause",
+    magnet = list(
+      rounc = "floor",
+      step = 0.1
+      )
+  ) %>%
+  hc_legend(layout = "vertical", verticalAlign = "top",
+            align = "right", valueDecimals = 0) %>%
+  hc_mapNavigation(
+    enabled = TRUE,
+    enableMouseWheelZoom = TRUE,
+    enableDoubleClickZoom = TRUE
+  ) %>%
+  hc_credits(enabled = TRUE,
+             text = last_updated,
+             position = list(align = "left", x = 10, y = -5))
+
+
+frameWidget(widget, width="100%", height="40rem")</code></pre>
+</div>
+</div>
+<div id="further-analysis" class="section level1">
+<h1>Further analysis</h1>
+<p>Aside from drilling into other categories of data here and checking againtt other data sets, I’ll also be looking at various forecast models and lag indicators. There will also be <em>drill down</em> into national and regional level data. In any case, as the story continues to unfold we should all brace for a very <em>dark</em> winter.</p>
+</div>

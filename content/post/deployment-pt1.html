@@ -1,0 +1,224 @@
+---
+title: "Deploying my R blogdown Based Site - Part 1"
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2020-10-31T15:59:43+05:30'
+featuredpath: img
+featured: deployment.png
+ogfeatured: H3_og_wide_deployment.png
+emblem: cloud.png
+description: Hacking a self-hosted build with PowerShell
+draft: false
+tags:
+- R
+- blogdown
+- PowerShell
+- GitHub Actions
+- deployment
+- devops
+categories: 
+- Deep Dive
+weight: 5
+editor_options: 
+  chunk_output_type: inline
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="low-maintenance-repeatability" class="section level1">
+<h1>Low Maintenance Repeatability</h1>
+<p>I’ve long held (as in <strong>for <em><a href="/vitae/early-years/#IBM">decades</a></em></strong>) that a software engineer could only brandish the “full stack” moniker if they had experience with instrumenting automated deployment. Over the past few years “devops” has become all the rage, and I’m <em>here for it</em>. This is the first of three articles outlining how I build and migrate this site - partly as a conditioned reflex and also as a study in constructive compromise.</p>
+<p>This entry focuses on the build internals, which is likely to <em>remain</em> self-hosted for a few reasons I outline below. The second post will take a look at Github Actions self-hosted runner implementation, and how that’s triggered from my private GitHub repo. That will include a look at how I use this process to re-deploy the site based on daily updates to third party source data. I use a few <em>helper</em> mechanisms that, with this hands-free deployment process, will let me re-trigger the deployment and use R to collect the fresh data at build time. This will allow me to keep the site <em>and its underlying data</em> up-to-date.</p>
+</div>
+<div id="groundwork" class="section level1">
+<h1>Groundwork</h1>
+<p>To start, I created a “deploy” folder in the project along with the scripts needed to make this work. I had performed this enough times “manually” to have a general idea of how to put it into a scripted form. It’s a bit of a Russian doll, where certain commands perform housekeeping and orchestration, while other actions run build activities based on parameters. The last few commands execute through the Azure CLI to push the new files up to blob storage and <a href="/post/CDN-refresh">clear the CDN</a>.</p>
+<p><img class="rounded bordered img-fluid filter-none centered" src="/img/deploy-folder.png"/></p>
+<p>This definitely falls into the “one person’s laziness is someone else’s efficiency” category. It’s not exactly best practice using local properties files. But since the build host is one of my local machines I opted to keep things relatively simple.</p>
+<div id="properties-file" class="section level2">
+<h2>Properties File</h2>
+<p>The properties file is a set of key/value pairs. There are a variety of ways to deal with constructing a connection string on-the-fly. But I’ve opted for the direct approach. Every so often I regenerate keys on Azure Portal and simply update the connection strings in the local file.</p>
+<figure>
+<figcaption class="caption">
+properties.json file sample
+</figcaption>
+<pre><code class="json">{
+    "int": "[Full connection string for my int Blob storage container]",
+    "prd": "[Full connection string for my prd Blob storage container]"
+}</code></pre>
+</figure>
+<p>As you’ll see later, the <em>push</em> script reads both values and uses one or the other based on the <em>environment</em> parameter passed in at runtime.</p>
+<div id="sidebar1-adding-properties.json-to-.gitignore" class="section level3">
+<h3>Sidebar1: Adding properties.json to .gitignore</h3>
+<p>Even with a private repo I want to “keep it clean” and not tempt fate.</p>
+<figure>
+<figcaption class="caption">
+.gitignore showing exclude of local properties file
+</figcaption>
+<pre><code class="ini">.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+public
+blogdown
+<text class="text-danger">deploy/properties.json</text>
+.fake
+.ionide</code></pre>
+</figure>
+<p>While local secrets and masking from the repo isn’t a commercial-grade policy, it’s reasonable for a side project.</p>
+</div>
+<div id="two-step-r-script-build-process" class="section level3">
+<h3>Two-step R Script build process</h3>
+<p>I split the build process into two parts. This deserves a bit of unpacking because of the “Russian doll” effect. First, when called, the first scriptlet processes all of the .Rmd files.</p>
+<figure>
+<figcaption class="caption">
+build-site.R - runs a headless R session to build .Rmd pages
+</figcaption>
+<pre><code class="r">setwd ("c:/repo/portfoliosite")
+blogdown::build_site(method = "html", run_hugo = "FALSE")
+q("no")</code></pre>
+</figure>
+<p>The parameter that triggers this is optional. There are times when <em>only</em> a Hugo-level build (the <em>second</em> scriplet) is required, such as updates to Hugo partials, CSS or JavaScript. If I don’t need to re-generate everything for the site that I can simply run the <em>Push</em> script without the “Rmd” parameter. The “run_hugo = ‘FALSE’” puts the responsibility on the subsequent hugo_cmd which builds the site assets based on the assigned <em>baseURL</em>.</p>
+<p>The following R script again sets the working directory, runs the hugo command with the baseURL parameter and then instructs the process to run without prompting. Again here the split of the ‘prd’ and ‘int’ version of the hugo command is for two reasons:</p>
+<ol style="list-style-type: decimal">
+<li>the difference in the baseUrl, and</li>
+<li>the ‘int’ script adds a second parameter to publish draft entries (‘-D’).</li>
+</ol>
+<figure>
+<figcaption class="caption">
+build-int.R - runs a headless R session to complete site build
+</figcaption>
+<pre><code class="r">setwd ("c:/repo/portfoliosite")
+blogdown::hugo_cmd(shQuote(c('-b', 'https://int.h3tech.dev', '-D')))
+q("no")</code></pre>
+</figure>
+</div>
+<div id="sidebar-2-hugo-command-and-baseurl-declaration" class="section level3">
+<h3>Sidebar 2: Hugo command and baseURL declaration</h3>
+<p>For context on the baseURL substitution I’ve included an excerpt from the top of my site’s config file.</p>
+<figure>
+<figcaption class="caption">
+config.toml - first five lines
+</figcaption>
+<pre><code class="ini">baseurl = "/"
+languageCode = "en-us"
+title = "H3 Tech Hub"
+theme = "h3tech-future-imperfect"
+preserveTaxonomyNames = true</code></pre>
+</figure>
+<p>The baseurl parameter is set to “/” by default to keep relative paths while checking local debug builds. But when the site is deployed “in the wild” this writes a fully qualified path to all the places where Hugo calls for it in various templates. Instead of over-writing the top line of the config.toml file I use the hugo_cmd version to pass in the baseurl “-b” value at build time.</p>
+<p>When the “Russian doll” has been fully unpacked and the site built, the Azure CLI takes over. Below is a full run-down of the PowerShell script from top to bottom.</p>
+</div>
+</div>
+</div>
+<div id="anatomy-of-a-powershell-script" class="section level1">
+<h1>Anatomy of a PowerShell Script</h1>
+<p>Now that a few of the interior layers have been peeled it’s time to look at this “onion” from the outside <em>in</em>. It begins with collecting a required parameter string - either an “int” for the integration environment or “prd” for the production tier. The second parameter is optional, and only validates to “Rmd”. That determines whether the build_site script runs.</p>
+<figure>
+<figcaption class="caption">
+push.ps1 - gather mandatory environment parameter
+</figcaption>
+<pre><code class="powershell">Param
+    (
+        [Parameter(Mandatory=$TRUE)]   
+        [ValidateNotNull()]
+        [ValidateNotNullOrEmpty()]        
+        [ValidateSet("int","prd")] 
+        [string]$environment,
+        [Parameter(Mandatory=$FALSE)]   
+        [ValidateSet("Rmd")]
+        [string]$build
+    )</code></pre>
+</figure>
+<p>This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost <em>never</em> trigger. If the parameter is not supplied PowerShell throws a standard message.</p>
+{{% fancybox-dark-theme-ok "/img" "deploy-PowerShellValidation.png" %}}
+<p>And similarly if I flub the input parameter it also halts the script and gives a standard output message. The same applies to the second parameter. If it is malformed a similar error and exit will result.</p>
+{{% fancybox-dark-theme-ok "/img" "deploy-PowerShellValidation-2.png" %}}
+<p>Moving along, this portion of the script performs due diligence of reading the properties entries from the JSON file. The one that’s actually initialized is based on the first required input parameter.</p>
+<figure>
+<figcaption class="caption">
+push.ps1 - read the environment properties
+</figcaption>
+<pre><code class="powershell">$JSON = Get-Content -Path "C:\repo\PortfolioSite\deploy\properties.json" | ConvertFrom-JSON
+
+If ($environment -eq 'prd') {
+    $prdString = $JSON.prd
+} else {
+    $intString = $JSON.int
+}</code></pre>
+</figure>
+<p>Below is a housecleaning move that clears everything from the public folder. (the destination that Hugo uses to output all generated web site assets)</p>
+<figure>
+<figcaption class="caption">
+push.ps1 - Remove any previously built files
+</figcaption>
+<pre><code class="powershell">Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force</code></pre>
+</figure>
+<p>Then the base R markdown build process… an optional step that’s only called with the second “Rmd” parameter. It clears all of the intermediate HTML files from the <em>post</em> project folder before the Rscript rebuilds them from scratch.</p>
+<figure>
+<figcaption class="caption">
+push.ps1 - clear blogdown HTML files &amp; re-generate from .Rmd files
+</figcaption>
+<pre><code class="powershell">If ($build -eq 'Rmd') {
+    Remove-Item C:\repo\PortfolioSite\content\post\*.html -Recurse -Force
+    cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-site.R'
+}</code></pre>
+</figure>
+<p>The section below selectively calls the respective R script to run Hugo to produce the site assets.</p>
+<figure>
+<figcaption class="caption">
+push.ps1 - run R script to re-generate the site
+</figcaption>
+<pre><code class="powershell">If ($environment -eq 'prd') {
+    cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-prd.R'
+} else {
+    cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-int.R'
+}</code></pre>
+</figure>
+<div id="the-aforementioned-hack" class="section level2">
+<h2>The Aforementioned Hack</h2>
+<p>The next lines could be a post in itself. In fact, this is where this process started. I found this issue in widgetframe when trying to use it for building this site. I had modified the package and posted a pull request, but the project has been abandoned by the author. Instead of creating a “new” package that has only one line of difference from the original I opted to stay with the “temporary” fix.</p>
+<p>The PowerShell command parses all HTML files in the public directory, finds all of the “offending” sub-strings, and replaces any double-slashes created by the iframe embed.</p>
+<figure>
+<figcaption class="caption">
+push.ps1 - Clean up a bug left behind by widgetframe
+</figcaption>
+<pre><code class="powershell">Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach { If (Get-Content $_.FullName | Select-String -Pattern '/figure-html//widgets/') 
+           {(Get-Content $_ | ForEach {$_ -replace '/figure-html&#47;&#47;widgets/', '/figure-html/widgets/'}) | Set-Content $_ } }
+           </code></pre>
+</figure>
+<p>From this point the script moves beyond housekeeping and local build duties and gets on with the environment push. This uses the Azure CLI to run a blob sync function. It only pushes up “new” files instead of a full delete and replace. This is where the connection string parameters come into play. Like the build script, the environment variable selects which Blob storage container becomes the target for the file sync.</p>
+<figure>
+<figcaption class="caption">
+push.ps1 - Azure CLI command to run azcopy blog storage sync
+</figcaption>
+<pre><code class="powershell">If ($environment -eq 'prd') {
+    az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $prdString
+} else {
+    az storage blob sync -c '$web' -s "C:\repo\PortfolioSite\public" --connection-string $intString
+}</code></pre>
+</figure>
+<p>This last command doesn’t require an if/then since a direct parameter substitution is straightforward. Both of my CDN endpoints have the same name pattern, except with one having an “int” and another having a “prd” suffix.</p>
+<figure>
+<figcaption class="caption">
+push.ps1 - Azure CLI command to clear the CDN cache
+</figcaption>
+<pre><code class="powershell">az cdn endpoint purge -g [myResourceGroup]-n [myCDNendpoint]$environment --profile-name [myProfile] --content-paths '/*'</code></pre>
+</figure>
+<p>Once the CDN purge is complete, users will pull the new version of the web site from blob and those assets will be cached in the CDN. And <em>viola</em> the site deployment is done. In all the process takes a total of about four minutes. The longest portion of the build and deploy process is the CDN cache purge. But I’m sure the build windows will climb as I source more large data sets from third parties.</p>
+</div>
+<div id="build-and-deploy-dependencies" class="section level2">
+<h2>Build and Deploy Dependencies</h2>
+<p>Of course there are dependencies that make this instrumentation and process work. First of all, there are all of the R packages that are called on to build the assets for the site. There’s also the login context for the Azure CLI. If you have multiple subscriptions you’ll need to ensure that the proper settings have been used. I also found that pandoc had to be installed on the OS level (on Windows) even though it wasn’t necessary to run the same commands from the R terminal in the RStudio application. There are ways to manage this programmatically but again the idea is to balance the practicalities of a generally good software practice without getting lost in what could turn into its own software project.</p>
+</div>
+</div>
+<div id="next-steps" class="section level1">
+<h1>Next Steps</h1>
+<p>As I mention above there’s more to this story. In the next installment I’ll show how I use GitHub Actions to trigger a new build and deployment to the production tier when code is merged to the main branch, using one of my home office machines as a build host. Along with that I’ll detail how I use other triggers - such as a notification when an updated data set is available from a public source - to also spin a new build which would capture new data for certain reports. Like everything else for this site, it’s a work in progress.</p>
+</div>

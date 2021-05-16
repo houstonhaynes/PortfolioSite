@@ -7,5 +7,4 @@ blogdown
 deploy/properties.json
 .fake
 .ionide
-content/post/*.html
 static/post/**
