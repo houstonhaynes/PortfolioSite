@@ -9,10 +9,10 @@ output:
 author: "Houston Haynes"
 date: '2021-05-13T22:59:43+05:30'
 featuredpath: img
-featured: XP-zombies_square.png
-ogfeatured: XP_zombies.png
+featured: xp-zombies-square.png
+ogfeatured: xp-zombies.png
 emblem: perspective.png
-description:  Looking Back to Rise Above Software Navel Gazing & Project Shell Games
+description:  Understanding Software Systems Law According to Moore & Conway
 draft: false
 tags:
 - XP
@@ -28,13 +28,15 @@ editor_options:
 ---
 # TL;DR
 
-If you've spent any amount of time in this field you will have noticed a "lost-and-found" cycle of various topics in software engineering. Well-worn subjects are revived like zombies in a genre movie, and "agility" is no stranger to that phenomenon. Through the years the discourse on agile patterns and practices has been both the beneficiary and victim of a recurrent novelty effect. And to be fair everyone in tech goes through a "discovery catharsis" around agile at some point in their career. With that, each generation (or iteration) of developers lose another vestige of lean software development to history. Eventually the essential meaning of "agile" in software development *itself* has been lost, outliving its essence - a shell of its former self.
+If you've spent any amount of time in this field you will have noticed a "lost-and-found" cycle of various aphorisms in software engineering. Through the years the discourse on agile patterns and practices has been both the beneficiary and victim of a recurrent novelty effect. It is continually paraded as the *agent* of change, when in truth it is really the result of how underlying changes have shaped its form. Its a rite of passage that everyone in tech goes through a "discovery catharsis" around agile at some point in their career - and their opinions on lean software are often shaped by that initial encounter with that deeper understanding of how the world of team-built software works. But the risk - and what I've seen - is that with each iteration of software development populism another lean software development principal is lost to history, or worse - is actively discarded due to it's misalignment with the commercial interests of the process-*du*-*jour*.
 
-While in today's technology landscape it's easy to dismiss "agile" to a by-gone era, it would be foolish to discard the foundational elements of more broadly defined lean software engineering simply because it was caught up in appropriated labels and antiquated buzzwords. It's useful to take a moment to pause to review *where* agile came from and *how* it gained such a strong foothold, and from that perspective determine which parts to reform, disband or retrench as current demands dictate.
+This is allowed to happen through failure to recognize that agile *itself* is __not__ an agent of its own design, but rather the outcome of deeper principals, laws that reshape it as the world of technology continues to remake itself. It's useful to take a moment to pause to review *where* agile came from and *how* it gained such a hold in the zeitgeist, and from that perspective determine which parts to reform, disband or retrench as current demands dictate.
 
-`r blogdown::shortcode("fancybox", "/img", "XP-zombies.png")`
+`r blogdown::shortcode("fancybox", "/img", "xp-zombies.png")`
 
 >Artificial urgency and superficial calendar management can be used to obfuscate that subject matter experts have lost control of a project. Just like a bad zombie movie, flashy action scenes can't hide the fact that they've lost the plot.
+
+Before we can look forward, we must look back through the winding technology landscape and assess how Conway's and Moore's Laws wield fundamental power in the formation of software working groups regardless of the labels it currently enjoys.
 
 ## How, Where and When Did Agile Come From?
 
@@ -46,7 +48,7 @@ And before *either* of those frameworks there was Kanban. Like Six Sigma, kanban
 
 ## How, Where and When Did Agile Go Wrong?
 
-As with any open-ended question, the answers can vary widely depending on whom you ask. And their answer will tell you more about which parts of agile history they've lived and the surrounding environment that shaped their opinion. As with `r blogdown::shortcode("url-link", "SAFe", "https://tomgeraghty.co.uk/index.php/a-short-critique-of-safe")`, the "filling the shape of its vessel" effect tends be billed as a virtuous result of adopting that process, but it also has some inherent short-comings when the underlying problem space in the software is really a symptom of a larger organizational issue. While this can happen when *any* agile label is adopted by a team, it's almost *always* a facet of SAFe project charters because SAFe pretends that it can fix organizational issues with structure wrapped in ceremony. Digital transformation is as much about organizational change as it's about modifying historical systems that are ostensibly a reflection of the company's strengths and weaknesses. Unfortunately, instead of dealing directly with long-standing issues across working groups, those monikers provide a form of cover for managers to whistle past or severely discount technical debts - a perverse incentive for both the buy-side and sell-side of that exchange. The "ask me no questions and I'll tell you no lies" social contract in these types of projects often doom them from the start. There's a famous survey that showed SCRUM Masters indicating that `r blogdown::shortcode("url-link", "nearly half of their agile transformation projects fail", "https://www.scruminc.com/why-47-of-agile-transformations-fail")`. I'm not sure I'd hire on any process or product that was had a coin-flip's chance of not working. But the problem is that they're attempting to solve for the wrong problem.
+As with any open-ended question, the answers can vary widely depending on whom you ask. And their answer will tell you more about which parts of agile history they've lived and the surrounding environment that shaped their opinion. As with `r blogdown::shortcode("url-link", "SAFe", "https://tomgeraghty.co.uk/index.php/a-short-critique-of-safe")`, the "filling the shape of its vessel" effect tends be billed as a virtuous result of adopting that process, but it also has some inherent short-comings when the underlying problem space in the software is really a symptom of a larger organizational issue. While this can happen when *any* agile label is adopted by a team, it's almost *always* a facet of SAFe project charters because SAFe pretends that it can fix organizational issues with structure wrapped in ceremony. The inherent lie in "digital transformation" is that technology changes can carry the full burden of organizational change. This flies in the face of Conway's Law, which asserts that historical systems that are ostensibly a reflection of the company's strengths and weaknesses. Unfortunately, instead of dealing directly with long-standing issues across working groups, these disposable tech monikers provide a form of cover for managers to whistle past or severely discount technical debts - a perverse incentive for both the buy-side and sell-side of that exchange. The "ask me no questions and I'll tell you no lies" social contract in these types of projects often doom them from the start. There's a famous survey that showed SCRUM Masters indicating that `r blogdown::shortcode("url-link", "nearly half of their agile transformation projects fail", "https://www.scruminc.com/why-47-of-agile-transformations-fail")`. I'm not sure I'd adopt process or product that was had a coin-flip's chance of not working. But the problem is that they're attempting to solve for the wrong problem. And any proposed solution that ignores the potentially negative consequences of `r blogdown::shortcode("url-link", "Conway's Law", "https://en.wikipedia.org/wiki/Conway%27s_law")` is a sure sign that its motivations are not founded in a company's core interest.
 
 ### A Label Doesn't Automatically Inform the Process
 

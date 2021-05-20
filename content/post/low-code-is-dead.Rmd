@@ -10,7 +10,7 @@ author: "Houston Haynes"
 date: '2021-01-04T15:59:43+05:30'
 featuredpath: img
 featured: lowcode.png
-ogfeatured: H3_og_wide_lowcode.png
+ogfeatured: h3_og_wide_lowcode.png
 emblem: perspective.png
 description: You keep using 'low code'. I do not think it means what you think it means.
 draft: true

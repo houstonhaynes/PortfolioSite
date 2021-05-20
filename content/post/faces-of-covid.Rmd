@@ -7,7 +7,7 @@ author: "Houston Haynes"
 date: '2020-07-07T14:59:43+05:30'
 featuredpath: img
 featured: facesofcovid.png
-ogfeatured: H3_og_wide_facesofcovid.png
+ogfeatured: h3_og_wide_facesofcovid.png
 emblem: health.png
 description: Underscoring COVID-19 data with reminders of its human toll
 draft: false
