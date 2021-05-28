@@ -7,19 +7,20 @@ output:
     fig_width: 8
     dev: "svg"
 author: "Houston Haynes"
-date: '2021-01-04T15:59:43+05:30'
+date: '2021-05-27T00:59:43+05:30'
 featuredpath: img
 featured: lowcode.png
 ogfeatured: h3_og_wide_lowcode.png
 emblem: perspective.png
 description: You keep using 'low code'. I do not think it means what you think it means.
-draft: true
+draft: false
 tags:
 - software engineering
 - agile
+- design
 categories: 
 - Perspective
-weight: 4
+weight: 1
 editor_options: 
   chunk_output_type: inline
 ---
@@ -27,9 +28,64 @@ editor_options:
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
-<div id="this-is-a-test." class="section level1">
-<h1>This is a test.</h1>
-<div id="and-its-all-a-test." class="section level2">
-<h2>and it’s all a test.</h2>
+<div id="history-rhymes" class="section level1">
+<h1>History Rhymes</h1>
+<p>Technology providers <em>ride</em> the 24-hour hype cycle as much as they <em>drive</em> it - and with that comes peaks and valleys in the signal-to-noise ratio online. This week was Microsoft’s “Build” showcase - with their big marketing push to companies and the broader development community. I usually don’t pay much attention but I wanted to check out how they pitch the road map for .NET and surrounding tools. It can be useful to see <em>how</em> they’re positioning their wares to developers and the decision-makers that green-light the projects that use them. I was also curious to see how Microsoft would balance between playing to their enterprise customers while flexing both their purchased <em>and</em> earned-equity in open source.</p>
+<blockquote>
+<p>“History doesn’t repeat itself. But it often rhymes.” <br>
+          – Mark Twain (apocryphal)</p>
+</blockquote>
+<p>One of the reasons I roll my eyes at these types of events is the inevitable <em>low code</em> product roll-outs. This is a staple of the enterprise so I would normally let it pass without mention, but well - <em><strong>here we are</strong></em>. Over the past few years I’ve worked as a consultant, and a considerable portion of that time is spent helping companies recover from low code “buyer’s remorse”. And while many of my examples here point to Microsoft, they’re not the only name in the low code game. Far from it. It just happens that the latest offerings read like <em>deja vue all over again</em>.</p>
+<div class="row">
+<div class="col-md-6">
+{{% ext-link-card "https://www.theverge.com/2021/5/25/22451144/microsoft-gpt-3-openai-coding-autocomplete-powerapps-power-fx" %}}
+</div>
+<div class="col-md-6">
+{{% ext-link-card "https://www.theregister.com/2020/10/28/gpt3_medical_chatbot_experiment/" %}}
+</div>
+</div>
+<p>I remember when Microsoft was straight-faced telling their customers that hand-craft XML was a valid activity for non-developers. Hello, InfoPath. Now there’s PowerApps which at least is moving the WYSIWYG interface to {{% url-link "FrontPage," "https://en.wikipedia.org/wiki/Microsoft_FrontPage" %}} levels of functionality. Remember when {{% url-link "SharePoint Composite" "https://docs.microsoft.com/en-us/sharepoint/dev/general-development/sharepoint-composites-handbook" %}}, promised the ability to create a business solution “without programming”? And now they’re using Teams as the facade for what they’re calling {{% url-link "Project Oakdale" "https://techcommunity.microsoft.com/t5/microsoft-teams-blog/teams-is-shaping-the-future-of-work-with-low-code-features-to/ba-p/1507180" %}} and PowerBI continues to merge with Excel in the form of Power Apps and {{% url-link "Power Fx" "https://github.com/microsoft/Power-Fx" %}}. Bear in mind I firmly believe that there’s nothing wrong with any of this as long as it serves the intended function and is a net benefit to the customer.</p>
+<div id="common-sense-or-snake-oil" class="section level2">
+<h2>Common Sense or Snake Oil?</h2>
+<p>I’ll admit that my skepticism toward the concept of low code marketing is both anecdotal and fed by long held sentiment in the developer community that it’s an inherent boondoggle. But aside from arms-length appraisal I’ve also had to rescue projects from the adverse consequences of poor low code implementations. Is it possible that there are so many well-functioning no-code systems I never see due to the “Maytag Repairman” effect. Those solutions simply quietly go about doing their work without notice. But given that Microsoft changes the names of these products while changing the “face” from Office for SharePoint, then SharePoint for PowerBI, then spreading the joy from PowerBI to Teams, I’m sticking with my thesis for now.</p>
+</div>
+<div id="cautionary-tales" class="section level2">
+<h2>Cautionary Tales</h2>
+<p>In one case I saw a company’s “low code” web form connecting to their recruitment system which requests information not legal to ask. In another situation a healthcare company had run amok with data underlying PowerBI reporting such that a “multi-million-dollar investment” had to be re-tooled from scratch. And at a financial firm I saw a group of traders use SharePoint workflow to play a hidden shell game with positions that caused the comptroller to throw a fit when they found out about it. While tech companies with enterprise offerings will sell the sunny side of “citizen developers” I’ve seen enough of the dark side to be skeptical. The executive presentation may look like virtuous incentives and maximizing productivity, but lurking right behind the shiny facade are perverse incentives that give short shrift to good engineering practice and is often the basis for the dreaded “shadow IT”, an operational and legal risk for the company.</p>
+</div>
+<div id="low-code-on-the-down-low" class="section level2">
+<h2>Low Code On The Down Low</h2>
+<p>But there are many, many examples of <em><strong>actual</strong></em> low code in service that checks all of the boxes, it’s just not the shiny facade with slick presentations at trade shows. I was reminded earlier this year when reading an article from Steve Smith <em>[aka Ardalis]</em>. It echoed some ideas I had about java and .NET. But it really made a succinct if inadvertent case that “low code” is <em>everywhere</em> now.</p>
+{{% ext-link-card "https://ardalis.com/stored-procedures-orms-and-graphql/" %}}
+<p>If a group in your company builds an API for your team to use in an internal application, <em><strong>that’s low code</strong></em>. If your company uses a third party service to broadcast messages to a mailing list, <em><strong>that’s low code</strong></em>. If an application makes a request to the open weather API or other public endpoint, <em><strong>that’s low code</strong></em>. Behind each of those examples and a myriad others there’s work going on behind the scenes that the caller will never know about - and that’s the beauty of it. But there’s a catch. <em>There’s always a catch</em>, it’s all about context.</p>
+<p>You <em>still</em> have to “mind the store” around certain base concepts, and recognize the unavoidable cognitive burden involved in carrying <em>enough</em> of what’s happening in that gray box of functionality so that you can maximize its advantages and limit its pitfalls. And never mind if that system or solution you depend on puts out a breaking change that nukes your project. No one selling you a “low code/no code” solution will talk about that, and for good reason. If you knew the total cost of that ownership, you’d never buy in, and that works against their interest. But for now I want to set that aside - because the <em>more</em> interesting bit to me is how <strong>software engineering today has become first-and-foremost <u>a low code world</u></strong>. And it’s <em>so</em> pervasive that almost no one talks about it in those terms.</p>
+</div>
+<div id="ddd-dsl-orm-alphabet-soup" class="section level2">
+<h2>DDD, DSL, ORM &amp; Alphabet Soup</h2>
+<p>Some text about how proper domain modeling leads to an domain specific language</p>
+</div>
+<div id="low-code-general-theory-of-relativity" class="section level2">
+<h2>Low Code General Theory of Relativity</h2>
+{{% tweet "1397597117531762688" %}}
+</div>
+<div id="r-u-serious-yeh-verily" class="section level2">
+<h2>R U Serious? (Yeh, Verily)</h2>
+<p>I mention in my {{% url-link "COVID Datapothecary" "/post/covid-datapothecary/" "_self" %}} post of how I view R as a proper example of a domain specific language. The number of non-developers it attracts from academia makes is a very popular choice for statistical modeling and machine learning. From that, R benefits from the inherent context of the constituency that provides a form of natural “guide rails” - most folks who come to R already have enough background to approach the math involved in their domain, and are simply looking for a programmatic means to express it. And because of the wide package support, both for general data processing <em>and</em> for domain specific operations, there’s a great deal of well-trod ground on which to start their journey.</p>
+<p>I’m re-using the example below but I want to repeat it here with some detail on how this function protects the user “at the boundaries”. Consider the following single line of code. It processes a column of data (here it’s “new_cases”) and generates a new one (ncrm - my short-hand for "new cases rolling mean) as part of a chain of functions against a source data set.</p>
+<pre><code class="r">  mutate(ncrm = slider::slide_dbl(new_cases, mean, .before = 3, .after = 3))</code></pre>
+<p>This is the function that it expresses, and is repeated here to show how the two look nothing alike. Above we’re simply trusting that it will do the right thing - which is the main case is to take a central value, look “before” and “after” three positions and provide the mean value. And it will do perform this function for as long as their are values in the named source column. Whether it’s one or one billion values it will keep politely stepping through and performing the calculation until it’s completed, and then attach the newly range of values ot the data frame.
+<span class="math display">\[
+\begin{aligned}
+\LARGE\overline{p}_\text{SM} &amp;= \LARGE\frac { \normalsize{p} \small{_M} \normalsize + p{ \small_M -1} + \cdots + p_{M \normalsize-(n-1)^{}}}{n}\\
+                       &amp;= \LARGE\frac1n \sum_{i=0}^{n-1} p_{ \small{M} \normalsize{-i}}
+\end{aligned}
+\]</span>
+This seems straight-forward enough, but what about the boundaries? What about the first position where there’s no “before”? Well the function handles it properly. The same happens when it steps close to the end of the series. Everything is handled in a way that prevents brittle errors from emerging in the process. So that new column can now be plotted as a line along with the bars representing the individual daily aggregates and we have a view of the data that’s become all-to-familiar on the nightly news.</p>
+{{% fancybox "/img" "data_originalCOVID_ncRawAndRM_NA.png" %}}
+<p>The point here is to illustrate that there certainly is a way to build an algorithm in nearly <em>any</em> language that can calculate a rolling mean. But the <em>ecosystem</em> around R that makes it a particularly adept low-code environment for this type of task.</p>
+</div>
+<div id="check-your-wallet-and-your-calendar" class="section level2">
+<h2>Check Your Wallet and Your Calendar</h2>
+<p>While R is specific, it’s not that special in this regard. Almost any popular language family has this kind of ecosystem around it. Java, Python, Node, JavaScript, and .NET all have their own ecosystem, whether the components are called library, package, crate, extension or some of the term-of-art. And if anyone is offering you a shortcut that skips past the context needed to account for it’s full cost, check your wallet <em>and</em> your calendar. Because even “free” low code solutions have costs - lock-in, lack of refactor-ability and most critically - time. The key takeaway here is that <em>real</em> low code is ubiquitous, and whether you keep it old school or go for the new shiny thing on display, you <strong>still</strong> have to deal honestly with the complexities of the domain that surrounds your business.</p>
 </div>
 </div>

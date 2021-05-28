@@ -22,7 +22,7 @@ tags:
 - Bootstrap
 categories: 
 - Sidebar
-weight: 7
+weight: 
 editor_options: 
   chunk_output_type: inline
 ---

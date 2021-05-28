@@ -14,7 +14,7 @@ ogfeatured: "h3_og_wide_telematics.png"
 emblem: iot.png
 description: Unpacking a vehicle telemetry solution from the code-side out
 draft: false
-weight: 2
+weight: 
 tags:
 - CosmosDB
 - Azure Functions

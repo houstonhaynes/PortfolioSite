@@ -8,7 +8,7 @@ featured = "H3logo.png"
 featuredpath = "img"
 ogfeatured = ""
 featuredalt = ""
-categories = [""]
+categories = ["vitae"]
 linktitle = ""
 format = ""
 link = ""
@@ -90,7 +90,7 @@ icon = "fas fa-check-square"
                     <div class="img-wrapper pl-4 pb-4">
                         <img class="float-left image centered rounded bordered filter-none mx-auto mt-4" src="/img/Chris_Anastas.jpg" alt="Chris Anastas">
                     </div>
-                    <div class="card-body w-75">The events that have taken place over recent months have re-shaped  the ethos. As a founder of an entertainment tech company, I was faced with responding to the most challenging market conditions of the modern era. With limited resources and time I had to find the right technical leader to step in to re-orient our business. Houston immediately helped us navigate through the most pressing times. He was successful in re-defining our product road map and provided counsel for technical and business domains in equal measure. His insight into front-of-house and back office systems along with his analytics expertise helped us to season our approach as we forged new partnerships with media companies. I can recommend him for his amazing engineering capability, unparalleled problem solving skills and his ability to earn the trust of our global, multi-cultural business partners.</div>
+                    <div class="card-body w-75">The ripple effect from the emergence of COVID-19 forced our start-up to respond to the most challenging market conditions of the modern era. With limited resources and time I had to find the right technical leader to step in and re-orient our business. Houston immediately helped us re-define our product road map and provided counsel for technical and business domains in equal part. His insight into front-of-house and back office systems along with his analytics expertise helped us to season our approach as we forged new partnerships with media companies. I can recommend him for his amazing engineering capability, unparalleled problem solving skills and his ability to earn the trust of our global, multi-cultural business partners.</div>
                 </div>
             </div>
         </div>

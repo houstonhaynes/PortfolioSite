@@ -20,7 +20,7 @@ tags:
 - Groovy
 categories: 
 - Deep Dive
-weight: 6
+weight: 
 editor_options: 
   chunk_output_type: inline
 ---

@@ -1,32 +1,32 @@
 ---
-title: "India - A Perfect Storm"
+title: "COVID in India - A Perfect Storm?"
 output:
   blogdown::html_page:
     dev: "svg"
 author: "Houston Haynes"
-date: '2021-05-14T14:59:43+05:30'
+date: '2021-05-23T14:59:43+05:30'
 featuredpath: img
 featured: COVID-19.png
 ogfeatured: h3_og_wide_covid19.png
 emblem: health.png
-description: The next wave in India could overtake us all
-draft: true
+description: Confounding Congregate Events and Strains of the Virus Straining Systems to the Breaking Point
+draft: false
+weight: 2
 tags:
 - COVID-19
 - R
 - highcharts
 categories: 
-- Sidebar
+- Deep Dive
 editor_options: 
   chunk_output_type: inline
 ---
 ```{r setup and file loads, include=FALSE}
 knitr::opts_chunk$set(
-	echo = FALSE,
+	echo = TRUE,
 	message = FALSE,
 	warning = FALSE
 )
-
 library(highcharter)
 library(tidyverse)
 library(lubridate)
@@ -45,6 +45,7 @@ coviddata <- read.csv(URL)
 library(rtweet)
 library(stringr)
 library(dplyr)
+library(DT)
 
 appname <- "H3 Tech Blog"
 consumer_key <- "Tb5d892Ozn7W3EP2uvm5RVQPH"
@@ -59,354 +60,467 @@ token <- create_token(
   access_key,
   access_secret)
 
-COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
-  filter(str_detect(text, 'died of COVID'))
+COVIDtweets <- get_timeline("CTZebra", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
+  filter(str_detect(text, 'died of #covid19'))
 
 COVIDtweets <- sample(COVIDtweets$status_id)
 
+# glimpse(COVIDtweets)
+
+# IndiaCOVIDtweets <- search_tweets("india, doctor OR nurse OR 'healthcare worker', 'died of covid'", n = 1000, parse = TRUE, include_rts = FALSE, ) 
+
+# IndiaCOVIDtweets <- sample(IndiaCOVIDtweets$status_id)
+
+# glimpse(IndiaCOVIDtweets)
+
 ```
 
-# A Crucible
+# My Cassandra Syndrome
 
-Having read several articles about <a href="https://www.wsj.com/articles/Indias-second-lockdown-seems-to-be-working-better-than-its-first-11604235601" target="_blank">India's mask mandate</a> and how that showed marked results that I had to see for myself. It didn't disappoint. When leveled for cases-per-million the shape of the data is unmistakable. 
+From the early days of lock down last year I was just as worried for *a possible* COVID-20 and COVID-21 as *the current* COVID-19. And when reconnecting with friends and former co-workers, many of whom work in public health and study of infectious diseases, the collective sentiment was largely similar. A close friend and I puzzled over India, as he's from there and was *convinced* that it would see an outsized infection rate due to its population density. But we were still puzzled why India's big wave emerged so recently and so asymmetrically. Part of it is our shared suspicion that there was under-reporting of cases, but we both thought there was more to the story.
 
-The data came from <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> and made for ample analysis. That said, there are some data shapes that cause me to raise an eyebrow. However, the chart below is a really stark visual story. I added some plotlines to indicate dates of policy changes (gathered from a <a href="https://en.wikipedia.org/wiki/COVID-19_pandemic_in_India" target="_blank">wiki page</a>) and the visual story is unmistakable. Not only does the case count per day *skyrocket* but it also *lags* the re-issuance of stricter guidelines.
+## Congregate Events
 
-## Comparison Countries
+Taking the queue from my entries about contagion spreading due to end-of-year congregate events in `r blogdown::shortcode("url-link", "Canada", "/post/COVID-19-Canadian-Case-Study", "_self")` and `r blogdown::shortcode("url-link", "Israel", "/post/COVID-19-Israel-Case-Study", "_self")`, my friend supposed that the same would happen in India with the advent of the national `r blogdown::shortcode("url-link", "Kumbh Festival", "https://www.bbc.com/news/world-asia-india-56770460")`. Even though many of those public events are held outdoors, my friend explained some of the cultural norms had a great deal of close contact over extended periods. So I decided to dive back into the "Our World In Data" repository and line up India's infection data with the dates of the festival.
 
-I was fairly arbitrary in my selection of countries to compare to India's data. I picked US and UK because the response in general has been *so poor* from a policy perspective. And as counterpoint I pulled in Canada and Germany who have better national strategies. India and China were chosen for their population size (even when leveled for cases per million I was expecting to see more from their data) and Japan has a pretty well-established mask culture. As you look at death and test rates below the picture continues to develop.
-
-`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-India-Case-Study_files/figure-html/widgets/widget_India_COVID_Cases_per_Million.html")`
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-India-a-perfect-storm_files/figure-html/widgets/widget_India_COVID_Cases_per_Million.html")`
 
 ```{r India_COVID_Cases_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
-  filter(date >= "2021-01-01")%>%
+  filter(date >= "2021-01-01") %>%
   rename(value = new_cases_smoothed_per_million) %>%
   mutate(value = ifelse(is.na(value), 0, value)) %>%
   mutate(date = ymd(date)) 
 
 data.wide <-  pivot_wider(data, names_from = location, values_from = value)
 
-#data.wide
-
 data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
 
 last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
 thm <- hc_theme_merge(
   hc_theme_ffx(),
-  hc_theme(colors = c("#800000", "#102156", "#d4622b",  "#45C0F5", 
-                      "#AFDC00", "#85DFD0", "purple", "orange"),
-           chart = list(backgroundColor = ""),
-           title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
-widget <- highchart(type = "stock") %>%
+widget <- highchart(type = "chart") %>%
   hc_add_theme(thm) %>%
-  hc_title(text = "New Cases per Million - India as Case Study", align = "center") %>%
-  hc_subtitle(text = "With Comparison to UK & US", align = "center") %>%
+  hc_title(text = "India's Kumbh Festival Dates Compared To COVID Infection Rates (per Million)", align = "center") %>%
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
-      borderRadius = 8,
-      borderWidth = 2) %>%
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+  hc_plotOptions(series = list(marker = list(enabled = FALSE))) %>%
   hc_credits(enabled = TRUE, 
              text = last_updated, 
              position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$India, type = "line", name = "India") %>%
-  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
-  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
+  hc_add_series(data_xts$India, type = "area", name = "India", color = "#FF9933", showInLegend = FALSE) %>%
   hc_tooltip(valueDecimals = 2) %>%
   hc_xAxis(type = "datetime",
     plotLines = list(list(
       label = list(text = "First Bath: Maka Sankranti"),
-      color = "#4D6278",
+      color = "#138808",
       width = 3,
       value = datetime_to_timestamp(as.Date('2021-01-14', tz = 'UTC'))
     ),
     list(
       label = list(text = "Second Bath: Mauni Amavasya"),
-      color = "#4D6278",
+      color = "#138808",
       width = 3,
       value = datetime_to_timestamp(as.Date('2021-02-11', tz = 'UTC'))
     ),
     list(
       label = list(text = "Third Bath: Vasant Panchami"),
-      color = "#4D6278",
+      color = "#138808",
       width = 3,
       value = datetime_to_timestamp(as.Date('2021-02-16', tz = 'UTC'))
     ),
     list(
       label = list(text = "Fourth Bath: Ram Navami"),
-      color = "#4D6278",
+      color = "#138808",
       width = 3,
       value = datetime_to_timestamp(as.Date('2021-04-21', tz = 'UTC'))
     ),
     list(
       label = list(text = "First Shahi Bath: Maha Shivratri"),
-      color = "#4D6278",
+      color = "#138808",
       width = 3,
       value = datetime_to_timestamp(as.Date('2021-03-11', tz = 'UTC'))
     ),
     list(
       label = list(text = "Second Shahi Bath: Somvati Amamvasya"),
-      color = "#4D6278",
+      color = "#138808",
       width = 3,
       value = datetime_to_timestamp(as.Date('2021-04-12', tz = 'UTC'))
     )
-    )) %>%
-  hc_legend(
-    enabled = TRUE,
-    align = "right",
-    layout = "proximate",
-    x = 0,
-    y = 0
-    ) 
+    )) 
 
-frameWidget(widget, width="100%", height="32rem")
+frameWidget(widget, width="100%", height="26rem")
+
 ```
 
-`r blogdown::shortcode("alert", "info", "Working with the Report:", "Use the legend on the right to highlight, show or hide a series. Use the bar at the bottom or zoom controls at the top to change the time range of the report.")`
+I was fully expecting for each date to be followed by a "bump" in case rates similar to what occurred in Canada and Israel. And while it *can* be influenced by under-reporting it's hard to see *that* many events remaining flat. So what could be the reason for such a huge wave of cases? It's entirely possible that there's no correlation whatsoever, or that there's something tangential about the later events that were minor contributors. There are too many *unknown unknowns* for this to be an __aha!__ moment. But with news of more virulent strains migrating to and gaining a footing in India I thought I'd take a look at genomics records to see if there's anything *else* that emerges. So I dug into `r blogdown::shortcode("url-link", "Nextstrain's data", "https://nextstrain.org/ncov/global?c=pango_lineage")`. Even if there weren't any answers I was hoping it would lead to better questions.
 
-Researchers will talk about the lag time between a change in policy and the shift in incident rates, but seldom will you see a more clear example. And of course the final piece to this mosaic is that the case rate in India moves *below* the UK, US, Germany and Canada as of the latest date (Nov 9) as of this writing.
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-India-a-perfect-storm_files/figure-html/widgets/widget_India_COVID_Variants_By_Month.html")`
 
-## Deaths per Million
+```{r India_COVID_Variants_By_Month, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-I was shocked to see the deaths per million *so high* in the UK. I honestly wonder if the US *not* being a higher number might be about improper/false attribution of cause of death. I've read anecdotes about folks in rest homes whose families assert they died from COVID-19 but their COD was listed as some other, more common cause. That said, the trend of the numbers in India after the new lockdown policy in mid September shows both the lagging response post-implementation *as well as* a rate the descends below those of the US and UK.
+asia <- "/repo/next-strain-ncov/data/asia.csv"
 
-`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-India-Case-Study_files/figure-html/widgets/widget_India_COVID_Deaths_per_Million.html")`
-
-```{r India_COVID_Deaths_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-
-data <- select(coviddata, date, location, new_deaths_smoothed_per_million) %>%
-  rename(value = new_deaths_smoothed_per_million) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
-  mutate(date = ymd(date)) %>%
-  filter(date >= "2021-01-01")
-
-data.wide <-  pivot_wider(data, names_from = location, values_from = value)
-
-#data.wide
-
-data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
-
-last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+asiadata <- read.csv(asia)
 
 thm <- hc_theme_merge(
   hc_theme_ffx(),
-  hc_theme(colors = c("#800000", "#102156", "#d4622b",  
-                      "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
-           chart = list(backgroundColor = ""),
-           title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
-widget <- highchart(type = "stock") %>%
+data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
+  filter(Country == "India" 
+#         | Country == "Malaysia" 
+#         | Country == "Bangladesh" 
+#         | Country == "Nepal"
+#         | Country == "Sri Lanka"
+#         | Country == "Afghanistan"
+#         | Country == "Pakistan"
+#         | Country == "Maldives"
+         ) %>%
+  add_column(value = 1) %>%
+  rename(Date = Collection.Data) %>%
+  rename(Variant = PANGO.Lineage) %>%
+  mutate(Date = mdy(Date)) %>%
+  filter(Date >= "2021-01-01") %>% 
+  select(Date, Variant, value) %>%
+  group_by(Variant, Date = floor_date(Date, "month")) %>%
+  summarise(value = sum(value))
+
+last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+
+widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Variant, labels = FALSE)) %>%
+  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) %>%
+  hc_legend(enabled = F) %>%
   hc_add_theme(thm) %>%
-  hc_title(text = "New Deaths per Million - India as Case Study", align = "center") %>%
-  hc_subtitle(text = "With Comparison to UK & US", align = "center") %>%
-    hc_chart(
-      borderColor = 'rgba(160, 160, 160, 0.3)',
-      borderRadius = 8,
-      borderWidth = 2) %>%
+  hc_title(text = "India COVID Variants Percentage by Month (PANGO Lineage)", align = "center") %>%
+  hc_add_theme(thm) %>%
+  hc_yAxis(title = list(enabled = FALSE)) %>%
+  hc_xAxis(title = list(enabled = FALSE)) %>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+    hc_legend(
+    align = "right",
+    verticalAlign = "top",
+    layout = "vertical"
+    ) %>%
+  hc_tooltip(shared = TRUE, sort = TRUE, useHTML= TRUE,
+              headerFormat = "<b>{point.key}</b><table>",
+              pointFormat = "<tr><td style='color: {series.color}'>{series.name}: </td><td style='text-align: right'> {point.percentage:,.2f} %</td></tr>",
+             footerFormat = "</table>") %>%
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$India, type = "line", name = "India") %>%
-  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
-  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
-  hc_tooltip(valueDecimals = 2) %>%
-  hc_xAxis(type = "datetime") %>%
-  hc_legend(
-    enabled = TRUE,
-    align = "right",
-    layout = "proximate",
-    x = 0,
-    y = 0
-    ) 
-  
+             position = list(align = "left", x = 10, y = -5))
 
-frameWidget(widget, width="100%", height="32rem")
+frameWidget(widget, width = "100%", height = "26rem")
 
 ```
 
-## Tests per Thousand
+`r blogdown::shortcode("alert", "info", "Hover:", "Shows tooltop with percentage of each variant present in data for that month aggregate.")`
 
-While the tests per thousand is increasing, it's not nearly high enough. It's really interesting to see how India's testing jumped up at the same time that case rate spiked. The drop-off at the end I assume is lag in reporting that will eventually be back-filled, but I'll go to other sources if this data sub-set flattens out.
+This visualization is structured as a percentage chart - where each variant is represented as a percent of total observations for a given month. The tooltip sort order re-shuffles the results to show the most prevalent variants for the month displayed. Even with a relatively short window it's easy to spot two clear trends. B.1.1.7 showed real staying power but has leveled off - and the emergence of B.1.617.1/2 "to the eye" looks like they line up with the spike in cases. __In April those two strains alone make 55.68% of genomically sequenced cases.__ As usual, correlation does not mean causation - and in systems like this even correlation can be elusive, but it's certainly enough to justify spending a bit more time with the data.
 
-`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-India-Case-Study_files/figure-html/widgets/widget_India_COVID_Tests_per_Thousand.html")`
+### Side Bar: Interest, Concern, Consequence, Variant & Clade
 
-```{r India_COVID_Tests_per_Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+The two references below are worth sharing when looking to grok this domain. The first includes classification of SARS-CoV-2 variants among other information. The second has a concise description of the relationship between variant and clade as well as some notes on the evolution of the SARS-CoV-2 genome.
 
-data <- select(coviddata, date, location, new_tests_smoothed_per_thousand) %>%
-  rename(value = new_tests_smoothed_per_thousand) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
-  mutate(date = ymd(date)) %>%
-  filter(date >= "2021-01-01")
+<div class="row">
+  <div class="col-md-6">`r blogdown::shortcode("ext-link-card", "https://www.cdc.gov/coronavirus/2019-ncov/cases-updates/variant-surveillance/variant-info.html")`</div>
+  <div class="col-md-6">`r blogdown::shortcode("ext-link-card", "https://www.news-medical.net/health/Viral-Clades-of-SARS-CoV-2.aspx")`</div>
+</div>
 
-data.wide <-  pivot_wider(data, names_from = location, values_from = value)
+I've worked at various healthcare-related companies throughout my career, and the one that maps most closely to this domain is `r blogdown::shortcode("url-link", "TherapyEdge", "/vitae/early-years/#TherapyEdge", "_self")`. I gained that formative experience right as AIDS was beginning to be understood as something other than an outright death sentence. So while I don't have the level of knowledge and experience of a clinician or researcher in this field, I know a bit more than the average software engineer. Knowledge is power, and understanding the nuance of how variants can diverge, and how the scientific community responds to and communicates about it will continue to grow in importance as we learn to live with SARS-CoV-2 in the coming years.
 
-data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
+## Higher Level View
 
-last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+Looking at clade data from the same observation set shows a more succinct pattern. While it looks like May has some drop off in the partial month data, April shows a clear take-over of 20I/501Y.V1 (primarily due to B.1.1.7) and 21A (due to B.1.617.2) which are the two variants that are currently causing the most worry around the globe.
+
+`r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-India-a-perfect-storm_files/figure-html/widgets/widget_India_COVID_Clades_By_Month.html")`
+
+```{r India_COVID_Clades_By_Month, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+asia <- "/repo/next-strain-ncov/data/asia.csv"
+
+asiadata <- read.csv(asia)
 
 thm <- hc_theme_merge(
   hc_theme_ffx(),
-  hc_theme(colors = c("#800000", "#102156", "#d4622b",  
-                      "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
-           chart = list(backgroundColor = ""),
-           title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
-widget <- highchart(type = "stock") %>%
+data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
+  filter(Country == "India" 
+#         | Country == "Malaysia" 
+#         | Country == "Bangladesh" 
+#         | Country == "Nepal"
+#         | Country == "Sri Lanka"
+#         | Country == "Afghanistan"
+#         | Country == "Pakistan"
+#         | Country == "Maldives"
+         ) %>%
+  add_column(value = 1) %>%
+  rename(Date = Collection.Data) %>%
+  mutate(Date = mdy(Date)) %>%
+  filter(Date >= "2021-01-01") %>% 
+  select(Date, Clade, value) %>%
+  group_by(Clade, Date = floor_date(Date, "month")) %>%
+  summarise(value = sum(value))
+
+last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+
+widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Clade, labels = FALSE)) %>%
+  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) %>%
+  hc_legend(enabled = F) %>%
   hc_add_theme(thm) %>%
-  hc_title(text = "Global New Tests per Thousand - India as Case Study", align = "center") %>%
-  hc_subtitle(text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
-    hc_chart(
-      borderColor = 'rgba(160, 160, 160, 0.3)',
-      borderRadius = 8,
-      borderWidth = 2) %>%
+  hc_yAxis(title = list(enabled = FALSE)) %>%
+  hc_xAxis(title = list(enabled = FALSE)) %>%
+  hc_title(text = "India COVID Clades Percentage by Month (Nextstrain)", align = "center") %>%
+  hc_add_theme(thm) %>%
+  hc_chart(
+    borderColor = 'rgba(160, 160, 160, 0.3)',
+    borderRadius = 8,
+    borderWidth = 2,
+    marginBottom = '80',
+    marginTop = '60',
+    marginLeft = '60',
+    marginRight = '60') %>%
+    hc_legend(
+    align = "right",
+    verticalAlign = "top",
+    layout = "vertical"
+    ) %>%
+  hc_tooltip(shared = TRUE, sort = TRUE, useHTML= TRUE,
+              headerFormat = "<b>{point.key}</b><table>",
+              pointFormat = "<tr><td style='color: {series.color}'>{series.name}: </td><td style='text-align: right'> {point.percentage:,.2f} %</td></tr>",
+             footerFormat = "</table>") %>%
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$India, type = "line", name = "India") %>%
-  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
-  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
-  hc_tooltip(valueDecimals = 2) %>%
-  hc_xAxis(type = "datetime") %>%
-  hc_legend(
-    enabled = TRUE,
-    align = "right",
-    layout = "proximate",
-    x = 0,
-    y = 0
-    ) 
-  
+             position = list(align = "left", x = 10, y = -5))
 
-frameWidget(widget, width="100%", height="32rem")
+frameWidget(widget, width = "100%", height = "26rem")
 
 ```
 
-# Code Review
+`r blogdown::shortcode("alert", "info", "Hover:", "Shows tooltip with percentage of each clade present in data for that month aggregate.")`
 
-The majority of this code is formatting the display elements of the chart using the highcharter library. Here I'll focus on how the data was collected and processed for use in this chart. Not all time series charts are the same and I'm using the "stock" chart type for the windowed slider at the bottom.
+Many experts around the globe are watching this very closely, and like variants and clades, so too will the information surrounding them continue to develop.
 
-<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#code">View the Code behind the Chart</button>
+## News From the World
 
-<pre id="code" class="collapse"><code class="r"># begin setup code chunk
-library(highcharter)
-library(widgetframe)
-library(tidyverse)
-library(lubridate)
-library(xts)
+One of the main concerns surround a potential future "COVID-20" and "COVID-21" is the possibility of those variants reducing the effectiveness of vaccines or available therapies. With that, the contagion would continue to spread, and may eventually overtake once-thought-safe populations. And given the information from those that specialize in this area, certain strains of the virus not only seem more contagious, they also are showing some resistance to certain vaccines and demonstrate potential for accelerated spread.
 
-URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+<div class="row">
+  <div class="col-md-6">`r blogdown::shortcode("tweet-single", "1392942636730880003")`</div>
+  <div class="col-md-6">`r blogdown::shortcode("tweet-single", "1396332689955950594")`</div>
+</div>
 
-coviddata <- read.csv(URL)
+During my time at TherapyEdge a significant portion of the company's effort was on determining which strains of the AIDS virus were modulating within a given patient, which would impact the cocktail of ARV and related medications that made an individual's treatment plan. It was like playing whack-a-mole, and if SARS-CoV-2 exhibits similar traits it will be a long time before the healthcare and scientific communities can get in front of it.
 
-# end setup code chunk
+## Taking Stock
 
-data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
-  rename(value = new_cases_smoothed_per_million) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
-  mutate(date = ymd(date))
+This isn't the only report I had planned for looking at this data, but given the recent press around `r blogdown::shortcode("url-link", "Modi's COVID response", "https://www.npr.org/2021/05/11/995446333/this-government-has-failed-us-anger-rises-in-india-over-pm-modis-covid-response")`, and the dramatic effect that had on COVID incident rates, I thought some focus time with the data was warranted. Seeing population-leveled incident rates is heart-wrenching enough, but in absolute terms the situation in truly horrific. This isn't *just* a problem for India. It's a problem for *all of us*, and while the scientific community has some clarity on this, I'm hopeful that governments and policy-makers will see beyond their borders and their own personal fortunes to do what's right for the future of our shared world.
 
-data.wide <-  pivot_wider(data, names_from = location, values_from = value)
-
-data_xts <- xts(data.wide[,-1], order.by = data.wide$date)
-
-last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",
-                        format(Sys.time(), "%a %b %d %Y %X"))
-
-thm <- hc_theme_merge(
-  hc_theme_smpl(),
-  hc_theme(colors = c("#800000", "#102156", "#d4622b",  
-                        "#45C0F5", "#AFDC00", "#85DFD0", "purple", "orange"),
-           chart = list(backgroundColor = ""),
-           title = list(style = list(fontFamily = "Ubuntu")),
-           subtitle = list(style = list(fontFamily = "Ubuntu")),
-           legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
-
-widget <- highchart(type = "stock") %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "Global New Cases per Million - India as Case Study", align = "center") %>%
-  hc_subtitle(
-    text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
-    hc_chart(
-      borderColor = 'rgba(160, 160, 160, 0.3)',
-      borderRadius = 8,
-      borderWidth = 2) %>%
-  hc_credits(enabled = TRUE, 
-             text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$India, type = "line", name = "India") %>%
-  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
-  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
-  hc_tooltip(valueDecimals = 2) %>%
-  hc_xAxis(type = "datetime",
-    plotLines = list(list(
-      label = list(text = "Schools opened"),
-      color = "#4D6278",
-      width = 3,
-      value = datetime_to_timestamp(as.Date('2020-05-03', tz = 'UTC'))
-    ),
-    list(
-      label = list(text = "Schools shut down"),
-      color = "#4D6278",
-      width = 3,
-      value = datetime_to_timestamp(as.Date('2020-06-01', tz = 'UTC'))
-    ),
-    list(
-      label = list(text = "New stricter controls announced"),
-      color = "#4D6278",
-      width = 3,
-      value = datetime_to_timestamp(as.Date('2020-07-13', tz = 'UTC'))
-    ),
-    list(
-      label = list(text = "Loosened 'traffic light' plan"),
-      color = "#800000",
-      width = 4,
-      value = datetime_to_timestamp(as.Date('2020-08-31', tz = 'UTC'))
-    )),
-    plotBands = list(
-      list(
-        label = list(text = "New nationwide<br />lockdown policy", align = "left"),
-        color = "rgba(100, 0, 0, 0.1)",
-        from = datetime_to_timestamp(as.Date('2020-09-13', tz = 'UTC')),
-        to = datetime_to_timestamp(as.Date(end(data_xts), tz = 'UTC'))
-      )
-    )
-  ) %>%
-  hc_legend(
-    enabled = TRUE,
-    align = "right",
-    layout = "proximate",
-    x = 0,
-    y = 0
-    ) 
-
-frameWidget(widget, width="100%", height="32rem")</code></pre>
-
-The file from "Our World in Data" is pulled in a single chunk at the top of the R markdown document, and the entire data set is placed in a dataframe that each individual report chunk can process for its own use. You'll see the creation of an initial *data* dataframe, which in each case selects on of the dozen or more columns in the original set. Then the *wide* version of the table is created to split out each country-based time series into its own column. That *wide* dataframe is then converted to an *xts* or extended time series dataframe.
-
-Each report is largely the same. The only factors that are changed is the selected metric (new cases/million, new deaths/million, new tests/thousand) and of course the titles. The *plotLines* and *plotBands* are largely manually generated - from dates I found in the wikipedia page mentioned above. The one plotBand date that is dynamically set is the end date which always uses the last date of the current report range. Once there's a change in policy then that will again require some hand-curated edits. Until then the daily reports will continue to 'stretch' that last *plotBand* as the data grows.
-
-# Continuing Research
-
-This isn't the only report I had planned for looking at this data, but given the recent press around India's changes in policy, and the dramatic effect that had on COVID incident rates, I had to see the data for myself. As more data is gathered and more interesting questions are posed to that data, other report types will surely follow.
-
-
-<div class="separator">Faces of COVID-19</div>
+<div class="separator">US Health Care Workers Lost to COVID-19</div>
 <figure>
 <div class="row">
-  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[1])`</div>
-  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[2])`</div>
-  <div class="col-md-4">`r blogdown::shortcode("tweet", COVIDtweets[3])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet-single", COVIDtweets[1])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet-single", COVIDtweets[2])`</div>
+  <div class="col-md-4">`r blogdown::shortcode("tweet-single", COVIDtweets[3])`</div>
 </div>
 <figcaption class="caption">The pandemic-related posts on this site are about more than data. <strong>Behind every number is a person, a family and a community.</strong> As reports are refreshed, new selections will also be chosen at random. To see how this is done, <a href="/post/faces-of-covid">see this sidebar</a>.</figcaption>
 <hr>
 </figure>
 
+`r blogdown::shortcode("alert", "info", "", "If anyone knows a curated Twitter account that lists similar info for Indian healthcare workers I'd be glad to modify my script for this page. I tried a few options using plain text search, but it pulled so many spam posts that were jacking keywords that I couldn't make the switch. This is a global phenomenon and we should honor all of those that have given the last full measure to stem the tide of this horrific pandemic.")`
 
+## The Code Behind the Charts
+
+These charts are similar to many others on this site, with a few wrinkles in display and tooltip styling. I use `r blogdown::shortcode("url-link", "highcharter", "https://jkunst.com/highcharter/")`, the R wrapper for the `r blogdown::shortcode("url-link", "HighCharts", "https://www.highcharts.com")` JavaScript library.
+
+Data for the first visual again uses the Our World In Data record set. Here it's pared down to this year's data and the date field is entitized.
+
+<pre><code class="r">library(highcharter)
+library(tidyverse)
+library(lubridate)
+library(widgetframe)
+library(xts)
+library(jsonlite)
+
+URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+
+coviddata <- read.csv(URL)
+
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
+  filter(date >= "2021-01-01") %>%
+  rename(value = new_cases_smoothed_per_million) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) %>%
+  mutate(date = ymd(date)) 
+
+data.wide <-  pivot_wider(data, names_from = location, values_from = value)
+
+data_xts <- xts(data.wide[,-1], order.by = data.wide$date)</code></pre>
+
+Because this visual was about the general shape of the plotted area juxtaposed against the dates I didn't use the "Highstock" visual as I did with Canada and Israel. The largest block of code is the layout of plotted dates, showcasing how the HighCharts wrapper uses a "lists of lists" approach to structuring the hand-off to javascript behind the scenes.
+
+<pre><code class="r">last_updated <- paste("Source: https://ourworldindata.org/  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+
+thm <- hc_theme_merge(
+  hc_theme_ffx(),
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
+
+widget <- highchart(type = "chart") %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "India's Kumbh Festival Dates Compared To COVID Infection Rates (per Million)", align = "center") %>%
+    hc_chart(
+      borderColor = 'rgba(160, 160, 160, 0.3)',
+      borderRadius = 8,
+      borderWidth = 2,
+      marginBottom = '80',
+      marginTop = '60',
+      marginLeft = '60',
+      marginRight = '60') %>%
+  hc_plotOptions(series = list(marker = list(enabled = FALSE))) %>%
+  hc_credits(enabled = TRUE, 
+             text = last_updated, 
+             position = list(align = "left", x = 10, y = -5)) %>%
+  hc_add_series(data_xts$India, 
+                type = "area", 
+                name = "India", 
+                color = "#FF9933", 
+                showInLegend = FALSE) %>%
+  hc_tooltip(valueDecimals = 2) %>%
+  hc_xAxis(type = "datetime",
+    plotLines = list(list(
+      label = list(text = "First Bath: Maka Sankranti"),
+      color = "#138808",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2021-01-14', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Second Bath: Mauni Amavasya"),
+      color = "#138808",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2021-02-11', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Third Bath: Vasant Panchami"),
+      color = "#138808",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2021-02-16', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Fourth Bath: Ram Navami"),
+      color = "#138808",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2021-04-21', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "First Shahi Bath: Maha Shivratri"),
+      color = "#138808",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2021-03-11', tz = 'UTC'))
+    ),
+    list(
+      label = list(text = "Second Shahi Bath: Somvati Amamvasya"),
+      color = "#138808",
+      width = 3,
+      value = datetime_to_timestamp(as.Date('2021-04-12', tz = 'UTC'))
+    )
+    )) 
+
+frameWidget(widget, width="100%", height="26rem")</code></pre>
+
+This visual that's built from the code below uses a Nextstrain data set, and while that can be generated from their Python/Anaconda project there's a dependency on running the process in a Linux container (as I'm on Windows 10). I've done that kind of work for local dev instances to be eventually be deployed in the Azure stack, but automating a headless Python/Conda process was eating too much time. I'm not sure if I'll go through the process of making it work or if I'll simply re-generate the file a few times per week. Time will tell...
+
+Here you'll see that I looked at countries that border India as well as India itself. I did some data exploration in order to see "fan out" due to other columns showing tracing back to bordering countries. But I'll need to do a more complete job of figuring out how to tie in relevant data, which seemed to be a bridge too far in this exercise. Note that I added a defaulted "1" value column so that roll-ups in the monthly aggregate could then be used by HighCharts to show a late-bound percentage value. (see {point.percentage:,.2f} % in the bottom sample)
+
+<pre><code class="r">library(highcharter)
+library(tidyverse)
+library(lubridate)
+library(widgetframe)
+library(jsonlite)
+
+asia <- "/repo/nextstrain-ncov/data/asia.csv"
+
+asiadata <- read.csv(asia)
+
+data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
+  filter(Country == "India" 
+#         | Country == "Malaysia" 
+#         | Country == "Bangladesh" 
+#         | Country == "Nepal"
+#         | Country == "Sri Lanka"
+#         | Country == "Afghanistan"
+#         | Country == "Pakistan"
+#         | Country == "Maldives"
+         ) %>%
+  add_column(value = 1) %>%
+  rename(Date = Collection.Data) %>%
+  rename(Variant = PANGO.Lineage) %>%
+  mutate(Date = mdy(Date)) %>%
+  filter(Date >= "2021-01-01") %>% 
+  select(Date, Variant, value) %>%
+  group_by(Variant, Date = floor_date(Date, "month")) %>%
+  summarise(value = sum(value))</code></pre>
+
+While the area spline and percentage charting makes for a "busy" visual, the key really is the tooltip. Note how HTML for building that mini-table is used to construct a "shared" tool tip, where mousing over any value will show the full range of values for every aggregate for that month. The late-binding of percentage-of-total has a definite "bucket brigade" vibe to it at first glance. But like most of this kind of hybrid/polyglot code exercises it becomes the "new normal" fairly quickly. There's quite a bit of lift that's being carried by the HighCharts "smarts" and that's part of the beauty in the beast.
+
+<pre><code class="r">thm <- hc_theme_merge(
+  hc_theme_ffx(),
+  hc_theme(title = list(style = list(fontFamily = "Ubuntu")),
+           subtitle = list(style = list(fontFamily = "Fira Code")),
+           legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
+
+last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
+
+widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Variant, labels = FALSE)) %>%
+  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) %>%
+  hc_legend(enabled = F) %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "India COVID Variants Percentage by Month (PANGO Lineage)", align = "center") %>%
+  hc_add_theme(thm) %>%
+  hc_yAxis(title = list(enabled = FALSE)) %>%
+  hc_xAxis(title = list(enabled = FALSE)) %>%
+  hc_chart(borderColor = 'rgba(160, 160, 160, 0.3)',
+            borderRadius = 8,
+            borderWidth = 2,
+            marginBottom = '80',
+            marginTop = '60',
+            marginLeft = '60',
+            marginRight = '60') %>%
+  hc_legend(align = "right",
+            verticalAlign = "top",
+            layout = "vertical") %>%
+  hc_tooltip(shared = TRUE, sort = TRUE, useHTML= TRUE,
+              headerFormat = "&#x3C;b&#x3E;{point.key}&#x3C;/b&#x3E;&#x3C;table&#x3E;",
+              pointFormat = "&#x3C;tr&#x3E;&#x3C;td style=&#x27;color: {series.color}&#x27;&#x3E;{series.name}: &#x3C;/td&#x3E;&#x3C;td style=&#x27;text-align: right&#x27;&#x3E; {point.percentage:,.2f} %&#x3C;/td&#x3E;&#x3C;/tr&#x3E;",
+              footerFormat = "&#x3C;/table&#x3E;") %>%
+  hc_credits(enabled = TRUE, 
+              text = last_updated, 
+              position = list(align = "left", x = 10, y = -5))
+
+frameWidget(widget, width = "100%", height = "26rem")</code></pre>
+
+I'm seriously considering the lift in "breaking out" the Linux-focused Python tooling for Nextstrain. It's both a way to keep my Python chops relatively sharp as well as lay some groundwork for more exploration of Nextstrain data in F#. Stay tuned!

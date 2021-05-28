@@ -19,7 +19,7 @@ tags:
 - Verizon
 categories: 
 - Sidebar
-weight: 5
+weight: 
 editor_options: 
   chunk_output_type: inline
 ---

@@ -30,7 +30,7 @@ tags:
 - Cloud
 categories: 
 - Perspective
-weight: 105
+weight: 104
 editor_options: 
   chunk_output_type: inline
 ---

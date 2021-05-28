@@ -10,11 +10,11 @@ author: "Houston Haynes"
 date: '2019-11-12T14:59:43+05:30'
 featuredpath: img
 featured: COVID_datapothecary.png
-ogfeatured: h3_og_wide_COVID_datapothecary.png
+ogfeatured: h3_og_wide_covid_datapothecary.png
 emblem: health.png
 description: Processing observation level data for more reliable calculated metrics
 draft: false
-weight: 2
+weight: 4
 tags:
 - R
 - COVID-19

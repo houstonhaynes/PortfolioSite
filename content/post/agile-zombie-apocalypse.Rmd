@@ -22,7 +22,7 @@ tags:
 - design
 categories: 
 - Perspective
-weight: 1
+weight: 5
 editor_options: 
   chunk_output_type: inline
 ---
@@ -104,7 +104,7 @@ Here's a final tidbit to get you thinking: If facebook is already paying for mar
 
 `r blogdown::shortcode("youtube", "cGuTmOUdFbo")`
 <br>
-And as a cherry on top, the observant reader will note that it's the "lean IT" summit - no mention of "agile" in that title.
+This is a really great synopsis of the history of "agile" and its nearly-accidental roots. Kent Beck is not only *__patient 0__* in this zombie apocalypse, he's also funny and delightfully self-effacing. I had no idea that he ever worked at facebook until seeing this video, found while researching this post. So it somewhat serves double-duty, both historical context and an interesting *early* bookend that pre-dates the facebook commercial above.
 
 ## Rediscovering Healthy Tensions in Engineering Process
 

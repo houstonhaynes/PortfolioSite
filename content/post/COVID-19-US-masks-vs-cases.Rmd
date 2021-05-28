@@ -7,7 +7,7 @@ author: "Houston Haynes"
 date: '2018-11-17T14:59:43+05:30'
 featuredpath: img
 featured: COVID-19-US.png
-ogfeatured: h3_og_wide_covid19-US.png
+ogfeatured: h3_og_wide_covid19-us.png
 emblem: health.png
 description: Cumlative, population-leveled case data versus public mask percentage
 draft: false
@@ -15,7 +15,7 @@ tags:
 - COVID-19
 categories: 
 - Sidebar
-weight: 3
+weight: 
 editor_options: 
   chunk_output_type: inline
 ---
