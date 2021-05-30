@@ -425,10 +425,9 @@ pre code {
     /* Force ligatures for Webkit, Blink, Gecko */
     line-height: 1.5em;
     border-radius: 8px;
-    /* not really likeing the look of breaks/wraps so disabling
     white-space: pre-wrap;
     word-break: break-all;
-    */
+    overflow: hidden;
 }
 
 hr {
@@ -2500,15 +2499,12 @@ body {
 
 @media screen and (min-width: 980px) {
     #header .menu {
-        display: block;
+        display: none;
     }
 }
 
-@media screen {
+@media screen and (max-width: 980px) {
     #header .links {
-        display: none;
-    }
-    #header h1 {
         display: none;
     }
 }

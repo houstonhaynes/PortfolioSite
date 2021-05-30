@@ -4,7 +4,7 @@ author = "Houston Haynes"
 date = "2019-10-07"
 title = "Early Career Compendium"
 description = "On my Foundation for building teams in operations and analytics for Media, Ecommerce, IoT & Healthcare"
-featured = "H3logo.png"
+featured = "h3logo.png"
 ogfeatured = ""
 featuredpath = "img"
 featuredalt = ""
@@ -16,9 +16,7 @@ weight = "01"
 icon = "fas fa-user-circle"
 +++
 
-# Hello and Welcome!
 {{< rawhtml >}}
-<div class="clearfix"><img class="ui small float-left rounded bordered image filter-none mr-3" src="/img/H3_suit.jpg">Since you were likely referred one of my public profiles, you might have an idea of my skills and background. However, there’s more to my story than you’ll find on LinkedIn or online resume listings. The following notes provide work history from the time I left college until I relocated to the west coast. Since I refer to this formative period throughout this site I thought it worth providing some context here.</div>
 <br id="Moog">
 <div class="container-fluid">
     <div class="row">

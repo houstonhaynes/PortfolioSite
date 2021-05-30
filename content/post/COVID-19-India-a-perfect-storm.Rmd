@@ -237,7 +237,7 @@ frameWidget(widget, width = "100%", height = "26rem")
 
 `r blogdown::shortcode("alert", "info", "Hover:", "Shows tooltop with percentage of each variant present in data for that month aggregate.")`
 
-This visualization is structured as a percentage chart - where each variant is represented as a percent of total observations for a given month. The tooltip sort order re-shuffles the results to show the most prevalent variants for the month displayed. Even with a relatively short window it's easy to spot two clear trends. B.1.1.7 showed real staying power but has leveled off - and the emergence of B.1.617.1/2 "to the eye" looks like they line up with the spike in cases. __In April those two strains alone make 55.68% of genomically sequenced cases.__ As usual, correlation does not mean causation - and in systems like this even correlation can be elusive, but it's certainly enough to justify spending a bit more time with the data.
+This visualization is structured as a percentage chart where each variant is represented as a percent of total observations for a given month. The tooltip sort order re-shuffles the results to show the most prevalent variants for the month displayed. It's been interesting to see how sample levels and back-dated sequence reporting has continued to shape the percentages for a given period. April is still "shifting" as May data continue to come in. As usual, correlation does not mean causation - and in systems like this even correlation can be elusive, but it's certainly enough to justify spending a bit more time with the data.
 
 ### Side Bar: Interest, Concern, Consequence, Variant & Clade
 
@@ -283,7 +283,7 @@ data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
   mutate(Date = mdy(Date)) %>%
   filter(Date >= "2021-01-01") %>% 
   select(Date, Clade, value) %>%
-  group_by(Clade, Date = floor_date(Date, "month")) %>%
+  group_by(Clade, Date = floor_date(Date, "7 days")) %>%
   summarise(value = sum(value))
 
 last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))

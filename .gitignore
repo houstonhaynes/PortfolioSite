@@ -8,3 +8,4 @@ deploy/properties.json
 .fake
 .ionide
 static/post/**
+themes/h3tech-future-imperfect/static/css/originalmain.css
