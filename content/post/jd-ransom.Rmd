@@ -1,0 +1,104 @@
+---
+title: Is Your JD A Ransom Note?
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2021-05-31T01:59:43+05:30'
+featuredpath: img
+featured: job-ransom.png
+ogfeatured: h3_og_wide_job-ransom.png
+emblem: bullhorn.png
+description: A job description can say more about your company than any marketing flyer
+draft: false
+tags:
+- hiring
+- team building
+- leadership
+- opportunity
+categories: 
+- Perspective
+weight: 1
+editor_options: 
+  chunk_output_type: inline
+---
+## A Very Good, Sort-of Bad Example
+
+The second person I ever hired stayed with that company for 20+ years after I moved on. He became the senior hardware engineering lead for one of the most widely recognized brands in the world of electronic music. This is what you'd call "an outlier". I have never repeated that feat, but I have gotten close in a handful of situations since then. Western North Carolina was a relatively small talent market. We had interviewed a few folks that there working at an RCA assembly plant down the street. And while there were folks that knew CAD pitched in their resumes and some applicants came from a local SONY/BMG owned CD print facility, nothing really meshed.
+
+`r blogdown::shortcode("tweet-single", "1210646604170088450")`
+
+Steve was a college classmate - a very good musician that really knew his way around the school's electronic music lab. He didn't have all of the hard skills but I knew from his aptitude in the lab that he'd grow into the position. I convinced Bob that in the long term he'd be more valuable after learning the ropes than any CAD engineer. Bob agreed to my long view, and we (and Moog Music) were both fortunate. While it's a pointed success story, it's certainly not something that could be viewed as the basis for a repeatable pattern.
+
+>If companies wish to reap the benefits of low turnover, or at a *minimum* establish a stable and productive work culture, they need to recognize that *it's actually 2021* **and not just** *2011* all over again.
+
+Time and again since then I've been reminded that good habits with recruiting and staff development is as hard-won as any engineering skill. So I try to be charitable when I look at job reqs with cartoonishly bad descriptions, but some are simply begging to be ridiculed.
+
+`r blogdown::shortcode("fancybox", "/img", "enquire_within.png")`
+
+And while it's easy to dunk on laughably bad examples and attitudes, there is a full-on reckoning coming to recruiting and hiring, if it's not already here...
+
+### The Great Uncoupling
+
+The pandemic has laid bare many inequities, and the workplace is no exception. The job market and tech sector in particular is in the throes of a unique cycle. Those who held on to their jobs saw the pressure to perform rise significantly. And companies in unique position to strip-mine the value they produced exaggerated the literal capitalization of their output.  
+
+`r blogdown::shortcode("ext-link-card", "https://www.shrm.org/resourcesandtools/hr-topics/talent-acquisition/pages/turnover-tsunami-expected-once-pandemic-ends.aspx")`
+
+Still others that were forced to step away from the workplace to care for loved ones eventually realized that the exchanges they made - the loss of personal and familial connection for a "work family" - never lived up to the hype. The pandemic has forced *everyone* to take stock of their life choices. Those looking to either return to or retrench *in* the work force are being much more selective, and "hustle culture" corporate gaslighting doesn't play any more.
+
+`r blogdown::shortcode("tweet-single", "1390705599399309317")`
+
+If companies wish to reap the benefits of low turnover, or at a *minimum* establish a stable and productive work culture, they need to recognize that *it's actually 2021* **and not just** *2011* all over again. A decent start would be an update to the attitudes they portray in job descriptions.
+
+## Second System Syndrome
+
+Probably the most common mistake I see in job reqs is laundry listing all of the skills of the person who just left that position. In almost all cases the skills they came in with were a sub-set of the skills they had when the left. To glibly parade that super-set as minimum requirements for the job is not a good look. This is somewhat akin to the concept introduced in "The Mythical Man Month: Revisited" which described *the second system syndrome*. It's a condition where the working group, in their fervor, set unrealistic expectations of the problems that will be solved with the new system. If the person who left had been in that position or at that company for a long time - they very likely acquired many of those skills while on the job. If that job description had been applied to the "day one" version of the person who just left, they likely wouldn't have qualified. Making careful consideration of required and nice-to-have skills is a signal that a potential employer is thinking "big picture".
+
+### Competency Inflation
+
+Somewhat arm-in-arm with the above is phenomena where HR will arbitrarily inflate the number of years necessary with a technology - often unwittingly requiring use that is longer than than that tool or service has been available. This is a reaction to resume inflation from applicants, an ersatz attempt to dissuade marginally or unqualified submissions. While I sympathize with the situation - and I've dealt with a considerable noise-to-signal ratio when hiring into certain high-skilled groups - the end does not justify the means. In fact it's quite counter-productive because it not only inspires more absurdly worded CVs but it also projects an image of marginal competence by the posting group. That can mean missing out on qualified applications to see gaffes like that in job reqs passing on submitting because it gives the impression that the hiring group is unqualified to manage the technology much less the engineers who leverage it.
+
+### Certification Abuse
+
+
+
+## You are not Google - Even Google isn't Google Any More
+
+
+`r blogdown::shortcode("tweet-single", "1387550833395576835")`
+
+`r blogdown::shortcode("tweet", "1387969648885338112")`
+
+## Street Rep
+
+<div class="row">
+  <div class="col-md-6 mt-2">`r blogdown::shortcode("ext-link-card", "https://www.businessinsider.com/top-stories-amazon-hire-to-fire-james-charles-lawsuit-wells-fargo-exodus-2021-5")`</div>
+  <div class="col-md-6">`r blogdown::shortcode("ext-link-card", "https://www.businessinsider.com/wells-fargo-top-mortgage-producers-leaving-droves-housing-market-2021-5")`</div>
+</div>
+
+## We See You
+
+`r blogdown::shortcode("tweet-single", "1399458756568641538")`
+
+## Sword of Damocles
+
+
+`r blogdown::shortcode("tweet-single", "1390470448656355330")`
+
+
+
+
+## Virtue Signaling
+
+`r blogdown::shortcode("tweet-single", "1372726826221539331")`
+
+# Deja Vue All Over Again
+
+
+`r blogdown::shortcode("ext-link-card", "https://www.forbes.com/sites/johnhall/2019/05/09/the-cost-of-turnover-can-kill-your-business-and-make-things-less-fun")`
+
+
+Building teams is hard. The balancing and re-balancing never ends. Personalities. Skillsets. Objectives. They are all on shifting sands. 
