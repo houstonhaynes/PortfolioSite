@@ -20,7 +20,7 @@ tags:
 - design
 categories: 
 - Perspective
-weight: 1
+weight: 3
 editor_options: 
   chunk_output_type: inline
 ---

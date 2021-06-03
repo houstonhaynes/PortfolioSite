@@ -1,5 +1,5 @@
 ---
-title: Is Your JD A Ransom Note?
+title: Is Your Job Description A Ransom Note?
 output:
   blogdown::html_page:
     toc: false
@@ -12,7 +12,7 @@ featuredpath: img
 featured: job-ransom.png
 ogfeatured: h3_og_wide_job-ransom.png
 emblem: bullhorn.png
-description: A job description can say more about your company than any marketing flyer
+description: A company's open positions and interview approach says more about its culture than any "About Us" page
 draft: false
 tags:
 - hiring
@@ -27,15 +27,13 @@ editor_options:
 ---
 ## A Very Good, Sort-of Bad Example
 
-The second person I ever hired stayed with that company for 20+ years after I moved on. He became the senior hardware engineering lead for one of the most widely recognized brands in the world of electronic music. This is what you'd call "an outlier". I have never repeated that feat, but I have gotten close in a handful of situations since then. Western North Carolina was a relatively small talent market. We had interviewed a few folks that there working at an RCA assembly plant down the street. And while there were folks that knew CAD pitched in their resumes and some applicants came from a local SONY/BMG owned CD print facility, nothing really meshed.
+The second person I hired in my career stayed with that company for 20+ years after I moved on. He eventually became the lead hardware engineer for one of the most widely recognized brands in the world of electronic music. This is what you'd call "an outlier". I have never repeated that feat, but I have gotten close in a handful of situations since then. Western North Carolina was a relatively small talent market. We had interviewed a few folks working at an RCA TV assembly plant down the street. And while there were folks that knew CAD who had pitched in their resumes, and other applicants came from a local SONY/BMG operated Compact Disc manufacturing plant, nothing really meshed.
 
 `r blogdown::shortcode("tweet-single", "1210646604170088450")`
 
-Steve was a college classmate - a very good musician that really knew his way around the school's electronic music lab. He didn't have all of the hard skills but I knew from his aptitude in the lab that he'd grow into the position. I convinced Bob that in the long term he'd be more valuable after learning the ropes than any CAD engineer. Bob agreed to my long view, and we (and Moog Music) were both fortunate. While it's a pointed success story, it's certainly not something that could be viewed as the basis for a repeatable pattern.
+Steve was a college classmate - a very good musician that really knew his way around the school's electronic music lab. He didn't have all of the hard skills but I knew from his aptitude in the lab that he'd grow into the position. I convinced Bob that in the long term he'd be more valuable after learning the ropes than any CAD engineer. Bob agreed to my long view, and the rest as they say is history. 
 
->If companies wish to reap the benefits of low turnover, or at a *minimum* establish a stable and productive work culture, they need to recognize that *it's actually 2021* **and not just** *2011* all over again.
-
-Time and again since then I've been reminded that good habits with recruiting and staff development is as hard-won as any engineering skill. So I try to be charitable when I look at job reqs with cartoonishly bad descriptions, but some are simply begging to be ridiculed.
+Since then I've been reminded time and again that good habits with recruiting and staff development is as hard-won as any engineering skill. So I try to be charitable when I look at job reqs with cartoonishly bad descriptions, but some are simply begging to be ridiculed.
 
 `r blogdown::shortcode("fancybox", "/img", "enquire_within.png")`
 
@@ -47,58 +45,95 @@ The pandemic has laid bare many inequities, and the workplace is no exception. T
 
 `r blogdown::shortcode("ext-link-card", "https://www.shrm.org/resourcesandtools/hr-topics/talent-acquisition/pages/turnover-tsunami-expected-once-pandemic-ends.aspx")`
 
-Still others that were forced to step away from the workplace to care for loved ones eventually realized that the exchanges they made - the loss of personal and familial connection for a "work family" - never lived up to the hype. The pandemic has forced *everyone* to take stock of their life choices. Those looking to either return to or retrench *in* the work force are being much more selective, and "hustle culture" corporate gaslighting doesn't play any more.
+Still others that were forced to step away from the workplace to care for loved ones eventually realized that the exchanges they made - the loss of personal and familial connection for a "work family" - never lived up to the hype. The pandemic has forced *everyone* to take stock of their life choices. Those looking to either return to or retrench *in* the work force are being much more selective, and "hustle culture" corporate gaslighting no longer passes without notice.
 
 `r blogdown::shortcode("tweet-single", "1390705599399309317")`
 
-If companies wish to reap the benefits of low turnover, or at a *minimum* establish a stable and productive work culture, they need to recognize that *it's actually 2021* **and not just** *2011* all over again. A decent start would be an update to the attitudes they portray in job descriptions.
+If companies wish to reap the benefits of low turnover, or at a *minimum* establish a stable and productive work culture, they need to recognize that **it's actually 20<u>21</u> *and not just 2011 all over again***. A decent start would be an update to the attitudes they portray in job descriptions.
 
 ## Second System Syndrome
 
-Probably the most common mistake I see in job reqs is laundry listing all of the skills of the person who just left that position. In almost all cases the skills they came in with were a sub-set of the skills they had when the left. To glibly parade that super-set as minimum requirements for the job is not a good look. This is somewhat akin to the concept introduced in "The Mythical Man Month: Revisited" which described *the second system syndrome*. It's a condition where the working group, in their fervor, set unrealistic expectations of the problems that will be solved with the new system. If the person who left had been in that position or at that company for a long time - they very likely acquired many of those skills while on the job. If that job description had been applied to the "day one" version of the person who just left, they likely wouldn't have qualified. Making careful consideration of required and nice-to-have skills is a signal that a potential employer is thinking "big picture".
+Probably the most common mistake I see in job reqs is laundry listing all of the skills of a "unicorn" who just **vacated** that position. In many cases the skills they came in with were a sub-set of the skills they had acquired during their tenure. To glibly parade that super-set as minimum requirements for the job is poor professional practice and generally a bad look. This is somewhat akin to the concept introduced in "The Mythical Man Month: Revisited" which described *the second system syndrome*. It's a condition where the working group, in their fervor, set unrealistic expectations of the problems that will be solved with a new system. If the person who left had been in that position or at that company for a long time - they very likely acquired many of those skills while on the job. If that job description had been applied to the "day one" version of the person who just left, they likely **wouldn't** have qualified. Making careful consideration of required and nice-to-have skills is a signal that a potential employer is thinking "big picture". It also helps to re-align salary expectations, especially if that was a factor in that position's current vacancy.
 
 ### Competency Inflation
 
-Somewhat arm-in-arm with the above is phenomena where HR will arbitrarily inflate the number of years necessary with a technology - often unwittingly requiring use that is longer than than that tool or service has been available. This is a reaction to resume inflation from applicants, an ersatz attempt to dissuade marginally or unqualified submissions. While I sympathize with the situation - and I've dealt with a considerable noise-to-signal ratio when hiring into certain high-skilled groups - the end does not justify the means. In fact it's quite counter-productive because it not only inspires more absurdly worded CVs but it also projects an image of marginal competence by the posting group. That can mean missing out on qualified applications to see gaffes like that in job reqs passing on submitting because it gives the impression that the hiring group is unqualified to manage the technology much less the engineers who leverage it.
+Somewhat arm-in-arm with the above is the phenomena where HR will arbitrarily bump up the number of years necessary with a technology - often unwittingly requiring use that is longer than that tool or service has been available. This is an escalation due to resume inflation from applicants, an ersatz attempt to dissuade marginally or unqualified submissions. While I sympathize with the situation - and I've dealt with a considerable noise-to-signal ratio when hiring into certain high-skilled groups - the end does not justify the means. In fact it's quite counter-productive because it not only inspires more absurdly postured CVs but it also projects an image of marginal competence by the posting group. That can mean missing out on qualified applicants who see gaffes like that and pass on submitting. It also signals that the hiring group is out of their depth. Remember that the search for base competency is a two-way street.
 
 ### Certification Abuse
 
+I have lost count of the number of times I've been hired into a position (or a consulting assignment) because of my credentials or experience, and the hiring manager was more interested in having me as a prop in the room to silently nod as he continued to offer the same ideas before I arrived. Honestly, thanks for the paycheck and all that, but the job req didn't say "yes man needed" and if it did - I wouldn't have entered the picture. I've seen positions listed requiring three-letter acronyms after the name, where the job largely entails turning database tables into CSV files. A working group is simply not going to keep people long with that large of a gap between the ask and the expression of a skill set.
 
+`r blogdown::shortcode("tweet-single", "1399166110516224001")`
+
+The flip-side of that is when a position demands certifications that can consume quite a bit of learning time and sometimes a fair bit of money to acquire. Demanding that a person possess a cert walking into the job means defacto excluding a broad swath of high aptitude applicants out of the pool. And we all have stories of folks we've met at work and wonder how in the world they managed to pass a certification exam. If bullet-pointing certifications is aspirational for the position, be sure to put them in the nice-to-have section of the job description.
 
 ## You are not Google - Even Google isn't Google Any More
 
+And beyond the job description itself, the interview process has been contorted into a hazing gauntlet. Even FAANG companies, that have to weed out a HUGE number of applications, now recognize that is counter-productive. Not only that, but it's also a sign that those who construct such byzantine elaborations likely are lacking in the empathy needed to make a qualified decision about any applicant.
 
 `r blogdown::shortcode("tweet-single", "1387550833395576835")`
 
 `r blogdown::shortcode("tweet", "1387969648885338112")`
+<br>
+
+And this perverse behavior has not gone unnoticed in the broader tech community. Using this process while the JD has "inclusive" and "friendly" somewhere in the high-minded section of the company ethos, potential applicants will take note and then take a pass.
+
+>If companies wish to reap the benefits of low turnover, or at a *minimum* establish a stable and productive work culture, they need to recognize that it's actually 20<u>21</u> and not just 2011 all over again.
 
 ## Street Rep
+
+Even successful companies can gain reputations as toxic that can be perniciously difficult to shake off. As long as profit margins are good and staffing is within a company's tolerance for turnover it's often overlooked. The way these usually play out is when there's some precipitating event that exposes the long-term erosion of standards or some PR disaster that major stakeholders can no longer wave off as incidental.
 
 <div class="row">
   <div class="col-md-6 mt-2">`r blogdown::shortcode("ext-link-card", "https://www.businessinsider.com/top-stories-amazon-hire-to-fire-james-charles-lawsuit-wells-fargo-exodus-2021-5")`</div>
   <div class="col-md-6">`r blogdown::shortcode("ext-link-card", "https://www.businessinsider.com/wells-fargo-top-mortgage-producers-leaving-droves-housing-market-2021-5")`</div>
 </div>
 
-## We See You
+But as soon as it affects company performance - whether at the top or bottom lines - then the vultures start to circle. Top talent will simply "swipe left" and the available pool of applicants will be diluted to the point that the cost of having no one in a seat is outweighed by the cost of having the wrong person in a seat. Once the erosion of talent starts it's very difficult to turn around. Any a senior manager declares "*we're going to start a new group **like a startup** to handle this business that overlaps one of our existing products*" then they're trying to usher a major course correction without acknowledging what they allowed their core competencies to slip away over time.
+
+### We See You
+
+And of course people in tech use more than Glassdoor to share their thoughts about what's happening in the industry. There was a time when an HR department could hold a "brown bag" where they corral a bunch of new employees to write positive shill posts to pump up the company's rating on that site. The field of information on what's happening in tech is broader than ever, and the white-washing doesn't wash any more.
 
 `r blogdown::shortcode("tweet-single", "1399458756568641538")`
 
-## Sword of Damocles
+### Sword of Damocles
 
+If you want to see why there's cresting turnover in the workplace, look no further. This kind of corporate brow-beating is a giant flashing red signal that management is antagonistic to employees. I suppose they could get away with this when they had the post-2008 economic downturn to provide cover for them. But in 2021 it looks like vestigial chain yanking.
 
 `r blogdown::shortcode("tweet-single", "1390470448656355330")`
 
+And to be honest most experienced workers who have the Great Recession as part of their history know that many got shafted twice - once by the false promises in the bubble economy that blew up - and again when the "recovery" left them to scrape together a way forward while the fat cats got fatter. Once burned, always learned.
 
+### Virtue Signaling
 
-
-## Virtue Signaling
+And nearly as distasteful as presenting an unceremonious list of demands, touting ostensibly positive yet subjective measures in a job req is not a good signal. It's like explaining a joke - if you have to explain it, it's probably not funny.
 
 `r blogdown::shortcode("tweet-single", "1372726826221539331")`
 
+This is the kind of thing that an applicant will discover one way or the other in the process of interviewing. To shove it in their face in the pre-amble is likely providing air cover for something they *don't* want the applicant to see.
+
+### Recognize Quality of Life Beyond Quality of Work
+
+One of the biggest 'whiffs' in HR and personnel management over the past year is in completely misunderstanding the value proposition of remote work. There's always been a low level of this in tech - where someone takes paternity/maternity leave and are given enough airspace from the rat race to look around and realize that things *can* be better than their current situation.
+
+`r blogdown::shortcode("tweet-single", "1398156875892469765")`
+
+In fact, that's where much of the re-assessment of the workplace originally sprang. Companies falsely believe that as soon as people get a shot in their arm that they'll right back up for life in a cubicle. There may be some aspect of that which returns at the margins. But too much of life has been altered for too many people for this to be seen as anything other than a sea change. In high-skilled technical professions, office-centered life will be the exception, not the rule.
+
 # Deja Vue All Over Again
 
+Most working groups who have long lags in hiring often discount or ignore the losses that mount when a seat remains empty. Other team members get over-taxed. Training lags. Resentment grows. And before you know it even more team members attrit away. Those are just a few of the opportunity costs of *not* proceeding with a timely backfill to a position. Managers will sometimes crow about "their incredible standards" to excuse it away to senior management, which too is a shell game that harms a shop's productivity. Dragging out filling a seat while parading a team's low "fixed costs" due unclaimed salaries does double damage to the company.
 
-`r blogdown::shortcode("ext-link-card", "https://www.forbes.com/sites/johnhall/2019/05/09/the-cost-of-turnover-can-kill-your-business-and-make-things-less-fun")`
+`r blogdown::shortcode("ext-link-card", "https://www.insperity.com/blog/cost-of-employee-turnover/")`
+
+Building teams is not easy. Skills. Objectives. Personalities. Promotions. The balancing and re-balancing never ends. But that's no excuse for falling back on antiquated and antagonistic practices. Take it from someone who has seen technology and the nature of work ebb and flow over decades - some things never change - but also **realize that this collective experience <u>is</u> something different**. The sooner the operating conditions are honestly assessed, the sooner a company can course-correct and find a way forward.
 
 
-Building teams is hard. The balancing and re-balancing never ends. Personalities. Skillsets. Objectives. They are all on shifting sands. 
+<div class="row">
+  <div class="col-md-6 mt-2">`r blogdown::shortcode("ext-link-card", "https://www.bloomberg.com/news/articles/2021-06-01/return-to-office-employees-are-quitting-instead-of-giving-up-work-from-home")`</div>
+  <div class="col-md-6">`r blogdown::shortcode("ext-link-card", "https://www.bloomberg.com/news/articles/2021-06-01/americans-are-done-with-5-days-a-week-in-the-office-here-s-what-that-means-for-the-economy")`</div>
+</div>
+
+`r blogdown::shortcode("header-centered", "1", "Welcome to the new normal")`
+<br>
