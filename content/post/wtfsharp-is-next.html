@@ -1,0 +1,421 @@
+---
+title: What the F(#) is Next?
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+    fig_width: 8
+    dev: "svg"
+author: "Houston Haynes"
+date: '2021-06-02T15:59:43+05:30'
+featuredpath: img
+featured: fsharp.png
+ogfeatured: h3_og_wide_fsharp.png
+emblem: perspective.png
+description: Toward a more functional future & full-stack fun
+draft: true
+tags:
+- F#
+- full stack
+- mobile
+- IoT
+categories: 
+- Perspective
+weight: 1
+editor_options: 
+  chunk_output_type: inline
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="another-inflection-point" class="section level2">
+<h2>An(other) Inflection Point</h2>
+<p>Spend enough time in technology and you see recurring patterns ebb and flow. The democratization of technology - areas of specialization evolving into commodities - has largely been a net positive. But if you get caught up in the swirl of it you sometimes miss the bigger picture. I did. In my recent pivot to consulting around the analytics domain I hadn’t realized the role is essentially solving the <em>wrong</em> problem over and again. The pandemic gave me a chance to take a step back from that to assess in a way I hadn’t up to this point, and so this post is a bit on the <strong>next</strong> step in my journey.</p>
+{{% tweet "1400817256418840576" %}}
+<p><strong>SPOILER ALERT:</strong> My response above is the 280 character version of this post - so if you’re running short of time that’s the tl;dr.</p>
+</div>
+<div id="a-warehouse-full-of-cannibals" class="section level2">
+<h2>A Warehouse Full of Cannibals</h2>
+<p>I mention in other posts on this site that my first software project outside of school was a warehouse management system for a small company {{% url-link "in its early growth stages" "/vitae/early-years/" "_self" %}}. We were building physical products “from a cold start” as well as doing refurbishments of vintage electronic music gear. But we were staffing up and had grown beyond the ability for Bob (and myself, ostensibly) to go around with all of the parts and component information as a function of collective memory. The challenge was that with <em>so many</em> parts sources - including stripping operational parts out of otherwise-broken systems - meant tracking how much of something we <em>could</em> build was a major concern. Most of our work was standard off-the-shelf components but there was <em>just enough</em> of the boutique part tracing that it really required its own solution.</p>
+<p>We not only had to track the parts we ordered from suppliers, but we also had to calibrate for raw materials and lead time required to fabricate some of our own parts built in-house. And all of this was before we had to start cannibalizing out of a smorgasbord of defunct instruments sitting on the back shelves of the warehouse. In many ways it was a logistics nightmare, but the silver lining is that it was the first event-sourced system I built which also had <em>some</em> predictive capabilities. Little did I know that it would be the kind of problem I’d be solving over and again for the next few decades.</p>
+{{% tweet-single "1400490914838024196" %}}
+</div>
+<div id="the-big-event-the-bigger-picture" class="section level2">
+<h2>The Big Event &amp; The Bigger Picture</h2>
+<p>Inventory management seems pretty mundane - and if you’re lucky, it is. <em>But almost <strong>no one</strong> is so lucky</em>. There’s the many-to-many relationships that emerge: multiple suppliers that can provide the same part, cost versus lead time considerations, it all factors in. And at that time there was no easy online search to find supplier part counts and delivery lead times. You had to get folks on the phone, which takes time and patience. And this system was as much about providing visibility into what’s “out there” as what we had on hand. The good news is that once the information was “in the system” then a generalist - an office manager or other line worker - can do a lookup and have a meaningful conversation with nearly anyone in the supply chain. Up to that point, it was either Bob or myself that had to spend time “on the horn” and creating a fan-out for that group of tasks was a pretty sizable force multiplier.</p>
+<p>It started with an accounting template, part of what Microsoft’s Access plus Visual Basic offering. As I mentioned in my early years with Moog that his son worked at Microsoft and he sent us a beta of the product, and it shaped really well to our problem space. I expanded it in <em>two</em> directions - as mentioned we kept notes on sources for off-the-shelf parts, and I <em>also</em> built tables for various custom circuit boards and parts we assembled in the shop with the full <em>bill of materials</em> (BOM) that each would consume. The “fun” part was coding an optimizer that could give us a view into how many boards we could build before running out of certain key components. So instead of a surprise when looking into a nearly empty bin, we could run checks before setting up for an assembly run to see what we’d need to resupply ahead of time. And beyond the “0 checks” we also used it to show the “shape” that the bins we would be afterward, and provide a view into what we’d need to order to replenish stock before the next run. We had been burned enough times that the investment in a bespoke-ish system was certainly worth the effort. And once we had gotten the primitives in place, the portions the provided the higher level view was an easy add-on.</p>
+<blockquote>
+<p>It struck me that the folks who build event driven systems and the folks who are consumed by byzantine analytics re-platforming <strong><em>never talk to each other</em></strong> because they’re both busy, albeit for different reasons.</p>
+</blockquote>
+<p>My next job was as a software developer for an accounting company that provided electronic tax filing software for CPAs. So that wasn’t merely dancing around an accounting mindset - this <em>was</em> accounting with a twist. We <em>also</em> had to deal with a variety of filing regulations with each state, plus US federal tax codes. And there were specific guidelines on how to note a preparer’s overrides and all of the amendments and indemnifications that came with it. As it turns out, this was an unexpected early lesson in the winding path my career has taken since then. Here’s a 2016 keynote by Greg Young - the person {{% url-link "who originally coined the term 'CQRS' and founder of EventStore DB" "https://www.eventstore.com/blog/event-sourcing-and-cqrs" %}}, who sums up the event sourced landscape very succinctly in this brief excerpt.</p>
+{{% youtube2 id="I3uH3iiiDqY" yt_start="355" yt_end="440" %}}
+</div>
+<div id="the-wrong-kind-of-ddd" class="section level2">
+<h2>The ‘Wrong’ Kind of DDD</h2>
+<p>But the road to this realization was full of detours. While event sourcing and event-driven systems are often associated with domain driven development (DDD) the next decade or so of my career was subsumed with another DDD - <strong><em>database</em> driven development</strong>. I spent some time with IBM Global Services and managing their partner e-commercie DBs around the globe. And that actually had some event sourcing functions as we were correcting and re-loading data in preparation for Y2K. But when I went to Siebel Systems we built out a lab with more than a dozen application and database based systems to simulate various workloads. That was when DBAs - database <em>architects</em> ruled the world. Because databases were often the greatest concentration of compute and storage (and therefore expense) it tended to also be the place where business logic would reside. And as anyone who’s led a “digital transformation” project will tell you the industry is still living with that legacy imbalance in enterprise n-tier systems to this day.</p>
+</div>
+<div id="youre-projecting" class="section level2">
+<h2>You’re Projecting</h2>
+<p>Fast forward to my first Microsoft Gold Partner assignment, a state level court system data warehousing project. They wanted to have a complete history for all court documents, but the old source system didn’t record deletes. Well, they did - in <strong><em>actually removing records</em></strong> instead of simply marking them with a ‘deleted’ indicator in the table. This was a vestige of the <em>precious</em> mentality of limited storage and compute available in databases from a bygone era. There had been plenty of opportunities to fix that, but no one went to the trouble in the intervening years. So they assumed that it could be magically <em>fixed</em> in the new data warehouse as though the information could be generated out of thin air. I eventually found a hybrid solution which could create a differential from monthly backups, loaded as snapshots for comparison. The re-built record delete indicators were only accurate to the end of the month in which they were deleted, but it was better than nothing. The process was tremendously time-consuming and very expensive, but as I’ve found over the years most analytics systems are the “later” choice of most <em>“pay now or pay later”</em> decision-making processes.</p>
+<p>What I found since that time is that most “digital transformation” analytics projects are in-effect recreating event sourcing from legacy operational systems, so that it could <em>then be <strong>re-projected</strong> into an analytic work product</em>. I make a passing reference to the inherent fallacy of “digital transformation” in my post about {{% url-link "agile patterns and practices" "/post/agile-zombie-apocalypse/" "_self" %}} and this is another facet of the same argument. Here again Greg Young articulates the problem space succinctly.</p>
+{{% youtube2 id="I3uH3iiiDqY" yt_start="3174" yt_end="3224" %}}
+<p>I don’t want this article to turn into yet another tutorial on event sourcing. There are plenty of those on the web. But it struck me that the folks who build event driven systems and the folks who are consumed by byzantine analytics re-platforming <strong><em>never talk to each other</em></strong> because they’re both busy, albeit for different reasons. So while Greg’s keynote presentation was certainly educational on its own merits - it’s also a message in a bottle to folks drowning in technical debt created by others (as I was) when trying to resurrect analytics programs based on operational systems that are fundamentally ill-suited to their task.</p>
+</div>
+<div id="a-more-functional-approach" class="section level2">
+<h2>A More Functional Approach</h2>
+<p>While this post is primarily about my early adventures in F# it’s not my first <em>or even my second</em> functional-friendly language. With my time at Siebel I picked up java and spent nearly a decade in that “family”. While I had done quite a bit of java proper I also wrote quite a bit of production code with Groovy. Much of that time I felt like I was wrestling as much with the JVM as solving business problems. And between that and Spark/Scala later in the analytics phase of my consulting work I really grew frustrated with the java runtime and shifted focus to C#. Like most folks in analytics I dabbled a bit with Python, but {{% url-link "R had all the advantages of a functional style" "https://adv-r.hadley.nz/fp.html" %}} with the ability to handle large data sets and efficient processing I was missing in Python.</p>
+<p>And when I took a pause this year to reconsider my approach, I kept stumbling across things in event sourcing that really resonated with the functional style of programming. There was part of me that felt like it was a form of survivor bias, but then this last footnote from Greg really brought it home for me.</p>
+{{% youtube2 id="I3uH3iiiDqY" yt_start="3226" yt_end="3258" %}}
+<p>So I wanted to find a general-purpose functional language that had avenues to enable high-performance machine learning workflows. I had taken a brief look at F# a few years ago, but it didn’t take. The story wasn’t really complete, and much of the machine learning tools left me scratching my head. But now with some of the machine learning projects receiving a full port to .NET and the growing meta-programming libraries around F# I thought it was time to consider <em>one language to rule them all</em> and F# looks like a quality candidate for that title.</p>
+</div>
+<div id="get-to-the-point" class="section level2">
+<h2>Get to the point</h2>
+<p>F# is succinct. So aside from being able to take advantage of “life in the .NET ecosystem” it also has the ability to pack a great deal of context into a relatively small block of code. I remember being resistant to that idea when going from java “proper” to Groovy, having grown accustomed to the former’s more elaborate syntactic style. And I hear similar comments from C# developers. But with my background with Python and R, F# felt like the best of all worlds. You get the brevity of tight syntax with static typing, a robust inference system and compiler that really keeps you from going far astray.</p>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codefsharp">
+View sample F# Parallel Array Sample
+</button>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codecsharp">
+View sample code converted to C#
+</button>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codeil">
+View sample in Intermediate Language
+</button>
+<pre id="codefsharp" class="collapse col-xs-12"><code class="fsharp">module ParallelArrayProgramming =
+
+    let oneBigArray = [| 0 .. 100000 |]
+
+    // do some CPU intensive computation
+    let rec computeSomeFunction x =
+        if x <= 2 then 1
+        else computeSomeFunction (x - 1) + computeSomeFunction (x - 2)
+
+    // Do a parallel map over a large input array
+    let computeResults() = oneBigArray |> Array.Parallel.map (fun x -> computeSomeFunction (x % 20))
+
+    printfn "Parallel computation results: %A" (computeResults())</code></pre>
+<pre id="codecsharp" class="collapse col-xs-12"><code class="csharp">using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using <StartupCode$_>;
+using Microsoft.FSharp.Collections;
+using Microsoft.FSharp.Core;
+
+[assembly: FSharpInterfaceDataVersion(2, 0, 0)]
+[assembly: AssemblyVersion("0.0.0.0")]
+[CompilationMapping(SourceConstructFlags.Module)]
+public static class @_
+{
+    [CompilationMapping(SourceConstructFlags.Module)]
+    public static class ParallelArrayProgramming
+    {
+        [Serializable]
+        internal sealed class computeResults@11 : FSharpFunc<int, int>
+        {
+            [CompilerGenerated]
+            [DebuggerNonUserCode]
+            internal computeResults@11()
+            {
+            }
+
+            public override int Invoke(int x)
+            {
+                return computeSomeFunction(x % 20);
+            }
+        }
+
+        [CompilationMapping(SourceConstructFlags.Value)]
+        public static int[] oneBigArray
+        {
+            get
+            {
+                return $_.oneBigArray@3;
+            }
+        }
+
+        [CompilationMapping(SourceConstructFlags.Value)]
+        internal static PrintfFormat<FSharpFunc<int[], Unit>, TextWriter, Unit, Unit> format@1
+        {
+            get
+            {
+                return $_.format@1;
+            }
+        }
+
+        public static int computeSomeFunction(int x)
+        {
+            if (x <= 2)
+            {
+                return 1;
+            }
+            return computeSomeFunction(x - 1) + computeSomeFunction(x - 2);
+        }
+
+        public static int[] computeResults()
+        {
+            return ArrayModule.Parallel.Map(new computeResults@11(), oneBigArray);
+        }
+    }
+}
+namespace <StartupCode$_>
+{
+    internal static class $_
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        internal static readonly int[] oneBigArray@3;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        internal static readonly PrintfFormat<FSharpFunc<int[], Unit>, TextWriter, Unit, Unit> format@1;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [CompilerGenerated]
+        [DebuggerNonUserCode]
+        internal static int init@;
+
+        static $_()
+        {
+            oneBigArray@3 = SeqModule.ToArray(Operators.CreateSequence(Operators.OperatorIntrinsics.RangeInt32(0, 1, 100000)));
+            format@1 = new PrintfFormat<FSharpFunc<int[], Unit>, TextWriter, Unit, Unit, int[]>("Parallel computation results: %A");
+            PrintfModule.PrintFormatLineToTextWriter(Console.Out, @_.ParallelArrayProgramming.format@1).Invoke(@_.ParallelArrayProgramming.computeResults());
+        }
+    }
+}</code></pre>
+<pre id="codeil" class="collapse col-xs-12"><code class="">.class private auto ansi '<Module>'
+    extends [mscorlib]System.Object
+{
+} // end of class <Module>
+
+.class public auto ansi abstract sealed _
+    extends [mscorlib]System.Object
+{
+    .custom instance void [FSharp.Core]Microsoft.FSharp.Core.CompilationMappingAttribute::.ctor(valuetype [FSharp.Core]Microsoft.FSharp.Core.SourceConstructFlags) = (
+        01 00 07 00 00 00 00 00
+    )
+    // Nested Types
+    .class nested public auto ansi abstract sealed ParallelArrayProgramming
+        extends [mscorlib]System.Object
+    {
+        .custom instance void [FSharp.Core]Microsoft.FSharp.Core.CompilationMappingAttribute::.ctor(valuetype [FSharp.Core]Microsoft.FSharp.Core.SourceConstructFlags) = (
+            01 00 07 00 00 00 00 00
+        )
+        // Nested Types
+        .class nested assembly auto ansi sealed serializable beforefieldinit computeResults@11
+            extends class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32, valuetype [System.Private.CoreLib]System.Int32>
+        {
+            // Methods
+            .method assembly specialname rtspecialname 
+                instance void .ctor () cil managed 
+            {
+                .custom instance void [System.Private.CoreLib]System.Runtime.CompilerServices.CompilerGeneratedAttribute::.ctor() = (
+                    01 00 00 00
+                )
+                .custom instance void [System.Private.CoreLib]System.Diagnostics.DebuggerNonUserCodeAttribute::.ctor() = (
+                    01 00 00 00
+                )
+                // Method begins at RVA 0x2090
+                // Code size 7 (0x7)
+                .maxstack 8
+
+                IL_0000: ldarg.0
+                IL_0001: call instance void class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32, valuetype [System.Private.CoreLib]System.Int32>::.ctor()
+                IL_0006: ret
+            } // end of method computeResults@11::.ctor
+
+            .method public strict virtual 
+                instance valuetype [System.Private.CoreLib]System.Int32 Invoke (
+                    valuetype [System.Private.CoreLib]System.Int32 x
+                ) cil managed 
+            {
+                // Method begins at RVA 0x2098
+                // Code size 10 (0xa)
+                .maxstack 8
+
+                IL_0000: ldarg.1
+                IL_0001: ldc.i4.s 20
+                IL_0003: rem
+                IL_0004: call valuetype [System.Private.CoreLib]System.Int32 _/ParallelArrayProgramming::computeSomeFunction(valuetype [System.Private.CoreLib]System.Int32)
+                IL_0009: ret
+            } // end of method computeResults@11::Invoke
+
+        } // end of class computeResults@11
+
+
+        // Methods
+        .method public specialname static 
+            valuetype [System.Private.CoreLib]System.Int32[] get_oneBigArray () cil managed 
+        {
+            // Method begins at RVA 0x2050
+            // Code size 6 (0x6)
+            .maxstack 8
+
+            IL_0000: ldsfld valuetype [System.Private.CoreLib]System.Int32[] '<StartupCode$_>.$_'::oneBigArray@3
+            IL_0005: ret
+        } // end of method ParallelArrayProgramming::get_oneBigArray
+
+        .method public static 
+            valuetype [System.Private.CoreLib]System.Int32 computeSomeFunction (
+                valuetype [System.Private.CoreLib]System.Int32 x
+            ) cil managed 
+        {
+            // Method begins at RVA 0x2058
+            // Code size 24 (0x18)
+            .maxstack 8
+
+            IL_0000: ldarg.0
+            IL_0001: ldc.i4.2
+            IL_0002: bgt.s IL_0006
+
+            IL_0004: ldc.i4.1
+            IL_0005: ret
+
+            IL_0006: ldarg.0
+            IL_0007: ldc.i4.1
+            IL_0008: sub
+            IL_0009: call valuetype [System.Private.CoreLib]System.Int32 _/ParallelArrayProgramming::computeSomeFunction(valuetype [System.Private.CoreLib]System.Int32)
+            IL_000e: ldarg.0
+            IL_000f: ldc.i4.2
+            IL_0010: sub
+            IL_0011: call valuetype [System.Private.CoreLib]System.Int32 _/ParallelArrayProgramming::computeSomeFunction(valuetype [System.Private.CoreLib]System.Int32)
+            IL_0016: add
+            IL_0017: ret
+        } // end of method ParallelArrayProgramming::computeSomeFunction
+
+        .method public static 
+            valuetype [System.Private.CoreLib]System.Int32[] computeResults () cil managed 
+        {
+            // Method begins at RVA 0x2074
+            // Code size 18 (0x12)
+            .maxstack 8
+
+            IL_0000: newobj instance void _/ParallelArrayProgramming/computeResults@11::.ctor()
+            IL_0005: call valuetype [System.Private.CoreLib]System.Int32[] _/ParallelArrayProgramming::get_oneBigArray()
+            IL_000a: tail.
+            IL_000c: call !!1[] [FSharp.Core]Microsoft.FSharp.Collections.ArrayModule/Parallel::Map<valuetype [System.Private.CoreLib]System.Int32, valuetype [System.Private.CoreLib]System.Int32>(class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<!!0, !!1>, !!0[])
+            IL_0011: ret
+        } // end of method ParallelArrayProgramming::computeResults
+
+        .method assembly specialname static 
+            class [FSharp.Core]Microsoft.FSharp.Core.PrintfFormat`4<class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>, class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.Unit, class [FSharp.Core]Microsoft.FSharp.Core.Unit> get_format@1 () cil managed 
+        {
+            // Method begins at RVA 0x2088
+            // Code size 6 (0x6)
+            .maxstack 8
+
+            IL_0000: ldsfld class [FSharp.Core]Microsoft.FSharp.Core.PrintfFormat`4<class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>, class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.Unit, class [FSharp.Core]Microsoft.FSharp.Core.Unit> '<StartupCode$_>.$_'::format@1
+            IL_0005: ret
+        } // end of method ParallelArrayProgramming::get_format@1
+
+        // Properties
+        .property valuetype [System.Private.CoreLib]System.Int32[] oneBigArray()
+        {
+            .custom instance void [FSharp.Core]Microsoft.FSharp.Core.CompilationMappingAttribute::.ctor(valuetype [FSharp.Core]Microsoft.FSharp.Core.SourceConstructFlags) = (
+                01 00 09 00 00 00 00 00
+            )
+            .get valuetype [System.Private.CoreLib]System.Int32[] _/ParallelArrayProgramming::get_oneBigArray()
+        }
+        .property class [FSharp.Core]Microsoft.FSharp.Core.PrintfFormat`4<class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>, class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.Unit, class [FSharp.Core]Microsoft.FSharp.Core.Unit> format@1()
+        {
+            .custom instance void [FSharp.Core]Microsoft.FSharp.Core.CompilationMappingAttribute::.ctor(valuetype [FSharp.Core]Microsoft.FSharp.Core.SourceConstructFlags) = (
+                01 00 09 00 00 00 00 00
+            )
+            .get class [FSharp.Core]Microsoft.FSharp.Core.PrintfFormat`4<class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>, class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.Unit, class [FSharp.Core]Microsoft.FSharp.Core.Unit> _/ParallelArrayProgramming::get_format@1()
+        }
+
+    } // end of class ParallelArrayProgramming
+
+
+} // end of class _
+
+.class private auto ansi abstract sealed '<StartupCode$_>.$_'
+    extends [mscorlib]System.Object
+{
+    // Fields
+    .field assembly static initonly valuetype [System.Private.CoreLib]System.Int32[] oneBigArray@3
+    .custom instance void [System.Private.CoreLib]System.Diagnostics.DebuggerBrowsableAttribute::.ctor(valuetype [System.Private.CoreLib]System.Diagnostics.DebuggerBrowsableState) = (
+        01 00 00 00 00 00 00 00
+    )
+    .field assembly static initonly class [FSharp.Core]Microsoft.FSharp.Core.PrintfFormat`4<class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>, class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.Unit, class [FSharp.Core]Microsoft.FSharp.Core.Unit> format@1
+    .custom instance void [System.Private.CoreLib]System.Diagnostics.DebuggerBrowsableAttribute::.ctor(valuetype [System.Private.CoreLib]System.Diagnostics.DebuggerBrowsableState) = (
+        01 00 00 00 00 00 00 00
+    )
+    .field assembly static int32 init@
+    .custom instance void [System.Private.CoreLib]System.Diagnostics.DebuggerBrowsableAttribute::.ctor(valuetype [System.Private.CoreLib]System.Diagnostics.DebuggerBrowsableState) = (
+        01 00 00 00 00 00 00 00
+    )
+    .custom instance void [System.Private.CoreLib]System.Runtime.CompilerServices.CompilerGeneratedAttribute::.ctor() = (
+        01 00 00 00
+    )
+    .custom instance void [System.Private.CoreLib]System.Diagnostics.DebuggerNonUserCodeAttribute::.ctor() = (
+        01 00 00 00
+    )
+
+    // Methods
+    .method private specialname rtspecialname static 
+        void .cctor () cil managed 
+    {
+        // Method begins at RVA 0x20a4
+        // Code size 69 (0x45)
+        .maxstack 5
+
+        IL_0000: ldc.i4.0
+        IL_0001: ldc.i4.1
+        IL_0002: ldc.i4 100000
+        IL_0007: call class [System.Private.CoreLib]System.Collections.Generic.IEnumerable`1<valuetype [System.Private.CoreLib]System.Int32> [FSharp.Core]Microsoft.FSharp.Core.Operators/OperatorIntrinsics::RangeInt32(valuetype [System.Private.CoreLib]System.Int32, valuetype [System.Private.CoreLib]System.Int32, valuetype [System.Private.CoreLib]System.Int32)
+        IL_000c: call class [System.Private.CoreLib]System.Collections.Generic.IEnumerable`1<!!0> [FSharp.Core]Microsoft.FSharp.Core.Operators::CreateSequence<valuetype [System.Private.CoreLib]System.Int32>(class [System.Private.CoreLib]System.Collections.Generic.IEnumerable`1<!!0>)
+        IL_0011: call !!0[] [FSharp.Core]Microsoft.FSharp.Collections.SeqModule::ToArray<valuetype [System.Private.CoreLib]System.Int32>(class [System.Private.CoreLib]System.Collections.Generic.IEnumerable`1<!!0>)
+        IL_0016: stsfld valuetype [System.Private.CoreLib]System.Int32[] '<StartupCode$_>.$_'::oneBigArray@3
+        IL_001b: ldstr "Parallel computation results: %A"
+        IL_0020: newobj instance void class [FSharp.Core]Microsoft.FSharp.Core.PrintfFormat`5<class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>, class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.Unit, class [FSharp.Core]Microsoft.FSharp.Core.Unit, valuetype [System.Private.CoreLib]System.Int32[]>::.ctor(class [System.Private.CoreLib]System.String)
+        IL_0025: stsfld class [FSharp.Core]Microsoft.FSharp.Core.PrintfFormat`4<class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>, class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.Unit, class [FSharp.Core]Microsoft.FSharp.Core.Unit> '<StartupCode$_>.$_'::format@1
+        IL_002a: call class [netstandard]System.IO.TextWriter [netstandard]System.Console::get_Out()
+        IL_002f: call class [FSharp.Core]Microsoft.FSharp.Core.PrintfFormat`4<class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>, class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.Unit, class [FSharp.Core]Microsoft.FSharp.Core.Unit> _/ParallelArrayProgramming::get_format@1()
+        IL_0034: call !!0 [FSharp.Core]Microsoft.FSharp.Core.PrintfModule::PrintFormatLineToTextWriter<class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>>(class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.PrintfFormat`4<!!0, class [System.Private.CoreLib]System.IO.TextWriter, class [FSharp.Core]Microsoft.FSharp.Core.Unit, class [FSharp.Core]Microsoft.FSharp.Core.Unit>)
+        IL_0039: call valuetype [System.Private.CoreLib]System.Int32[] _/ParallelArrayProgramming::computeResults()
+        IL_003e: callvirt instance !1 class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2<valuetype [System.Private.CoreLib]System.Int32[], class [FSharp.Core]Microsoft.FSharp.Core.Unit>::Invoke(!0)
+        IL_0043: pop
+        IL_0044: ret
+    } // end of method $_::.cctor
+
+} // end of class <StartupCode$_>.$_</code></pre>
+</div>
+<div id="texts-of-the-trade" class="section level2">
+<h2>Texts of the Trade</h2>
+<div id="kinesthetic-learning" class="section level3">
+<h3>Kinesthetic Learning</h3>
+</div>
+<div id="safe-stack" class="section level3">
+<h3>Safe Stack</h3>
+</div>
+<div id="net-interactive" class="section level3">
+<h3>.NET Interactive</h3>
+</div>
+<div id="akka.net" class="section level3">
+<h3>Akka.NET</h3>
+</div>
+<div id="eventstore-db" class="section level3">
+<h3>EventStore DB</h3>
+</div>
+</div>
+<div id="mini-projects" class="section level2">
+<h2>Mini-projects</h2>
+<div id="f-web-parser" class="section level3">
+<h3>F# web parser</h3>
+</div>
+<div id="f-qr-code-generator" class="section level3">
+<h3>F# QR Code Generator</h3>
+</div>
+<div id="snowflaqe-no-not-that-one-graphql-client" class="section level3">
+<h3>Snowflaqe (no, not that one) GraphQL client</h3>
+</div>
+</div>
+<div id="f-to-the-edge-back-again" class="section level2">
+<h2>F# to the Edge &amp; Back Again</h2>
+</div>
+<div id="baby-steps" class="section level2">
+<h2>Baby Steps</h2>
+</div>
+<div id="there-back-again" class="section level2">
+<h2>There &amp; Back Again</h2>
+</div>
