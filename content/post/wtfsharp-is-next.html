@@ -12,8 +12,8 @@ featuredpath: img
 featured: fsharp.png
 ogfeatured: h3_og_wide_fsharp.png
 emblem: perspective.png
-description: Toward a more functional future & full-stack fun
-draft: true
+description: A winding journey to a more functional path forward in the cloud and on the edge
+draft: false
 tags:
 - F#
 - full stack
@@ -38,7 +38,7 @@ editor_options:
 <div id="a-warehouse-full-of-cannibals" class="section level2">
 <h2>A Warehouse Full of Cannibals</h2>
 <p>I mention in other posts on this site that my first software project outside of school was a warehouse management system for a small company {{% url-link "in its early growth stages" "/vitae/early-years/" "_self" %}}. We were building physical products “from a cold start” as well as doing refurbishments of vintage electronic music gear. But we were staffing up and had grown beyond the ability for Bob (and myself, ostensibly) to go around with all of the parts and component information as a function of collective memory. The challenge was that with <em>so many</em> parts sources - including stripping operational parts out of otherwise-broken systems - meant tracking how much of something we <em>could</em> build was a major concern. Most of our work was standard off-the-shelf components but there was <em>just enough</em> of the boutique part tracing that it really required its own solution.</p>
-<p>We not only had to track the parts we ordered from suppliers, but we also had to calibrate for raw materials and lead time required to fabricate some of our own parts built in-house. And all of this was before we had to start cannibalizing out of a smorgasbord of defunct instruments sitting on the back shelves of the warehouse. In many ways it was a logistics nightmare, but the silver lining is that it was the first event-sourced system I built which also had <em>some</em> predictive capabilities. Little did I know that it would be the kind of problem I’d be solving over and again for the next few decades.</p>
+<p>We not only had to track the parts we ordered from suppliers, but we also had to calibrate for raw materials and lead time required to fabricate some of our own parts built in-house. And all of this was before we had to start cannibalizing out of a smorgasbord of defunct instruments sitting on the back shelves of the warehouse. In many ways it was a logistics nightmare, but the silver lining is that it was built to eventually include <em>some</em> predictive capabilities. Little did I know that it would be the kind of problem I’d be solving over and again for the next few decades.</p>
 {{% tweet-single "1400490914838024196" %}}
 </div>
 <div id="the-big-event-the-bigger-picture" class="section level2">
@@ -46,32 +46,33 @@ editor_options:
 <p>Inventory management seems pretty mundane - and if you’re lucky, it is. <em>But almost <strong>no one</strong> is so lucky</em>. There’s the many-to-many relationships that emerge: multiple suppliers that can provide the same part, cost versus lead time considerations, it all factors in. And at that time there was no easy online search to find supplier part counts and delivery lead times. You had to get folks on the phone, which takes time and patience. And this system was as much about providing visibility into what’s “out there” as what we had on hand. The good news is that once the information was “in the system” then a generalist - an office manager or other line worker - can do a lookup and have a meaningful conversation with nearly anyone in the supply chain. Up to that point, it was either Bob or myself that had to spend time “on the horn” and creating a fan-out for that group of tasks was a pretty sizable force multiplier.</p>
 <p>It started with an accounting template, part of what Microsoft’s Access plus Visual Basic offering. As I mentioned in my early years with Moog that his son worked at Microsoft and he sent us a beta of the product, and it shaped really well to our problem space. I expanded it in <em>two</em> directions - as mentioned we kept notes on sources for off-the-shelf parts, and I <em>also</em> built tables for various custom circuit boards and parts we assembled in the shop with the full <em>bill of materials</em> (BOM) that each would consume. The “fun” part was coding an optimizer that could give us a view into how many boards we could build before running out of certain key components. So instead of a surprise when looking into a nearly empty bin, we could run checks before setting up for an assembly run to see what we’d need to resupply ahead of time. And beyond the “0 checks” we also used it to show the “shape” that the bins we would be afterward, and provide a view into what we’d need to order to replenish stock before the next run. We had been burned enough times that the investment in a bespoke-ish system was certainly worth the effort. And once we had gotten the primitives in place, the portions the provided the higher level view was an easy add-on.</p>
 <blockquote>
-<p>It struck me that the folks who build event driven systems and the folks who are consumed by byzantine analytics re-platforming <strong><em>never talk to each other</em></strong> because they’re both busy, albeit for different reasons.</p>
+<p>It struck me that the folks who build event based systems and the folks who are consumed by byzantine analytics re-platforming <strong><em>never talk to each other</em></strong> because they’re both busy, albeit for different reasons.</p>
 </blockquote>
-<p>My next job was as a software developer for an accounting company that provided electronic tax filing software for CPAs. So that wasn’t merely dancing around an accounting mindset - this <em>was</em> accounting with a twist. We <em>also</em> had to deal with a variety of filing regulations with each state, plus US federal tax codes. And there were specific guidelines on how to note a preparer’s overrides and all of the amendments and indemnifications that came with it. As it turns out, this was an unexpected early lesson in the winding path my career has taken since then. Here’s a 2016 keynote by Greg Young - the person {{% url-link "who originally coined the term 'CQRS' and founder of EventStore DB" "https://www.eventstore.com/blog/event-sourcing-and-cqrs" %}}, who sums up the event sourced landscape very succinctly in this brief excerpt.</p>
-{{% youtube2 id="I3uH3iiiDqY" yt_start="355" yt_end="440" %}}
+<p>My next job was as a developer for an accounting company that provided electronic tax filing software for CPAs. So that wasn’t merely dancing around an accounting mindset - this <em>was</em> accounting with a twist. We <em>also</em> had to deal with a variety of filing regulations with each state, plus US federal tax codes. And there were specific guidelines on how to note a preparer’s overrides and all of the amendments and indemnifications that came with it. As it turns out, this was an unexpected early lesson in the winding path my career has taken since then. Here’s a 2016 keynote by Greg Young - the person {{% url-link "who originally coined the term 'CQRS' and founder of EventStore DB" "https://www.eventstore.com/blog/event-sourcing-and-cqrs" %}}, who sums up the event sourced landscape in this brief excerpt.</p>
+{{% youtube2-small id="I3uH3iiiDqY" yt_start="355" yt_end="440" %}}
 </div>
 <div id="the-wrong-kind-of-ddd" class="section level2">
 <h2>The ‘Wrong’ Kind of DDD</h2>
-<p>But the road to this realization was full of detours. While event sourcing and event-driven systems are often associated with domain driven development (DDD) the next decade or so of my career was subsumed with another DDD - <strong><em>database</em> driven development</strong>. I spent some time with IBM Global Services and managing their partner e-commercie DBs around the globe. And that actually had some event sourcing functions as we were correcting and re-loading data in preparation for Y2K. But when I went to Siebel Systems we built out a lab with more than a dozen application and database based systems to simulate various workloads. That was when DBAs - database <em>architects</em> ruled the world. Because databases were often the greatest concentration of compute and storage (and therefore expense) it tended to also be the place where business logic would reside. And as anyone who’s led a “digital transformation” project will tell you the industry is still living with that legacy imbalance in enterprise n-tier systems to this day.</p>
+<p>But the road to this realization was full of detours. While event sourcing and event-driven systems are often associated with domain driven design (DDD) the next decade or so of my career was subsumed with another DDD - <strong><em>database</em> driven development</strong>. I spent some time with IBM Global Services and managing their partner e-commerce DBs around the globe. And that actually had some event sourcing functions as we were correcting and re-loading data in preparation for Y2K. But when I went to Siebel Systems we built out a lab with more than a dozen application and database based systems to simulate various workloads. That was when DBAs - database <em>architects</em> ruled the world. Because databases were often the greatest concentration of compute and storage (and therefore expense) it tended to also be the place where business logic would reside. And as anyone who’s led a “digital transformation” project will tell you the industry is still living with that legacy imbalance in enterprise n-tier systems to this day.</p>
 </div>
 <div id="youre-projecting" class="section level2">
 <h2>You’re Projecting</h2>
-<p>Fast forward to my first Microsoft Gold Partner assignment, a state level court system data warehousing project. They wanted to have a complete history for all court documents, but the old source system didn’t record deletes. Well, they did - in <strong><em>actually removing records</em></strong> instead of simply marking them with a ‘deleted’ indicator in the table. This was a vestige of the <em>precious</em> mentality of limited storage and compute available in databases from a bygone era. There had been plenty of opportunities to fix that, but no one went to the trouble in the intervening years. So they assumed that it could be magically <em>fixed</em> in the new data warehouse as though the information could be generated out of thin air. I eventually found a hybrid solution which could create a differential from monthly backups, loaded as snapshots for comparison. The re-built record delete indicators were only accurate to the end of the month in which they were deleted, but it was better than nothing. The process was tremendously time-consuming and very expensive, but as I’ve found over the years most analytics systems are the “later” choice of most <em>“pay now or pay later”</em> decision-making processes.</p>
+<p>Fast forward to my first Microsoft Gold Partner assignment, a state level court system data warehousing project. They wanted to have a complete history for all court documents, but the old source system didn’t record deletes. Well - to be specific they <strong><em>actually removed records</em></strong> instead of simply marking them with a ‘deleted’ indicator in the table. This was a vestige of the <em>precious</em> mentality of limited storage and compute available in databases from a bygone era. There had been plenty of opportunities to fix that <em>omission by subtraction</em>, but no one went to the trouble to do so in the intervening years. So they assumed that it could be magically <em>fixed</em> in the new data warehouse as though the information could be generated out of thin air. I eventually found a hybrid solution which could create a differential from monthly backups, loaded as snapshots for comparison. The re-built record delete indicators were only accurate to the end of the month in which they were deleted, but it was better than nothing. The process was tremendously time-consuming and very expensive, but as I’ve found over the years most analytics systems are the “later” choice of most <em>“pay now or pay later”</em> decision-making processes.</p>
 <p>What I found since that time is that most “digital transformation” analytics projects are in-effect recreating event sourcing from legacy operational systems, so that it could <em>then be <strong>re-projected</strong> into an analytic work product</em>. I make a passing reference to the inherent fallacy of “digital transformation” in my post about {{% url-link "agile patterns and practices" "/post/agile-zombie-apocalypse/" "_self" %}} and this is another facet of the same argument. Here again Greg Young articulates the problem space succinctly.</p>
-{{% youtube2 id="I3uH3iiiDqY" yt_start="3174" yt_end="3224" %}}
-<p>I don’t want this article to turn into yet another tutorial on event sourcing. There are plenty of those on the web. But it struck me that the folks who build event driven systems and the folks who are consumed by byzantine analytics re-platforming <strong><em>never talk to each other</em></strong> because they’re both busy, albeit for different reasons. So while Greg’s keynote presentation was certainly educational on its own merits - it’s also a message in a bottle to folks drowning in technical debt created by others (as I was) when trying to resurrect analytics programs based on operational systems that are fundamentally ill-suited to their task.</p>
+{{% youtube2-small id="I3uH3iiiDqY" yt_start="3174" yt_end="3224" %}}
+<p>I don’t want this article to preach the gospel of all things event sourced. There are plenty of those around the web. But it struck me that the folks who build event based systems and the folks who are consumed by byzantine analytics re-platforming <strong><em>never talk to each other</em></strong> because they’re both busy, albeit for different reasons. So while Greg’s keynote presentation was certainly educational on its own merits - it’s also a message in a bottle to folks drowning in technical debt created by others (as I was) when trying to extract analytic value out of legacy operational systems that are fundamentally ill-suited to their task.</p>
 </div>
 <div id="a-more-functional-approach" class="section level2">
 <h2>A More Functional Approach</h2>
-<p>While this post is primarily about my early adventures in F# it’s not my first <em>or even my second</em> functional-friendly language. With my time at Siebel I picked up java and spent nearly a decade in that “family”. While I had done quite a bit of java proper I also wrote quite a bit of production code with Groovy. Much of that time I felt like I was wrestling as much with the JVM as solving business problems. And between that and Spark/Scala later in the analytics phase of my consulting work I really grew frustrated with the java runtime and shifted focus to C#. Like most folks in analytics I dabbled a bit with Python, but {{% url-link "R had all the advantages of a functional style" "https://adv-r.hadley.nz/fp.html" %}} with the ability to handle large data sets and efficient processing I was missing in Python.</p>
-<p>And when I took a pause this year to reconsider my approach, I kept stumbling across things in event sourcing that really resonated with the functional style of programming. There was part of me that felt like it was a form of survivor bias, but then this last footnote from Greg really brought it home for me.</p>
-{{% youtube2 id="I3uH3iiiDqY" yt_start="3226" yt_end="3258" %}}
-<p>So I wanted to find a general-purpose functional language that had avenues to enable high-performance machine learning workflows. I had taken a brief look at F# a few years ago, but it didn’t take. The story wasn’t really complete, and much of the machine learning tools left me scratching my head. But now with some of the machine learning projects receiving a full port to .NET and the growing meta-programming libraries around F# I thought it was time to consider <em>one language to rule them all</em> and F# looks like a quality candidate for that title.</p>
+<p>This post is primarily about how my early adventures inadvertently led to a shift to focus to learning F#. But to be fair it’s not my first <em>or even my second</em> functional-friendly language. With my time at Siebel I picked up java and spent nearly a decade in that “family”. While I had done quite a bit of java proper I also wrote quite a bit of production code with Groovy. Much of that time I felt like I was wrestling as much with the JVM as solving business problems. And between that and Spark/Scala later in the analytics phase of my consulting work I really grew frustrated with the java runtime and shifted focus to C#. Like most folks in analytics I dabbled a bit with Python, but found that {{% url-link "the inherent functional programming (FP) style of R" "https://adv-r.hadley.nz/fp.html" %}} along with its unique ability to efficiently process large observation records made it a clear choice above Python. So from that time forward I was primarily working in C# or R, and only stepped out to Python when it was already present in Jupyter notebooks or other mixed code environments.</p>
+<p>When I took a pause during the pandemic to reconsider my options as a systems architect, I kept stumbling across facets of event sourcing that resonated with functional programming. I thought it might be a form of survivor bias, since I had used a handful of FP languages and really like working with R. But then this last footnote from Greg really brought the point home.</p>
+{{% youtube2-small id="I3uH3iiiDqY" yt_start="3226" yt_end="3258" %}}
+<p>So that settled the matter for me. I wanted to find a general-purpose functional language that had avenues to enable machine learning workloads. I had taken a brief look at F# a few years ago, but it didn’t stick. The story wasn’t really cohesive, but now with an impressive portfolio of ports to or interop with .NET and the growing meta-programming libraries that support F#, I thought it was time to consider it the <em>one language to rule them all</em>, at least for my own designs.</p>
 </div>
-<div id="get-to-the-point" class="section level2">
-<h2>Get to the point</h2>
-<p>F# is succinct. So aside from being able to take advantage of “life in the .NET ecosystem” it also has the ability to pack a great deal of context into a relatively small block of code. I remember being resistant to that idea when going from java “proper” to Groovy, having grown accustomed to the former’s more elaborate syntactic style. And I hear similar comments from C# developers. But with my background with Python and R, F# felt like the best of all worlds. You get the brevity of tight syntax with static typing, a robust inference system and compiler that really keeps you from going far astray.</p>
+<div id="to-the-point" class="section level2">
+<h2>To The Point</h2>
+<p>Unlike my prose, F# is succinct. So aside from being able to take advantage of “life in the .NET ecosystem” it also has the ability to pack a great deal of context into a relatively small block of code. I remember being resistant to that idea when going from java “proper” to Groovy, having grown acclimated to the former’s more verbose syntax. And I hear similar comments from C# developers being perplexed with the terse structure of F# code. But with my exposure to Python and R, F# felt like the best of all worlds. You get the clarity of a composed structure using static typing with robust type inference and a compiler that really keeps you from going far astray. F# had a high quality REPL long before it was cool, and there is {{% url-link "hot module reload in the SAFE Stack " "https://safe-stack.github.io/docs/recipes/developing-and-testing/using-hot-reload/" %}}with a more general HMR implementation coming to .NET 6 later this year. From the perspective of supporting rapid development, it has the goods.</p>
+<p>For an example of F#’s succinct syntax consider this sample from my {{% url-link "Low Code is Dead. Long Live Low Code!" "/post/low-code-is-dead" "_self" %}} blog post. The idea is to illustrate how an F# function extrapolates to C# and then the Intermediate Language that the .NET compiler uses to produce machine code. This isn’t to say F# is better or worse than any other language, just that it has certain traits that make it advantageous for a direct for of expression.</p>
 <button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codefsharp">
 View sample F# Parallel Array Sample
 </button>
@@ -380,42 +381,105 @@ namespace <StartupCode$_>
 
 } // end of class <StartupCode$_>.$_</code></pre>
 </div>
-<div id="texts-of-the-trade" class="section level2">
-<h2>Texts of the Trade</h2>
-<div id="kinesthetic-learning" class="section level3">
-<h3>Kinesthetic Learning</h3>
+<div id="machine-learning" class="section level2">
+<h2>Machine Learning</h2>
+<p>And it’s worthwhile to point out the growth in .NET machine learning projects, both to facilitate interop with other frameworks as well as purpose-built .NET workloads. The Apache Spark library is particularly notable that it works with either C# or F# <em>and</em> code can be deployed to Azure HDI, Amazon’s Elastic MapReduce or Databricks. While .NET gets credit for “playing well with others” by being able to run on Mac and Linux, the transpile and interop story of .NET and particularly F# goes much further than that. While I discuss some F# specific tooling in sections below, these links provide a quick view into open source initiatives in the machine learning community.</p>
+<div class="row">
+<div class="col-md-4 centered">
+{{% ext-link-card "https://github.com/fslaborg" %}}
 </div>
-<div id="safe-stack" class="section level3">
-<h3>Safe Stack</h3>
-</div>
-<div id="net-interactive" class="section level3">
-<h3>.NET Interactive</h3>
-</div>
-<div id="akka.net" class="section level3">
-<h3>Akka.NET</h3>
-</div>
-<div id="eventstore-db" class="section level3">
-<h3>EventStore DB</h3>
+<div class="col-md-4 centered">
+{{% ext-link-card "https://github.com/SciSharp" %}}
 </div>
 </div>
-<div id="mini-projects" class="section level2">
-<h2>Mini-projects</h2>
-<div id="f-web-parser" class="section level3">
-<h3>F# web parser</h3>
+<div class="row">
+<div class="col-md-4 centered">
+{{% ext-link-card "https://dotnet.microsoft.com/apps/machinelearning-ai/ml-dotnet" %}}
 </div>
-<div id="f-qr-code-generator" class="section level3">
-<h3>F# QR Code Generator</h3>
-</div>
-<div id="snowflaqe-no-not-that-one-graphql-client" class="section level3">
-<h3>Snowflaqe (no, not that one) GraphQL client</h3>
+<div class="col-md-4 centered">
+{{% ext-link-card "https://dotnet.microsoft.com/apps/data/spark" %}}
 </div>
 </div>
-<div id="f-to-the-edge-back-again" class="section level2">
-<h2>F# to the Edge &amp; Back Again</h2>
 </div>
-<div id="baby-steps" class="section level2">
-<h2>Baby Steps</h2>
+<div id="an-overnight-success-ten-years-in-the-making" class="section level2">
+<h2>An Overnight Success Ten Years in the Making</h2>
+<p>I really enjoyed watching these interviews with Don Syme, for the context as well as candor and humor he brings to the conversation. But I also liked the structure of the interview, where background info was displayed to “season” the screen as Don responded to questions.</p>
+<div class="row">
+<div class="col-md-6">
+{{% youtube2 id="hNAb04V4liA" %}}
 </div>
-<div id="there-back-again" class="section level2">
-<h2>There &amp; Back Again</h2>
+<div class="col-md-6">
+{{% youtube2 id="x4j7LQApfEY" %}}
+</div>
+</div>
+<p>It shows that F# may seem like a newcomer to certain fields, but that has more to do with <em>where</em> it can be deployed and the underpinnings supported by the .NET ecosystem more than F# itself. With .NET 6 Long Term Support and new tooling like .NET interactive, F# will compare favorably with a wide variety of general purpose and domain specific languages, which I expect will lead to broader adoption across the board.</p>
+</div>
+<div id="kinesthetic-learning" class="section level2">
+<h2>Kinesthetic Learning</h2>
+<p>There’s no substitute for learning while doing. But I’m also a reader. So I set up a large music stand in my home office with several books perched on it which I’ve started to refer as my “F# bookshelf”. I’m currently working through Isaac Abraham’s “Get Programming with F#” but I will thumb through others for reference, and to occasionally provide a view into what’s down the road. But the real work is sitting with the lessons and samples side-by-side in a working environment.</p>
+<ol style="list-style-type: decimal">
+<li>{{% url-link "Get Programming with F#" "https://www.manning.com/books/get-programming-with-f-sharp" %}} by Issac Abraham</li>
+<li>{{% url-link "Machine Learning Projects for .NET Developers" "https://www.apress.com/gp/book/9781430267676" %}} by Matthais Brandewinder</li>
+<li>{{% url-link "Expert F# 4.0" "https://www.apress.com/gp/book/9781484207413" %}} by Don Syme, et al</li>
+<li>{{% url-link "Stylish F#" "https://www.apress.com/gp/book/9781484239995" %}} by Kit Eason</li>
+<li>{{% url-link "Domain Modeling Made Functional" "https://pragprog.com/titles/swdddf/domain-modeling-made-functional/" %}} by Scott Wlaschin</li>
+</ol>
+{{% fancybox "/img" "music-stand.jpg" %}}
+<div id="online-resources" class="section level3">
+<h3>Online Resources</h3>
+<p>Books often come with downloadable companion code - but there are also many, many free online resources that facilitate the curious programmer’s journey.</p>
+<ol style="list-style-type: decimal">
+<li>{{% url-link "F# From the Ground Up" "https://www.udemy.com/course/fsharp-from-the-ground-up/" %}} (Kit Eason [Udemy paid courseware - highly recommended])</li>
+<li>{{% url-link "F# for Fun and Profit" "https://fsharpforfunandprofit.com/" %}} (Scott Wlaschin’s site)</li>
+<li>{{% url-link "Compositional IT News & Blog" "https://www.compositional-it.com/news-blog/" %}} (company founded by Isaac Abraham)</li>
+<li>{{% url-link "Learning F#" "https://fsharp.org/learn/" %}} (F# Foundation’s compendium)</li>
+<li>{{% url-link "Functional koans in F#" "https://github.com/ChrisMarinos/FSharpKoans" %}} (Chris Marinos on GitHub)</li>
+</ol>
+</div>
+</div>
+<div id="akka.net-actor-model-and-the-reactive-manifesto" class="section level2">
+<h2>Akka.NET, Actor Model and the Reactive Manifesto</h2>
+<p>This is where I’ll get in trouble with both the mathematicians and the computer scientists. But my personal opinion is that serverless apps - both stateless and <em>durable</em> functions - are really a rehash of the actor model, which has been around for decades. I had some early brushes with the concept while in school, but it really sunk in when I started looking for ways to make operational systems more elastic and reactive. It turns out that I’m not alone in this, and actor model in Akka.NET (the name being an approved homage to the original java implementation) brings event-driven systems shoulder-to-shoulder with event sourced architectures. To many software engineers event <em>driven</em> and event <em>sourced</em> are distinct from one another, so it’s worthwhile to consider each on their own before you find where they might overlap in a given domain.</p>
+<p>Here are a pair of clips from a presentation by Aaron Stannard, co-creator of Akka.NET and CTO of {{% url-link "petabridge" "https://petabridge.com/" %}}. They cover a few highlights of the Akka.NET actor system.</p>
+<div class="row">
+<div class="col-md-6">
+{{% youtube2 id="ozelpjr9SXE" yt_start="1204" yt_end="1526" %}}
+</div>
+<div class="col-md-6">
+{{% youtube2 id="ozelpjr9SXE" yt_start="1792" yt_end="1942" %}}
+</div>
+</div>
+<p>Actor systems are a form of orchestrated ephemeral compute that can very efficiently create a cohesive reactive application surface. There are many of these systems showing up across tech stacks well beyond public cloud serverless planes or Akka and Akka.NET. The {{% url-link "reactive manifesto" "https://www.reactivemanifesto.org/" %}} was authored in 2014 and serves as a common point of departure for many, is from my perspective is at least partly responsible for the renewed interest in the actor pattern. I count myself as both early <em>and</em> late to this party. Given the dilution that has happened to the agile manifesto, I’ll be curious to see how <strong><em>this</em></strong> manifesto ages. While I think that in some ways it doesn’t go far enough, I added my signature to show solidarity with its most high-minded goals.</p>
+<p>The part of Akka.NET that really has my attention is that petabridge has provided {{% url-link "an entire site on learning how to implement Akka.NET step-by-step" "https://petabridge.com/bootcamp/" %}}, and it’s <strong><em>free</em></strong>. I’m definitely adding that my list of online learning resources. While it’s written in and around C#, I’m looking forward to embracing it to take over to F# using Scott Wlaschin’s “railway” pattern. I had a sense I would need to maintain and even sharpen my C# chops if I was going to take a deep dive into F#, and this is a prime example. From early on had a sense that leaning on R would only get me so far down the road, and the thought is pretty exciting to me.</p>
+</div>
+<div id="wildernesslabs-meadow-and-xamarin" class="section level2">
+<h2>WildernessLabs Meadow and Xamarin</h2>
+<div class="row">
+<div class="col-md-8">
+Et nulla eiusmod sit magna sit ut. Duis qui Lorem excepteur officia qui sunt Lorem nisi eu. Consectetur nulla qui aliquip occaecat laborum qui aliquip dolor officia ad et. Incididunt officia et proident aliquip irure minim occaecat cupidatat ex reprehenderit. Exercitation amet laborum cupidatat sint laborum ullamco anim adipisicing veniam nostrud magna duis fugiat enim. Enim excepteur sit ex nostrud sit ullamco. Incididunt laboris duis qui dolore reprehenderit. Aliquip exercitation anim ea mollit qui minim cupidatat incididunt cupidatat laborum enim. Eu dolore id incididunt est minim anim incididunt ad minim sunt elit sit. Excepteur ea mollit est minim proident labore do anim deserunt excepteur. Amet duis veniam proident excepteur dolore enim tempor tempor laboris duis velit. Tempor dolor fugiat officia ut reprehenderit.
+</div>
+<div class="col-md-4">
+{{% fancybox "/img" "meadow-project.jpg" %}}
+</div>
+</div>
+</div>
+<div id="other-learning-projects" class="section level2">
+<h2>Other Learning Projects</h2>
+<p>Aside from the exercises, kata, koan and other assorted bits and bytes, I’m also building a few of my own little projects to help sharpen my F# chops. My first project was an Azure Function app that takes a URL and retrieves openGraph data from the targeted web page. It’s what I use to build the cards you see throughout this site. There are still some wrinkles to iron out, but for now I’m running the function in a local dev container, since I’m also building this site locally.</p>
+<p>I’m also learning how to use {{% url-link "Snowflaqe" "https://github.com/Zaid-Ajaj/Snowflaqe" %}}, a meta-programming project from Zaid Ajaj. It’s a fascinating micro-cosm into one of F#’s real super-powers - the code can be used to generate new, canonical code - so <strong><em>meta!</em></strong> I used it to generate a client that scraped GitHub’s public GraphQL schema, and used that to generate all of the type interfaces for a client interface library. It’s like magic. The purpose is to collect repository data, to satisfy my own curiosity about the relative growth of functional-friendly languages relative to other programming styles over the past 10 years. It’s still early days but I’m hoping to complete the project end-to-end in F#/.NET and <em>not</em> fall back to R and C#.</p>
+<p>But that’s just the start. Right now the challenge is to maintain the core lessons (and the hardware project above) while not getting too distracted by the “new shiny” idea that pops into my head. It’s the kind of problem I love to have.</p>
+</div>
+<div id="everything-old-is-new-again" class="section level2">
+<h2>Everything Old Is New Again</h2>
+<div class="row">
+<div class="col-md-4">
+<img src="/img/fsharp_ecosystem.png" alt="The F# ecosystem">
+</div>
+<div class="col-md-8">
+Et nulla eiusmod sit magna sit ut. Duis qui Lorem excepteur officia qui sunt Lorem nisi eu. Consectetur nulla qui aliquip occaecat laborum qui aliquip dolor officia ad et. Incididunt officia et proident aliquip irure minim occaecat cupidatat ex reprehenderit. Exercitation amet laborum cupidatat sint laborum ullamco anim adipisicing veniam nostrud magna duis fugiat enim. Enim excepteur sit ex nostrud sit ullamco. Incididunt laboris duis qui dolore reprehenderit. Aliquip exercitation anim ea mollit qui minim cupidatat incididunt cupidatat laborum enim. Eu dolore id incididunt est minim anim incididunt ad minim sunt elit sit. Excepteur ea mollit est minim proident labore do anim deserunt excepteur. Amet duis veniam proident excepteur dolore enim tempor tempor laboris duis velit. Tempor dolor fugiat officia ut reprehenderit.
+</div>
+</div>
+</div>
+<div id="coda-corporate-and-open-source-balancing-act" class="section level2">
+<h2>Coda: Corporate and Open Source Balancing Act</h2>
 </div>
