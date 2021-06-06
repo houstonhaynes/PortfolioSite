@@ -12,7 +12,7 @@ featuredpath: img
 featured: fsharp.png
 ogfeatured: h3_og_wide_fsharp.png
 emblem: perspective.png
-description: A winding journey to a more functional and more hopeful path forward in the cloud and on the edge
+description: A winding journey to a more functional and more hopeful path forward in the cloud and at the edge
 draft: false
 tags:
 - F#
@@ -84,7 +84,7 @@ So that put a floor under what my personal experiments were hinting at - I wante
 
 Unlike my prose, F# is succinct. So aside from being able to take advantage of "life in the .NET ecosystem" it also has the ability to pack a great deal of context into a relatively small block of code. I remember being resistant to that idea when going from java "proper" to Groovy, having grown acclimated to the former's more verbose syntax. And I hear similar comments from C# developers being perplexed with the terse structure of F# code. But with my exposure to Python and R, F# felt like the best of all worlds. You get the clarity of a composed structure using static typing with robust type inference and a compiler that really keeps you from going far astray. F# had a high quality REPL long before it was cool, and there is `r blogdown::shortcode("url-link", "hot module reload in the SAFE Stack ", "https://safe-stack.github.io/docs/recipes/developing-and-testing/using-hot-reload/")`with a more general HMR implementation coming to .NET 6 later this year. From the perspective of supporting rapid development, it has the goods.
 
-For an example of F#'s succinct syntax consider this sample from my `r blogdown::shortcode("url-link", "Low Code is Dead. Long Live Low Code!", "/post/low-code-is-dead", "_self")` blog post. The idea is to illustrate how an F# function extrapolates to C# and then the Intermediate Language that the .NET compiler uses to produce machine code. This isn't to say F# is better or worse than any other language, just that it has certain traits that make it advantageous for a direct for of expression.
+For an example of F#'s succinct syntax consider this sample from my `r blogdown::shortcode("url-link", "Low Code is Dead. Long Live Low Code!", "/post/low-code-is-dead", "_self")` blog post. The idea is to illustrate how an F# function extrapolates to C# and then the Intermediate Language that the .NET compiler uses to produce machine code. This isn't to say F# is better or worse than any other language, just that it has certain traits that make it advantageous for a direct form of expression.
 
 <button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codefsharp">View sample F# Parallel Array Sample</button>
 <button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codecsharp">View sample code converted to C#</button>
@@ -393,13 +393,13 @@ namespace <StartupCode$_>
 
 ## Meta Programming
 
-The thing that really turned my head was `r blogdown::shortcode("url-link", "Fable", "https://fable.io/")`. I found out about it after I had just rolled off of a project to build a streaming platform. in that project I had run into a brick wall with Blazor WebAssembly because of the inability to stream DRM protected content through the WASM sandbox. It was a road block that sent me scurrying back to Node and JavaScript, and while the polyglot life is the new normal is today's tech scene it was a point of frustration. Fable offers all of the type safety of TypeScript while rendering JavaScript that can run on any browser.
+The thing that really turned my head was `r blogdown::shortcode("url-link", "Fable", "https://fable.io/")`. I found out about it after I had just rolled off of a project to build a streaming platform. In that project I had run into a brick wall with Blazor WebAssembly because of the inability to stream DRM protected content through the WASM sandbox. It was a road block that sent me scurrying back to Node and JavaScript, and while the polyglot life is the new normal is today's tech scene it was a point of frustration. Fable offers all of the type safety of TypeScript while rendering JavaScript that can run on any browser.
 
 The real genius of it emerges with the `r blogdown::shortcode("url-link", "SAFE Stack", "https://safe-stack.github.io/")`, where sharing allows a single code file to ***transpile* to *multiple* targets**. So you can create one definition that informs both the server interface and the client applications. I was pretty excited about the SAFE Stack because of my work in the R ecosystem - with R markdown, Shiny server and Blogdown's transpiling to HTML. So while I recognized the "meta" pattern I had seen in R, the SAFE Stack demonstrated clearly that F# could span domains in a way I hadn't seen before.
 
 ## Machine Learning
 
-And it's worthwhile to point out the growth in .NET machine learning projects, both to facilitate interop with other frameworks as well as purpose-built .NET workloads. The Apache Spark library is particularly notable that it works with either C# or F# *and* code can be deployed to Azure HDI, Amazon's Elastic MapReduce or Databricks. While .NET gets credit for "playing well with others" by being able to run on Mac and Linux, the transpile and interop story of .NET and particularly F# goes much further than that. While I discuss some F# specific tooling in sections below, these links provide a quick view into open source initiatives in the  machine learning community.
+And it's worthwhile to point out the growth in .NET machine learning projects, both to facilitate interop with other frameworks as well as purpose-built .NET workloads. The Apache Spark library is particularly notable that it works with either C# or F# *and* code can be deployed to Azure HDI, Amazon's Elastic MapReduce or Databricks. While .NET gets credit for "playing well with others" by being able to run on Mac and Linux, the transpile and interop story of .NET and particularly F# goes much further than that. While I discuss some F# specific tooling, these links provide a quick view into open source initiatives in the machine learning community.
 
 <div class="row">
   <div class="col-md-4 centered">`r blogdown::shortcode("ext-link-card", "https://github.com/fslaborg")`</div>
@@ -423,7 +423,7 @@ It shows that F# may seem like a newcomer to certain fields, but that has more t
 
 ## Kinesthetic Learning
 
-There's no substitute for learning while doing. But I'm also a reader. So I set up a large music stand in my home office with several books perched on it which I've started to refer as my "F# bookshelf". I'm currently working through Isaac Abraham's "Get Programming with F#" but I will thumb through others for reference, and to occasionally provide a view into what's down the road. But the real work is sitting with the lessons and samples side-by-side in a working environment.
+There's no substitute for learning while doing. But I'm also a reader. So I set up a large music stand in my home office with several books perched on it which I've started to refer as my "F# bookshelf". I'm currently working through Isaac Abraham's "Get Programming with F#" but I will thumb through others for reference and to occasionally provide a view into what's down the road. But the real work is sitting with the lessons and samples side-by-side in a working environment.
 
 1. `r blogdown::shortcode("url-link", "Get Programming with F#", "https://www.manning.com/books/get-programming-with-f-sharp")` by Issac Abraham
 1. `r blogdown::shortcode("url-link", "Machine Learning Projects for .NET Developers", "https://www.apress.com/gp/book/9781430267676")` by Matthais Brandewinder
@@ -435,13 +435,15 @@ There's no substitute for learning while doing. But I'm also a reader. So I set 
 
 ### Online Resources
 
-Books often come with downloadable companion code - but there are also many, many paid and free online resources that facilitate the curious programmer's journey.
+Books often come with downloadable companion code - but there are also many free and paid online resources that facilitate the curious programmer's journey.
 
 1. `r blogdown::shortcode("url-link", "F# From the Ground Up", "https://www.udemy.com/course/fsharp-from-the-ground-up/")` (Kit Eason [Udemy paid courseware - highly recommended])
 1. `r blogdown::shortcode("url-link", "F# for Fun and Profit", "https://fsharpforfunandprofit.com/")` (Scott Wlaschin's site)
 1. `r blogdown::shortcode("url-link", "Compositional IT News & Blog", "https://www.compositional-it.com/news-blog/")` (company founded by Isaac Abraham)
 1. `r blogdown::shortcode("url-link", "Learning F#", "https://fsharp.org/learn/")` (F# Foundation's compendium)
 1. `r blogdown::shortcode("url-link", "Functional koans in F#", "https://github.com/ChrisMarinos/FSharpKoans")` (Chris Marinos on GitHub)
+
+There are many torch-bearers for F#, and they offer long-standing and substantial bodies of work to help software engineers approach regardless of their technical background.
 
 ## Akka.NET, Actor Model and the Reactive Manifesto
 
@@ -456,7 +458,7 @@ Here are a pair of clips from a presentation by Aaron Stannard, co-creator of Ak
 
 Actor systems are a form of orchestrated ephemeral compute that can very efficiently create a cohesive reactive application surface. There are many of these systems showing up across tech stacks well beyond public cloud serverless planes or Akka and Akka.NET. The `r blogdown::shortcode("url-link", "reactive manifesto", "https://www.reactivemanifesto.org/")` was authored in 2014 and serves as a common point of departure for many, is from my perspective is at least partly responsible for the renewed interest in the actor pattern. I count myself as both early *and* late to this party. Given `r blogdown::shortcode("url-link", "the dilution that has undercut the agile manifesto", "/post/agile-zombie-apocalypse", "_self")`, I'll be curious to see how ***this*** manifesto ages. While I think that in some ways it doesn't go far enough, I added my signature to show solidarity with its most high-minded goals.
 
-The part of Akka.NET that really has my attention is that Petabridge has provided `r blogdown::shortcode("url-link", "an entire site on learning how to implement Akka.NET step-by-step", "https://Petabridge.com/bootcamp/")`, and it's ***free***. I'm definitely adding that my list of online learning resources. While it's written in and around C#, I'm looking forward to embracing it to take over to F# using Scott Wlaschin's "railway" pattern. I had a sense I would need to maintain and even sharpen my C# chops if I was going to take a deep dive into F#, and this is a prime example. From early on I had a sense that leaning on R would only get me so far down the road, and to cover new ground is exciting.
+The part of Akka.NET that really has my attention is that Petabridge has provided `r blogdown::shortcode("url-link", "an entire site on learning how to implement Akka.NET step-by-step", "https://Petabridge.com/bootcamp/")`, and it's ***free***. I'm definitely adding that site to my list of online learning resources. While it's written in and around C#, I'm looking forward to embracing it to bring over to F# using Scott Wlaschin's "railway" pattern. I had a sense I would need to maintain and even sharpen my C# chops if I was going to take a deep dive into F# if I was going to speed that transition. From early on I had a sense that leaning on R would only get me so far down the road, and to cover this new ground is exciting.
 
 ## Beyond Reactive with Wilderness Labs & Xamarin
 
@@ -467,9 +469,9 @@ The part of Akka.NET that really has my attention is that Petabridge has provide
 
 ## Other Learning Projects
 
-Aside from the exercises, kata, koan and other assorted bits and bytes, I'm also building a few of my own little projects to help sharpen my F# chops. My first project was an Azure Function app that takes a URL and retrieves openGraph data from the targeted web page. It's what I use to build the cards you see throughout this site. There are still some wrinkles to iron out, but for now I'm running the function in a local dev container, since I'm also building this site locally.
+Aside from the exercises, kata, koan and other assorted bits and bytes, I'm also building a few of my own little projects to help sharpen my F# chops. My first foray was an Azure Function app that takes a URL and retrieves openGraph data from the targeted web page. It's what I use to build the cards you see throughout this site, called by Hugo as part of the final stage of fleshing out the static site's structure. There are still some wrinkles to iron out, but for now I'm running the function in a local dev container, since I'm also building this site locally.
 
-I'm also learning how to use `r blogdown::shortcode("url-link", "Snowflaqe", "https://github.com/Zaid-Ajaj/Snowflaqe")`, a meta-programming project from Zaid Ajaj. It's a fascinating microcosm into one of F#'s real super-powers - the code can be used to generate new, canonical code - so ***meta!*** I used it to generate a client that scraped GitHub's public GraphQL schema, and used that to generate all of the types for a client interface library. It's like magic. My goal was to collect repository data, to satisfy my own curiosity about the relative growth of functional-friendly languages relative to other programming styles over the past 10 years. It's still in early stages but I'm hoping to complete the project end-to-end in F#/.NET and *not* fall back to R.
+I'm also learning how to use `r blogdown::shortcode("url-link", "Snowflaqe", "https://github.com/Zaid-Ajaj/Snowflaqe")`, a meta-programming project from Zaid Ajaj. It's a fascinating microcosm into one of F#'s real super-powers - that it can be used to generate new, canonical code - so ***meta!*** I used it to generate a client that scraped GitHub's public GraphQL schema, and used that to generate all of the types for a client interface library. It's like magic. My goal was to collect repository data, to satisfy my own curiosity about the relative growth of functional-friendly languages relative to other programming styles over the past 10 years. It's still in early stages but I'm hoping to complete the project end-to-end in F#/.NET and *not* fall back to R.
 
 But that's just the start. Right now the challenge is to maintain the core lessons (and the hardware project above) while not getting too distracted by the "new shiny" idea that pops into my head. It's the kind of problem I love to have.
 
@@ -477,7 +479,7 @@ But that's just the start. Right now the challenge is to maintain the core lesso
 
 <div class="row">
   <div class="col-md-4"><img class="mt-2" src="/img/fsharp_ecosystem.png" alt="The F# ecosystem"></div>
-  <div class="col-md-8">My vision of a path forward with F# is taking shape. Fable, Xamarin, and Meadow face *out* while Akka.NET, Kubernetes, Event Store, C# and .NET interop provide the base for a reactive platform that's fast, flexible, resilient and maintainable. The clarity of this sits in stark contrast to those lessons in my career where poor early choices and tech fragmentation were a projects' undoing. And the objective should not *only* be improved user experience or reduced burn rate but also a more sustainable operational framework. We as an industry must look beyond cost considerations to sustainability and reduction of carbon footprint. Bringing these intelligent tools together gives me a renewed sense that it's not only *possible* to create a solution greater than the sum of its parts, but that its inherent efficiency is also a more *responsible* approach. And so, the work continues...</div>
+  <div class="col-md-8">My vision of a path forward with F# is taking shape. Fable, Xamarin, and Meadow face *out* while Akka.NET, Kubernetes, Event Store, C# and .NET interop provide the base for a reactive platform that's fast, flexible, resilient and maintainable. The clarity of this sits in stark contrast to those lessons in my career where poor early choices and tech fragmentation were a project's undoing. And the objective should not *only* be improved user experience or reduced burn rate but also a more sustainable operational framework. We as an industry must look beyond cost considerations to sustainability and reduction of carbon footprint. Bringing these intelligent tools together gives me a renewed sense that it's not only *possible* to create a solution greater than the sum of its parts, but that its inherent efficiency is also a more *responsible* approach. And so, the work continues...</div>
 </div>
 
 ## Coda: Microsoft, the Enterprise & The Open Source Balancing Act
