@@ -78,7 +78,7 @@ If the company isn't mature enough to move beyond a reflexive rapid prototyping 
 
 It's an Achilles Heel that the agile label can so easily conform to the shape of whatever problem it's poured into. From my first encounter with it in the early aughts I found the "choose your own adventure" aspect to be off-putting. Even today - there are entire areas of engineering concern that focus solely on one XP tenet and no one bats an eye. And for those that *do* bat an eye, a quick acronym switch-eroo is all that it takes to get people on board. Mind you, I *highly* value Test Driven Development. I just happen to think it's one aspect of a larger solution space - and in fact this video says as much, while also describing how renaming "TDD" to "BDD" was the way that one notable adherent managed to get engineers to a clear-eyed view of the practice.
 
-`r blogdown::shortcode("youtube2", id = '"EZ05e7EMOLM"', yt_start = '"1893"')`
+`r blogdown::shortcode("youtube2-small", id = '"EZ05e7EMOLM"', yt_start = '"1893"', yt_end = '"2052"')`
 <br>
 I don't mean to cast this talk in a negative light - it just happened to have the perfect anecdote to illustrate my point. In fact, I think the entire video is a worthy watch if only because Ian Cooper does *such* a great job of presenting the topic from an honest perspective. He's as forthright about the failures he encountered along the way as he was clear in showing the successful exhibits in the presentation. It's a hallmark of agile to be honest, sometimes brutally so, and embracing the course-corrections is valuable in creating better systems. He *gets it* - and showed how he eventually grokked what TDD is meant to be *as a practice* - a proxy for user interaction to validate the outward-facing elements of the solution. In truth - what he illustrates by accident of history underscored what I was taught early on - that you could choose to *not* explicitly embrace XP practices but to *contravene* them was trouble. While the focus here is on proper TDD, he unwittingly shows that other XP practices emerge as an accidentally virtuous consequence of honoring TDDs most earnest goals.
 
@@ -98,11 +98,11 @@ And like seeing *yet another* zombie horror story play itself out, my recent con
 
 `r blogdown::shortcode("url-link", "That was part of my motivation in creating AD4S.", "/post/ad4s-a-proposal", "_self")` All of those higher-order decisions that deal with these subjects have to be addressed and noted in a way that they can be tracked along with software engineering decisions. In a world with GDPR, CCPA, HIPPA, SOC 1/2/3, ISO 127001, FIPS 140-2 and myriad other acronyms and regulations on the horizon these and future concerns must have a home to be proactively faced by the working group. And it must be done regardless of whether they are deemed "essential" or "accidental" by those who only evaluate whether they can see their next job promotion in it. Regardless of how Aristotle would segment the problem space, it's all "the work" and must be addressed.
 
-`r blogdown::shortcode("youtube", "07YRhcJGAJ4")`
+`r blogdown::shortcode("youtube2-small", id = '"07YRhcJGAJ4"')`
 <br>
 Here's a final tidbit to get you thinking: If facebook is already paying for marketing to plant their flag in front of this parade, where do you think *your* company should be? Regardless of whether your shop utters "Internet" in every sentence like facebook, it would be prudent to take note which way the wind is blowing.
 
-`r blogdown::shortcode("youtube", "cGuTmOUdFbo")`
+`r blogdown::shortcode("youtube2-small", id = '"cGuTmOUdFbo"')`
 <br>
 This is a really great synopsis of the history of "agile" and its nearly-accidental roots. Kent Beck is not only *__patient 0__* in this zombie apocalypse, he's also funny and delightfully self-effacing. I had no idea that he ever worked at facebook until seeing this video, found while researching this post. So it somewhat serves double-duty, both historical context and an interesting *early* bookend that pre-dates the facebook commercial above.
 
