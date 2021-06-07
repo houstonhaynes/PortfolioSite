@@ -76,7 +76,7 @@ It really brought home that "low code" is in the eye of the beholder. And more i
 
 To illustrate how low code is all relative, here's an example processed through `r blogdown::shortcode("url-link", "SharpLab.io", "https://sharplab.io/")` of a sample array processing function written in F# which is then converted to C# and Intermediate (the pre-compiled code before it is converted to machine code). 5 instructions in F# becomes 88 lines of C#. And the same F# converts to 198 lines of IL. No matter how you choose to view this exercise, it's plain to see that there's (potentially) a great deal more going on under the hood when a high level instruction is issued.
 
-<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codefsharp">View sample F# Parallel Array Sample</button>
+<button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codefsharp">View F# Parallel Array Sample</button>
 <button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codecsharp">View sample code converted to C#</button>
 <button class="btn btn-outline-dark btn-sm mt-2 mb-2" data-toggle="collapse" data-target="#codeil">View sample in Intermediate Language</button>
 
