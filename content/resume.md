@@ -10,20 +10,20 @@ featuredalt = ""
 categories = [""]
 linktitle = ""
 format = ""
+draft = true
 link = ""
 weight = "01"
 icon = "fas fa-address-card"
 +++
 
-# Shared via OneDrive
+# Houston's Resume
 Note: you can use the control in the bottom right of the window to download in the original or PDF format.
 <style>
   iframe {
-    width: 1px;
     min-width: 100%;
   }
 </style>
-<iframe id="OneDrive" class="iframe" src="https://onedrive.live.com/embed?cid=C8792DC9FD06F2E0&resid=C8792DC9FD06F2E0%2145743&authkey=ALFb_yR5LiYaFoo&em=2" height="1200" width = "800" frameborder="0" scrolling="no"></iframe>
+<iframe id="resume" class="iframe" src="https://h3tech.dev/pdf/H3_GeneralCV.pdf" height="1200" width = "800" frameborder="0" scrolling="no"></iframe>
 <script>
-  iResize({ log: true }, '#OneDrive')
+  iResize({ log: true }, '#resume')
 </script>

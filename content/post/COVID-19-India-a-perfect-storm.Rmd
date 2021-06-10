@@ -283,7 +283,7 @@ data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
   mutate(Date = mdy(Date)) %>%
   filter(Date >= "2021-01-01") %>% 
   select(Date, Clade, value) %>%
-  group_by(Clade, Date = floor_date(Date, "7 days")) %>%
+  group_by(Clade, Date = floor_date(Date, "month")) %>%
   summarise(value = sum(value))
 
 last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
