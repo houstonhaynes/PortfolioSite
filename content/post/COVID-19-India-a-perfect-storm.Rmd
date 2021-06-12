@@ -245,7 +245,7 @@ The two references below are worth sharing when looking to grok this domain. The
 
 <div class="row">
   <div class="col-md-6">`r blogdown::shortcode("ext-link-card", "https://www.cdc.gov/coronavirus/2019-ncov/cases-updates/variant-surveillance/variant-info.html")`</div>
-  <div class="col-md-6">`r blogdown::shortcode("ext-link-card", "https://www.news-medical.net/health/Viral-Clades-of-SARS-CoV-2.aspx")`</div>
+  <div class="col-md-6">`r blogdown::shortcode("ext-flink-card", "https://www.news-medical.net/health/Viral-Clades-of-SARS-CoV-2.aspx")`</div>
 </div>
 
 I've worked at various healthcare-related companies throughout my career, and the one that maps most closely to this domain is `r blogdown::shortcode("url-link", "TherapyEdge", "/vitae/early-years/#TherapyEdge", "_self")`. I gained that formative experience right as AIDS was beginning to be understood as something other than an outright death sentence. So while I don't have the level of knowledge and experience of a clinician or researcher in this field, I know a bit more than the average software engineer. Knowledge is power, and understanding the nuance of how variants can diverge, and how the scientific community responds to and communicates about it will continue to grow in importance as we learn to live with SARS-CoV-2 in the coming years.

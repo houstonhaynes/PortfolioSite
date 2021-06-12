@@ -53,7 +53,7 @@ What follows is a series of notes, sketches and ideas that outline the problem s
 
 There are natural innovation and implementation cycles in software architecture. It's been that way since the 1970s. With the proliferation of commoditized compute and storage, patterns once thought untenable are now seeing renewed interest. But there's a dark side to progress. Due to the "surface area" of digital technologies the threats to data security have grown exponentially. Many of the intentionally naive patterns from earlier eras existed in an inherently bounded context - of limited access and confined compute space (a system used and maintained at a specific location with limited or no internet access) As those early architectural ideas are re-imagined for the information age, so too must shielding and resiliency be re-imagined for those patterns to be useful in a forward-looking digital landscape.
 
-`r blogdown::shortcode("ext-link-card", "https://www.scmagazine.com/home/security-news/vulnerabilities/namewreck-is-the-latest-collision-between-tcp-ip-and-the-standards-process")` 
+`r blogdown::shortcode("ext-flink-card", "https://www.scmagazine.com/home/security-news/vulnerabilities/namewreck-is-the-latest-collision-between-tcp-ip-and-the-standards-process")` 
 
 # On the toxicity of performative leadership
 
@@ -154,7 +154,7 @@ Software is the digital infrastructure of our lives. When you're in a vehicle go
 
 ### GDPR, CCPA and related standards and regulations
 
-`r blogdown::shortcode("ext-link-card", "https://fortune.com/2021/04/02/aclu-shares-data-facebook-third-parties-digital-privacy")` 
+`r blogdown::shortcode("ext-flink-card", "https://fortune.com/2021/04/02/aclu-shares-data-facebook-third-parties-digital-privacy")` 
 
 # The "So what" Factor
 
@@ -202,7 +202,7 @@ Software is the digital infrastructure of our lives. When you're in a vehicle go
 
 #### Healthcare
 
-`r blogdown::shortcode("ext-link-card", "https://www.imt.ie/news/health-researchers-blocked-by-gdpr-12-04-2021")`
+`r blogdown::shortcode("ext-flink-card", "https://www.imt.ie/news/health-researchers-blocked-by-gdpr-12-04-2021")`
 <p>&nbsp;</p>
 
 ## Risk Calculation - a CVE-inspired model
@@ -233,13 +233,13 @@ Not every problem requires a software engineering "fix". Aside from the up-front
 
 ## Further Reading
 
-`r blogdown::shortcode("ext-link-card", "https://abbycovert.com/make-sense/")`
+`r blogdown::shortcode("ext-flink-card", "https://abbycovert.com/make-sense/")`
 <p>&nbsp;</p>
 
-`r blogdown::shortcode("ext-link-card", "https://www.infoq.com/articles/C4-architecture-model/")`
+`r blogdown::shortcode("ext-flink-card", "https://www.infoq.com/articles/C4-architecture-model/")`
 <p>&nbsp;</p>
 
-`r blogdown::shortcode("ext-link-card", "https://structurizr.com/")`
+`r blogdown::shortcode("ext-flink-card", "https://structurizr.com/")`
 <p>&nbsp;</p>
 
 

@@ -92,7 +92,7 @@ As far back as my time at IBM Global Services (Y2K, y'all) I was classifying sub
 
 `r blogdown::shortcode("header-centered", "3", "Don't Let This Be Your Company")`
 
-`r blogdown::shortcode("ext-link-card", "https://www.buzzfeednews.com/article/ryanmac/we-found-joe-bidens-secret-venmo")` 
+`r blogdown::shortcode("ext-flink-card", "https://www.buzzfeednews.com/article/ryanmac/we-found-joe-bidens-secret-venmo")` 
 
 And like seeing *yet another* zombie horror story play itself out, my recent consulting experience has been littered with "digital transformation" and similar software forensics exercises. In some cases the clients were multi-national conglomerates operating under consent decrees from the federal agencies - and the root cause of the issues always stemmed from earlier engineering teams choosing to ignore those accidental complexities. This is part of the potential devil's bargain that can come along with misuse and abuse of refactoring and re-engineering. In many cases long-since-gone "talent" simply chose to ignore the work because it wasn't glamorous or required the team to face *the real costs* of those early decisions. That's "institutional complexity" in a nutshell, and is a pernicious technical debt.
 
