@@ -1,0 +1,21 @@
+{{ with getJSON (printf "http://localhost:7071/api/gethtmlmeta?url=%s" (.Get 0 )) }}
+<div class="card centered" style="max-width:36rem;width:100%;margin-bottom:2rem;">
+    <div class="card-header font-weight-bold" style="letter-spacing:.15rem;">
+        <a href="{{ .data.og_url }}" target="_blank">{{ .data.og_title | title }}</a>
+    </div>
+    <div class="card-body">
+        {{ with .data.og_image }}
+        <img src="{{ .url }}" alt="" class="card-img-top rounded bordered mb-2" style="width:100%;height:auto">
+        {{ end }}
+        <div class="mt-2 small">
+                {{ with .data.og_description }}<caption>{{ . | htmlUnescape | markdownify }}</caption>{{ end }}
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="font-italic text-muted small">
+            {{ with .data.author }}Author: {{ . }},&nbsp;{{ end }}
+            {{ if and .data.author .data.application-name}}{{ end }}{{ with .data.application-name }}Source: {{ . }}{{ end }} 
+            {{ with .data.article_published_time }}&nbsp;&middot;&nbsp;&nbsp;{{ dateFormat "Jan 02, 2006" . }}{{ end }}</div>
+    </div>
+</div>
+{{ end }}
