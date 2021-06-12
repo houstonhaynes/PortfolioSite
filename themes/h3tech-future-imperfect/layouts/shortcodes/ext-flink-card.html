@@ -1,4 +1,4 @@
-{{ with getJSON (printf "https://h3portfoliosite.azurewebsites.net/api/gethtmlmeta?url=%s&code=[REDACTED]]" (.Get 0 )) }}
+{{ with getJSON (printf "https://h3portfoliosite.azurewebsites.net/api/gethtmlmeta?url=%s&code=[REDACTED]" (.Get 0 )) }}
 <div class="card centered" style="max-width:36rem;width:100%;margin-bottom:2rem;">
     <div class="card-header font-weight-bold" style="letter-spacing:.15rem;">
         <a href="{{ .ogurl }}" target="_blank">{{ .ogtitle | title }}</a>
