@@ -56,7 +56,7 @@ One crucial factor that should be stated up front is that this is *not* another 
 
 Any manager that reflexively "buffers" themselves from the responsibility of active systems management is likely missing key elements in their background and experience to realize that this approach works against business needs. This is what "performative leadership" refers to - and it has myriad forms in any size organization. It's both a process and institutional "smell" for this attitude to persist. At its worst it's a double abdication. On one hand, engineers may be "let off the hook" to disconnect from business input due to proxies that don't have actual domain knowledge. And similarly it can also be a means for the non-adept business leaders to parachute non-technical staff into the project. While it has any number of excuses, it too often is also used to shield the responsible business party from exposing their inability or `r blogdown::shortcode("url-link", "unwillingness,", "https://hbr.org/2021/04/how-leaders-get-in-the-way-of-organizational-change")` to provide actionable domain knowledge. 
 
-`r blogdown::shortcode("ext-link-card", "https://hbr.org/2021/04/how-leaders-get-in-the-way-of-organizational-change")`
+`r blogdown::shortcode("ext-flink-card", "https://hbr.org/2021/04/how-leaders-get-in-the-way-of-organizational-change")`
 <br>
 
 These kinds of institutional disconnects - whether by accident, cultural reflex or by design are the beginning of the end for any software project and is often an unseen strategic liability for the company. The common practice of "body-ing up" the room with a cadre of eager-but-inexperienced contributors only serves to further undermine a project's charter and dims prospects for a timely, successful delivery.
