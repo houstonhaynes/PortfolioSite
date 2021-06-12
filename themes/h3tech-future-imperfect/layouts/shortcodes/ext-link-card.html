@@ -4,8 +4,12 @@
         <a href="{{ .data.url }}" target="_blank">{{ .data.title | title }}</a>
     </div>
     <div class="card-body">
-        {{ with .data.image }}
-        <img src="{{ .url }}" alt="" class="card-img-top rounded bordered mb-2" style="width:100%;height:auto">
+        {{ if .data.image }}
+            {{ with .data.image }}
+            <img src="{{ .url }}" alt="" class="card-img-top rounded bordered mb-2" style="width:100%;height:auto">
+            {{ end }}
+        {{ else }}
+            <img src="/img/siteimagemissing.png" alt="" class="card-img-top rounded bordered mb-2" style="width:100%;height:auto">
         {{ end }}
         <div class="mt-2 small">
                 {{ with .data.description }}<caption>{{ . | htmlUnescape | markdownify }}</caption>{{ end }}
