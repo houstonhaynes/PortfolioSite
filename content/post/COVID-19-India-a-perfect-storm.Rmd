@@ -171,7 +171,7 @@ I was fully expecting for each date to be followed by a "bump" in case rates sim
 
 ```{r India_COVID_Variants_By_Month, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-asia <- "/repo/next-strain-ncov/data/asia.csv"
+asia <- "/repo/next-strain-ncov/data/global.csv"
 
 asiadata <- read.csv(asia)
 
@@ -197,7 +197,7 @@ data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
   mutate(Date = mdy(Date)) %>%
   filter(Date >= "2021-01-01") %>% 
   select(Date, Variant, value) %>%
-  group_by(Variant, Date = floor_date(Date, "month")) %>%
+  group_by(Variant, Date = floor_date(Date, "15 days")) %>%
   summarise(value = sum(value))
 
 last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
@@ -258,7 +258,7 @@ Looking at clade data from the same observation set shows a more succinct patter
 
 ```{r India_COVID_Clades_By_Month, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-asia <- "/repo/next-strain-ncov/data/asia.csv"
+asia <- "/repo/next-strain-ncov/data/global.csv"
 
 asiadata <- read.csv(asia)
 
@@ -283,7 +283,7 @@ data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
   mutate(Date = mdy(Date)) %>%
   filter(Date >= "2021-01-01") %>% 
   select(Date, Clade, value) %>%
-  group_by(Clade, Date = floor_date(Date, "month")) %>%
+  group_by(Clade, Date = floor_date(Date, "15 days")) %>%
   summarise(value = sum(value))
 
 last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
