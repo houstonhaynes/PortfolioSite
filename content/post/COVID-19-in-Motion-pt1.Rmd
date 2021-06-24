@@ -6,7 +6,7 @@ output:
     dev: "svg"
   keep_md: TRUE
 author: "Houston Haynes"
-date: '2018-11-08T14:59:43+05:30'
+date: '2020-06-28T14:59:43+05:30'
 featuredpath: img
 featured: COVID-19.png
 ogfeatured: h3_og_wide_covid19.png

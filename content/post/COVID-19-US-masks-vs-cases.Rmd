@@ -4,7 +4,7 @@ output:
   blogdown::html_page:
     dev: "svg"
 author: "Houston Haynes"
-date: '2018-11-17T14:59:43+05:30'
+date: '2020-11-17T14:59:43+05:30'
 featuredpath: img
 featured: COVID-19-US.png
 ogfeatured: h3_og_wide_covid19-us.png
