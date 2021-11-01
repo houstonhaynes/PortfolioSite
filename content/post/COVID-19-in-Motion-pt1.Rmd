@@ -78,7 +78,7 @@ COVIDtweets <- sample(COVIDtweets$status_id)
 
 # Exercise in Scale
 
-When I started working with the <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> COVID-19 data set I wanted to chart out a few things to get a *feel* for the data. I've done this work for quite a while and the first thing you often do is a form of *reality* check. In some cases I checked againtt other charts based on the same data and thought "that can't be right" only to plot it myself and see it directly. (looking at you, *Europe*) As we all have witnessed this year experts have been sounding the alarm since early on. Pandemics are like locomotives, they're difficult to stop once they gain momentum. The same goes for an effective response.
+When I started working with the <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a> COVID-19 data set I wanted to chart out a few things to get a *feel* for the data. I've done this work for quite a while and the first thing you often do is a form of *reality* check. In some cases I checked against other charts based on the same data and thought "that can't be right" only to plot it myself and see it directly. (looking at you, *Europe*) As we all have witnessed this year experts have been sounding the alarm since early on. Pandemics are like locomotives, they're difficult to stop once they gain momentum. The same goes for an effective response.
 
 `r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Cases_by_Continent.html")`
 
@@ -183,7 +183,7 @@ frameWidget(widget, width="100%", height="26rem")
 
 `r blogdown::shortcode("alert", "info", "Working with the Report:", "Use the legend to highlight, show or hide a series. Hovering over bands in the chart reveals detail for a given date.")`
 
-So I took the data and plotted it on a map, to play on a day grain through time. The gradationt are pretty subtle at the start, and that's because of the data getting *very* dark late in the range. 
+So I took the data and plotted it on a map, to play on a day grain through time. The gradients are pretty subtle at the start, and that's because of the data getting *very* dark late in the range.
 
 `r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_Global_New_Cases_Per_Million.html")`
 
@@ -341,7 +341,7 @@ frameWidget(widget, width="100%", height="40rem")
 
 # Daily COVID Mortality
 
-One of the things I expected was to see some "chop" in early data as reporting became more contistent. Here I was surprised to see irregular bumps in the "smoothed" data. Once South America is removed from the set then things look much less strange. Such as it is, the visuals tell a convincing story of where things are going as of November, and it's *not* good.
+One of the things I expected was to see some "chop" in early data as reporting became more consistent. Here I was surprised to see irregular bumps in the "smoothed" data. Once South America is removed from the set then things look much less strange. Such as it is, the visuals tell a convincing story of where things are going as of November, and it's *not* good.
 
 `r blogdown::shortcode("fancybox-iframe", "/post/COVID-19-in-Motion-pt1_files/figure-html/widgets/widget_New_Deaths_by_Continent.html")`
 
@@ -1116,4 +1116,4 @@ frameWidget(widget, width="100%", height="40rem")</code></pre>
 
 # Further analysis
 
-Aside from drilling into other categories of data here and checking againtt other data sets, I'll also be looking at various forecast models and lag indicators. There will also be *drill down* into national and regional level data. In any case, as the story continues to unfold we should all brace for a very *dark* winter. 
+Aside from drilling into other categories of data here and checking against other data sets, I'll also be looking at various forecast models and lag indicators. There will also be *drill down* into national and regional level data. In any case, as the story continues to unfold we should all brace for a very *dark* winter.
