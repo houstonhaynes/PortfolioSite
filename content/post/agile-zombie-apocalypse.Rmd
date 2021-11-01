@@ -10,7 +10,7 @@ author: "Houston Haynes"
 date: '2021-05-13T22:59:43+05:30'
 featuredpath: img
 featured: xp-zombies-square.png
-ogfeatured: xp-zombies.png
+ogfeatured: XP-zombies.png
 emblem: perspective.png
 description:  Understanding Software Systems Law According to Moore & Conway
 draft: false
@@ -32,7 +32,7 @@ If you've spent any amount of time in this field you will have noticed a "lost-a
 
 This is allowed to happen through failure to recognize that agile *itself* is __not__ an agent of its own design, but rather the outcome of deeper principals, laws that reshape it as the world of technology continues to remake itself. It's useful to take a moment to pause to review *where* agile came from and *how* it gained such a hold in the zeitgeist, and from that perspective determine which parts to reform, disband or retrench as current demands dictate.
 
-`r blogdown::shortcode("fancybox", "/img", "xp-zombies.png")`
+`r blogdown::shortcode("fancybox", "/img", "XP-zombies.png")`
 
 >Artificial urgency and superficial calendar management can be used to obfuscate that subject matter experts have lost control of a project. Just like a bad zombie movie, flashy action scenes can't hide the fact that they've lost the plot.
 

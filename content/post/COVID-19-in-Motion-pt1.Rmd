@@ -261,12 +261,12 @@ data <- select(coviddata[with(coviddata, order(date, iso_code)),],
 #datatable(data)
 
 
-ds <- data %>%
-  group_by(iso_code) %>%
+ds <- data |>
+  group_by(iso_code) |>
   do(item = list(
     iso_code = first(.$iso_code),
     sequence = .$ncpmrm,
-    ncpmrm = last(.$ncpmrm))) %>%
+    ncpmrm = last(.$ncpmrm))) |>
   .$item
 
 #head(ds, 10)
@@ -519,12 +519,12 @@ data <- select(coviddata[with(coviddata, order(date, iso_code)),],
 #datatable(data)
 
 
-ds <- data %>%
-  group_by(iso_code) %>%
+ds <- data |>
+  group_by(iso_code) |>
   do(item = list(
     iso_code = first(.$iso_code),
     sequence = .$ndpmrm,
-    ndpmrm = last(.$ndpmrm))) %>%
+    ndpmrm = last(.$ndpmrm))) |>
   .$item
 
 #head(ds, 10)
@@ -780,12 +780,12 @@ data <- select(coviddata[with(coviddata, order(date, iso_code)), ],
   ungroup() |>
   mutate_at(vars(ntpt, ntrm, ntptrm), funs(round(., 2)))
 
-ds <- data %>%
-  group_by(iso_code) %>%
+ds <- data |>
+  group_by(iso_code) |>
   do(item = list(
     iso_code = first(.$iso_code),
     sequence = .$ntptrm,
-    ndpmrm = last(.$ntptrm))) %>%
+    ndpmrm = last(.$ntptrm))) |>
   .$item
 
 #head(ds, 10)
