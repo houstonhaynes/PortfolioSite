@@ -41,13 +41,13 @@ Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1381713740207419394" %}}
+{{% tweet "1407382878477074432" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1403366419631280129" %}}
+{{% tweet "1385247021691408388" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1388870899013586947" %}}
+{{% tweet "1404521018627026946" %}}
 </div>
 </div>
 <hr>
@@ -61,7 +61,7 @@ Faces of COVID-19
 <figcaption class="caption">
 Collecting Tweets from “FacesOfCovid” Account
 </figcaption>
-<pre><code class="r">COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE) %>%
+<pre><code class="r">COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE) |>
   filter(str_detect(text, 'died of COVID'))</code></pre>
 </figure>
 <p>The “get_timeline” command first takes the account name (which can also be an account id) and a <em>n</em> value of 1,000 - to get a longer list that then default 100. Filtering significantly pares down the list and getting 1,000 tweets mean I go “back in time” far enough to get a good cross-section from which to randomly select the posts to embed. The <em>parse</em> function does the heavy lifting of putting the API result into a dataframe, and setting <em>include_rts</em> to FALSE keeps retweets out of the list. And finally, the filter command selects for posts containing a string that I use as a <em>key</em> to strive to get announcement posts. The last time I tested this locally I noticed that the initial pared down to slightly less than 400 tweets, which is plenty for the next step.</p>
@@ -119,31 +119,31 @@ More Faces of COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet "1381573141042970624" %}}
+{{% tweet "1386817370283405316" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1384220257942913024" %}}
+{{% tweet "1417529739405938692" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1406310818841464832" %}}
+{{% tweet "1429518737099612166" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1376505035153141769" %}}
+{{% tweet "1433119967071772680" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1375130359403188224" %}}
+{{% tweet "1391422714452185096" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1405903139606237186" %}}
+{{% tweet "1407367785810776064" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1392283381585661955" %}}
+{{% tweet "1407111090086072329" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1395744365595840515" %}}
+{{% tweet "1390018458453225474" %}}
 </div>
 <div class="col-md-4">
-{{% tweet "1389354082595389443" %}}
+{{% tweet "1390372587075682309" %}}
 </div>
 </div>
 <hr>

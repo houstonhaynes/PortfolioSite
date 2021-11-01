@@ -57,8 +57,8 @@ series = list(
   )
 )
 
-hcCatalog <- highchart() %>%
-  hc_title(text = paste("Ten Year Plot")) %>% 
+hcCatalog <- highchart() |>
+  hc_title(text = paste("Ten Year Plot")) |> 
   hc_chart(
       type = 'column',
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -68,16 +68,16 @@ hcCatalog <- highchart() %>%
       marginTop = '60',
       marginLeft = '80',
       marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
+      style = list(fontFamily = 'Fira Code')) |>
   hc_xAxis(categories = list(
     list( name = dfCatalog$Year,
-    categories = dfCatalog$CATALOG))) %>%  
-  hc_yAxis(min = 0, title = list(text = "Total Mismatches")) %>%
-  hc_yAxis(allowDecimals = 'false') %>%
-  hc_add_series_list(series) %>%
+    categories = dfCatalog$CATALOG))) |>  
+  hc_yAxis(min = 0, title = list(text = "Total Mismatches")) |>
+  hc_yAxis(allowDecimals = 'false') |>
+  hc_add_series_list(series) |>
   hc_plotOptions(
     series = list(
-      stacking = 'normal', marker = 'none')) %>% 
+      stacking = 'normal', marker = 'none')) |> 
   hc_add_theme(hc_theme_flat())
 
 frameWidget(hcCatalog)
@@ -102,18 +102,18 @@ series = list(
     data = dfCatalog$COUNT
   )
 
-hcOutlierSum <- highchart() %>%
-  hc_title(text = paste("Matches vs Outlying Values by System")) %>% 
+hcOutlierSum <- highchart() |>
+  hc_title(text = paste("Matches vs Outlying Values by System")) |> 
   hc_chart(
       type = 'pie',
       backgroundColor = 'rgb(236, 240, 241)',
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
       borderWidth = 2,
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_add_series(series) %>%
+      style = list(fontFamily = 'Fira Code')) |>
+  hc_add_series(series) |>
   hc_plotOptions(
-    series = list(dataLabels = list(enabled='true', format='{point.name}: <b>{point.percentage:.1f}%</b>'))) %>% 
+    series = list(dataLabels = list(enabled='true', format='{point.name}: <b>{point.percentage:.1f}%</b>'))) |> 
   hc_add_theme(hc_theme_smpl())
 
 frameWidget(hcOutlierSum, height='12rem')
@@ -145,19 +145,19 @@ series = list(
   )
 )
 
-hcOutlierSum <- highchart() %>%
-  hc_title(text = paste("Author Gross Revenue Grouping")) %>% 
+hcOutlierSum <- highchart() |>
+  hc_title(text = paste("Author Gross Revenue Grouping")) |> 
   hc_chart(
       type = 'pie',
       backgroundColor = 'rgb(236, 240, 241)',
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
       borderWidth = 2,
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_tooltip(list(pointFormat = '{series.name}: <b>{point.percentage:.1f}%</b>')) %>%
-  hc_add_series(series) %>%
+      style = list(fontFamily = 'Fira Code')) |>
+  hc_tooltip(list(pointFormat = '{series.name}: <b>{point.percentage:.1f}%</b>')) |>
+  hc_add_series(series) |>
   hc_plotOptions(
-    pie = list(startAngle = '-90', endAngle = '90', center = list('50%', '75%'), size = '110%') %>% 
+    pie = list(startAngle = '-90', endAngle = '90', center = list('50%', '75%'), size = '110%') |> 
   hc_add_theme(hc_theme_ffx())
 
 frameWidget(hcOutlierSum, height='12rem')

@@ -61,8 +61,8 @@ token <- create_token(
   access_key,
   access_secret)
 
-COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
-  filter(str_detect(text, 'died of COVID'))
+COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) |>
+    filter(str_detect(text, 'died of COVID'))
 
 COVIDtweets <- sample(COVIDtweets$status_id)
 
@@ -79,15 +79,15 @@ Having taken a turn with the data following <a href="/post/covid-19-israel-case-
 ```{r Canada_COVID_Cases_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 data <- select(coviddata, date, location, 
-               new_cases_smoothed_per_million, new_deaths_smoothed_per_million, stringency_index) %>%
-  filter(location == "Canada", date >= "2020-03-01") %>%
+               new_cases_smoothed_per_million, new_deaths_smoothed_per_million, stringency_index) |>
+  filter(location == "Canada", date >= "2020-03-01") |>
   mutate(new_cases_smoothed_per_million = ifelse(is.na(new_cases_smoothed_per_million),
-                                                 0, new_cases_smoothed_per_million)) %>%
+                                                 0, new_cases_smoothed_per_million)) |>
   mutate(new_deaths_smoothed_per_million = ifelse(is.na(new_deaths_smoothed_per_million),
-                                                 0, new_deaths_smoothed_per_million)) %>%
+                                                 0, new_deaths_smoothed_per_million)) |>
   mutate(stringency_index = ifelse(is.na(stringency_index),
-                                                 0, stringency_index)) %>%
-  mutate(date = ymd(date)) %>%
+                                                 0, stringency_index)) |>
+  mutate(date = ymd(date)) |>
   select(date, new_cases_smoothed_per_million, new_deaths_smoothed_per_million, 
          stringency_index)
 
@@ -105,24 +105,24 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Ubuntu")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
 
-widget <- highchart(type = "stock") %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "Global New Cases/Deaths per Million - Canada as Case Study", align = "center") %>%
-  #hc_subtitle(text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") %>%
+widget <- highchart(type = "stock") |>
+  hc_add_theme(thm) |>
+  hc_title(text = "Global New Cases/Deaths per Million - Canada as Case Study", align = "center") |>
+  #hc_subtitle(text = "With Comparison to Japan, China, India, Canada, Germany, UK & US", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
-      borderWidth = 2) %>%
+      borderWidth = 2) |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
+             position = list(align = "left", x = 10, y = -5)) |>
   hc_add_series(data_xts$new_cases_smoothed_per_million, 
-                type = "area", name = "Daily Cases per Million", yAxis = 0) %>%
-  hc_add_yAxis(nid = 1L, title = list(text = "Cases per Million"), relative = 2) %>%
+                type = "area", name = "Daily Cases per Million", yAxis = 0) |>
+  hc_add_yAxis(nid = 1L, title = list(text = "Cases per Million"), relative = 2) |>
   hc_add_series(data_xts$new_deaths_smoothed_per_million, 
-                type = "area", name = "Daily Deaths per Million", yAxis = 1) %>%
-  hc_add_yAxis(nid = 2L, title = list(text = "Deaths per Million"), relative = 1) %>%
-  hc_tooltip(valueDecimals = 2) %>%
+                type = "area", name = "Daily Deaths per Million", yAxis = 1) |>
+  hc_add_yAxis(nid = 2L, title = list(text = "Deaths per Million"), relative = 1) |>
+  hc_tooltip(valueDecimals = 2) |>
   hc_xAxis(type = "datetime", labels = list(format = '{value:%b %d}'),
     plotLines = list(list(
       label = list(text = "Thanksgiving"),

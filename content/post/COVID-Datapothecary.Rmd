@@ -76,37 +76,37 @@ There are re-sampling methods that can scrub bad values but here I started by di
                                 location == "Chile" &
                                 new_cases == 1057),
                              57,
-                             new_cases)) %>%
+                             new_cases)) |>
   mutate(new_cases = ifelse((date == "2020-07-24" &
                                 location == "Peru" &
                                 new_cases == 3887),
                              87,
-                             new_cases)) %>%
+                             new_cases)) |>
   mutate(new_cases = ifelse((date == "2020-08-14" &
                                 location == "Peru" &
                                 new_cases == 3935),
                              335,
-                             new_cases)) %>%
+                             new_cases)) |>
   mutate(new_cases = ifelse((date == "2020-09-07" &
                                 location == "Ecuador" &
                                 new_cases == 3800),
                              38,
-                             new_cases)) %>%
+                             new_cases)) |>
   mutate(new_cases = ifelse((date == "2020-09-07" &
                                 location == "Bolivia" &
                                 new_cases == 1610),
                              161,
-                             new_cases)) %>%
+                             new_cases)) |>
   mutate(new_cases = ifelse((date == "2020-10-02" &
                                 location == "Argentina" &
                                 new_cases == 3351),
                             351,
-                            new_cases)) %>%
+                            new_cases)) |>
   mutate(new_cases = ifelse((date == "2020-10-09" &
                                 location == "Ecuador" &
                                 new_cases == 398),
                             39,
-                            new_cases)) %>%</code></pre>
+                            new_cases)) |></code></pre>
 
 Essentially I'm doing *by eye* what a sampling algorithm might do. I look for out-sized values and adjust each one down to fit relatively closely to the range on *either side* of the offending data point. Since the rolling mean calculation will provide further smoothing, I knew I didn't have to be too precious about it. I just had to take care of what looked like obvious flubs in data entry.
 

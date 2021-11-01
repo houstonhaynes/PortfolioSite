@@ -42,7 +42,7 @@ token <- create_token(
   access_key,
   access_secret)
 
-COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
+COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) |>
   filter(str_detect(text, 'died of COVID'))
 
 COVIDtweets <- sample(COVIDtweets$status_id)
@@ -75,7 +75,7 @@ Like several other places on the site, I let blogdown and Hugo do the heavy lift
 
 It starts with a block of R code at the top of the page that pulls and filters the timeline for the "FacesOfCovid" account. There's a lot going on "under the hood" of this code, which is part of the beauty of what this library handles on the user's behalf. One thing that's not shown here is the setup of the token used to make an authorized request into the Twitter API to collect the data. There are plenty of <a href="https://mran.microsoft.com/snapshot/2017-02-04/web/packages/rtweet/vignettes/auth.html" target ="_blank">tutorials online</a> of how to manage that (and embed the token into a .rds file to then be read into an RSession variable with the project. )
 
-<figure><figcaption class="caption">Collecting Tweets from "FacesOfCovid" Account</figcaption><pre><code class="r">COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE) %>%
+<figure><figcaption class="caption">Collecting Tweets from "FacesOfCovid" Account</figcaption><pre><code class="r">COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE) |>
   filter(str_detect(text, 'died of COVID'))</code></pre></figure>
 
 The "get_timeline" command first takes the account name (which can also be an account id) and a *n* value of 1,000 - to get a longer list that then default 100. Filtering significantly pares down the list and getting 1,000 tweets mean I go "back in time" far enough to get a good cross-section from which to randomly select the posts to embed. The *parse* function does the heavy lifting of putting the API result into a dataframe, and setting *include_rts* to FALSE keeps retweets out of the list. And finally, the filter command selects for posts containing a string that I use as a *key* to strive to get announcement posts. The last time I tested this locally I noticed that the initial pared down to slightly less than 400 tweets, which is plenty for the next step.

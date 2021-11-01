@@ -175,12 +175,12 @@ function setDefaultMode() {
 <div id="late-additions" class="section level2">
 <h2>Late Additions</h2>
 <p>Because of wanting to allow for that “following the default setting” behavior I had to add a reset control. This clears any localStorage value and the listener takes whatever was set on the browser or OS level. As for how it’s displayed, there was a bit of arm-wrestling with Bootstrap to get the contol to appear in a way that was integral with the dark/light mode switch. The end result displays as part of the dark mode control without crowding the menu with yet another “button”.</p>
-{{% fancybox "/img" "reset-closeup.png" %}}
+<p>{{% fancybox "/img" "reset-closeup.png" %}}</p>
 </div>
 <div id="modal-behavior" class="section level2">
 <h2>Modal Behavior</h2>
 <p>Originally I had set the behavior to simply “flip the switch” when the reset control was activated. When the “reset” toggle was clicked the site would “snap” to that setting as quickly as the CSS changes could be rendered on the canvas. However the behavior in certain browsers is not exactly as expected, since it’s possible that the localStorage value and system-set value could match. Also, there are settings on the browser level that can sometimes conflict with the OS-level setting (which I found on mobile devices when testing) that meant the user could end up with a confusing end result. If the browser was still set to the same mode as the localStorage setting, and the OS was set to the opposite value, the user would see <em>no</em> change in the browser canvas. The prompt in the modal is there to add some context to this multi-tiered control.</p>
-{{% fancybox "/img" "reset-modal.png" %}}
+<p>{{% fancybox "/img" "reset-modal.png" %}}</p>
 <p>While the standard “Close” and “times” buttons are on the modal, it’s also set to clear on any click within the desktop space. It’s not really dependent on the user confirming the modal for any behavior to change. I did that as a measure of convenience, but am also aware that it too might cause some confusion. Either way, once the top-level experience was in-hand I could deal with some unintended consequences with various elements inside the page. It can feel like a “game of whack-a-mole” but the end result was worth the effort.</p>
 </div>
 <div id="masking-dark-mode-in-media-embeds" class="section level2">
@@ -201,11 +201,11 @@ iframe[src^="https://platform.twitter.com"] {
 <div id="desktop-versus-mobile-dark-mode-preferences" class="section level2">
 <h2>desktop versus mobile dark mode preferences</h2>
 <p>As mentioned above with the modal, I mistakenly believed that the OS-level listener was the only setting I had to account for. As it turns out there are also mobile settings in the browser and the device level settings.</p>
-{{% fancybox "/img" "reset-mobileOS.png" %}}
+<p>{{% fancybox "/img" "reset-mobileOS.png" %}}</p>
 <p>And here’s the setting in Chrome for my Samsung Note10+. I noticed that this is only available in the mobile app. No equivalent setting exists in Chrome desktop.</p>
-{{% fancybox "/img" "reset-mobileOSDefault.jpg" %}}
+<p>{{% fancybox "/img" "reset-mobileOSDefault.jpg" %}}</p>
 <p>And beyond the device settings Samsung provides a control in their Bixby applet. I was able to put a widget that could flip the value manually without diving into device settings. And while this can be triggered based on a variety of conditions, here I’m simply using it for testing purposes.</p>
-{{% fancybox "/img" "reset-mobileLightDark.jpg" %}}
+<p>{{% fancybox "/img" "reset-mobileLightDark.jpg" %}}</p>
 <p>So while the solution makes a good-faith-effort to provide a smooth user experience, there’s still quite a bit of fragmentation in the marketplace. Different operating systems, browsers and devices approach accessibility their own way. And I expect that will continue to be the case as standards and practices are sorted out.</p>
 </div>
 <div id="future-tweaks-and-re-engineering" class="section level2">
@@ -216,7 +216,7 @@ iframe[src^="https://platform.twitter.com"] {
 <div id="another-beginning" class="section level1">
 <h1>Another Beginning</h1>
 <p>As usual, what started as “simple” will require more thought and work, and fortunately there are quite a few tools online to help with that process. I’m a huge fan of <a href="http://paletton.com/" target="_blank">paletton</a> not only for evaluating color schemes, but also for its vision simulator.</p>
-{{% fancybox "/img" "reset-visionSimulator.png" %}}
+<p>{{% fancybox "/img" "reset-visionSimulator.png" %}}</p>
 <p>If you’re looking at the low contrast between the menus and the text, the irony of that is not lost on me, either. Still it’s an invaluable tool for checking color choices against the ability for people with different conditions to pick up the nuances in your color palette. There’s also <a href="https://webaccessibility.com/" target="_blank">the webaccessibility site</a> also offers an initially free service which checks a wide variety of web settings. And a web search reveals a plethora of options, and I expect this only to become more common as standards and practices emerge.</p>
 <p>This will continue to be a developing topic and I’m looking forward to moving past the “convenience feature” of dark mode and make the site more accessible to everyone.</p>
 </div>

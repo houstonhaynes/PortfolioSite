@@ -60,7 +60,7 @@ token <- create_token(
   access_key,
   access_secret)
 
-COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
+COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) |>
   filter(str_detect(text, 'died of COVID'))
 
 COVIDtweets <- sample(COVIDtweets$status_id)
@@ -81,9 +81,9 @@ I was fairly arbitrary in my selection of countries to compare to Israel's data.
 
 ```{r Israel_COVID_Cases_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
-  rename(value = new_cases_smoothed_per_million) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) |>
+  rename(value = new_cases_smoothed_per_million) |>
+  mutate(value = ifelse(is.na(value), 0, value)) |>
   mutate(date = ymd(date))
 
 data.wide <-  pivot_wider(data, names_from = location, values_from = value)
@@ -103,26 +103,26 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Ubuntu")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
 
-widget <- highchart(type = "stock") %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "Global New Cases per Million - Israel as Case Study", align = "center") %>%
-  hc_subtitle(text = "With Comparison to Japan, China, Israel, Canada, Germany, UK & US", align = "center") %>%
+widget <- highchart(type = "stock") |>
+  hc_add_theme(thm) |>
+  hc_title(text = "Global New Cases per Million - Israel as Case Study", align = "center") |>
+  hc_subtitle(text = "With Comparison to Japan, China, Israel, Canada, Germany, UK & US", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
-      borderWidth = 2) %>%
+      borderWidth = 2) |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
-  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
-  hc_add_series(data_xts$China, type = "line", name = "China") %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
-  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
-  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
-  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
-  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
-  hc_tooltip(valueDecimals = 2) %>%
+             position = list(align = "left", x = 10, y = -5)) |>
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") |>
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") |>
+  hc_add_series(data_xts$China, type = "line", name = "China") |>
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") |>
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") |>
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") |>
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") |>
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") |>
+  hc_tooltip(valueDecimals = 2) |>
   hc_xAxis(type = "datetime",
     plotLines = list(list(
       label = list(text = "Schools opened"),
@@ -156,7 +156,7 @@ widget <- highchart(type = "stock") %>%
         to = datetime_to_timestamp(as.Date('2021-02-07', tz = 'UTC'))
       )
     )
-  ) %>%
+  ) |>
   hc_legend(
     enabled = TRUE,
     align = "right",
@@ -181,9 +181,9 @@ I was shocked to see the deaths per million *so high* in the UK. I honestly wond
 
 ```{r Israel_COVID_Deaths_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-data <- select(coviddata, date, location, new_deaths_smoothed_per_million) %>%
-  rename(value = new_deaths_smoothed_per_million) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
+data <- select(coviddata, date, location, new_deaths_smoothed_per_million) |>
+  rename(value = new_deaths_smoothed_per_million) |>
+  mutate(value = ifelse(is.na(value), 0, value)) |>
   mutate(date = ymd(date))
 
 data.wide <-  pivot_wider(data, names_from = location, values_from = value)
@@ -203,26 +203,26 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Ubuntu")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
 
-widget <- highchart(type = "stock") %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "Global New Deaths per Million - Israel as Case Study", align = "center") %>%
-  hc_subtitle(text = "With Comparison to Japan, China, Israel, Canada, Germany, UK & US", align = "center") %>%
+widget <- highchart(type = "stock") |>
+  hc_add_theme(thm) |>
+  hc_title(text = "Global New Deaths per Million - Israel as Case Study", align = "center") |>
+  hc_subtitle(text = "With Comparison to Japan, China, Israel, Canada, Germany, UK & US", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
-      borderWidth = 2) %>%
+      borderWidth = 2) |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
-  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
-  hc_add_series(data_xts$China, type = "line", name = "China") %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
-  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
-  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
-  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
-  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
-  hc_tooltip(valueDecimals = 2) %>%
+             position = list(align = "left", x = 10, y = -5)) |>
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") |>
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") |>
+  hc_add_series(data_xts$China, type = "line", name = "China") |>
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") |>
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") |>
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") |>
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") |>
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") |>
+  hc_tooltip(valueDecimals = 2) |>
   hc_xAxis(type = "datetime",
     plotLines = list(list(
       label = list(text = "Schools opened"),
@@ -256,7 +256,7 @@ widget <- highchart(type = "stock") %>%
         to = datetime_to_timestamp(as.Date('2021-02-07', tz = 'UTC'))
       )
     )
-  ) %>%
+  ) |>
   hc_legend(
     enabled = TRUE,
     align = "right",
@@ -278,9 +278,9 @@ While the tests per thousand is increasing, it's not nearly high enough. It's re
 
 ```{r Israel_COVID_Tests_per_Thousand, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-data <- select(coviddata, date, location, new_tests_smoothed_per_thousand) %>%
-  rename(value = new_tests_smoothed_per_thousand) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
+data <- select(coviddata, date, location, new_tests_smoothed_per_thousand) |>
+  rename(value = new_tests_smoothed_per_thousand) |>
+  mutate(value = ifelse(is.na(value), 0, value)) |>
   mutate(date = ymd(date))
 
 data.wide <-  pivot_wider(data, names_from = location, values_from = value)
@@ -298,26 +298,26 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Ubuntu")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
 
-widget <- highchart(type = "stock") %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "Global New Tests per Thousand - Israel as Case Study", align = "center") %>%
-  hc_subtitle(text = "With Comparison to Japan, China, Israel, Canada, Germany, UK & US", align = "center") %>%
+widget <- highchart(type = "stock") |>
+  hc_add_theme(thm) |>
+  hc_title(text = "Global New Tests per Thousand - Israel as Case Study", align = "center") |>
+  hc_subtitle(text = "With Comparison to Japan, China, Israel, Canada, Germany, UK & US", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
-      borderWidth = 2) %>%
+      borderWidth = 2) |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
-  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
-  hc_add_series(data_xts$China, type = "line", name = "China") %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
-  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
-  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
-  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
-  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
-  hc_tooltip(valueDecimals = 2) %>%
+             position = list(align = "left", x = 10, y = -5)) |>
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") |>
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") |>
+  hc_add_series(data_xts$China, type = "line", name = "China") |>
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") |>
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") |>
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") |>
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") |>
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") |>
+  hc_tooltip(valueDecimals = 2) |>
   hc_xAxis(type = "datetime",
     plotLines = list(list(
       label = list(text = "Schools opened"),
@@ -351,7 +351,7 @@ widget <- highchart(type = "stock") %>%
         to = datetime_to_timestamp(as.Date('2021-02-07', tz = 'UTC'))
       )
     )
-  ) %>%
+  ) |>
   hc_legend(
     enabled = TRUE,
     align = "right",
@@ -384,9 +384,9 @@ coviddata <- read.csv(URL)
 
 # end setup code chunk
 
-data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
-  rename(value = new_cases_smoothed_per_million) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) |>
+  rename(value = new_cases_smoothed_per_million) |>
+  mutate(value = ifelse(is.na(value), 0, value)) |>
   mutate(date = ymd(date))
 
 data.wide <-  pivot_wider(data, names_from = location, values_from = value)
@@ -405,27 +405,27 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Ubuntu")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu',color ='black'))))
 
-widget <- highchart(type = "stock") %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "Global New Cases per Million - Israel as Case Study", align = "center") %>%
+widget <- highchart(type = "stock") |>
+  hc_add_theme(thm) |>
+  hc_title(text = "Global New Cases per Million - Israel as Case Study", align = "center") |>
   hc_subtitle(
-    text = "With Comparison to Japan, China, Israel, Canada, Germany, UK & US", align = "center") %>%
+    text = "With Comparison to Japan, China, Israel, Canada, Germany, UK & US", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
-      borderWidth = 2) %>%
+      borderWidth = 2) |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
-  hc_add_series(data_xts$Japan, type = "line", name = "Japan") %>%
-  hc_add_series(data_xts$China, type = "line", name = "China") %>%
-  hc_add_series(data_xts$Israel, type = "line", name = "Israel") %>%
-  hc_add_series(data_xts$Canada, type = "line", name = "Canada") %>%
-  hc_add_series(data_xts$Germany, type = "line", name = "Germany") %>%
-  hc_add_series(data_xts$`United States`, type = "line", name = "US") %>%
-  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") %>%
-  hc_tooltip(valueDecimals = 2) %>%
+             position = list(align = "left", x = 10, y = -5)) |>
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") |>
+  hc_add_series(data_xts$Japan, type = "line", name = "Japan") |>
+  hc_add_series(data_xts$China, type = "line", name = "China") |>
+  hc_add_series(data_xts$Israel, type = "line", name = "Israel") |>
+  hc_add_series(data_xts$Canada, type = "line", name = "Canada") |>
+  hc_add_series(data_xts$Germany, type = "line", name = "Germany") |>
+  hc_add_series(data_xts$`United States`, type = "line", name = "US") |>
+  hc_add_series(data_xts$`United Kingdom`, type = "line", name = "UK") |>
+  hc_tooltip(valueDecimals = 2) |>
   hc_xAxis(type = "datetime",
     plotLines = list(list(
       label = list(text = "Schools opened"),
@@ -459,7 +459,7 @@ widget <- highchart(type = "stock") %>%
         to = datetime_to_timestamp(as.Date(end(data_xts), tz = 'UTC'))
       )
     )
-  ) %>%
+  ) |>
   hc_legend(
     enabled = TRUE,
     align = "right",

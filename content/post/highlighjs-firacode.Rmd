@@ -53,7 +53,7 @@ But as usual, there was a catch. Once a "quick fix" was in place it rippled out 
 <div class="row">
 <div class="col-md-6">
 <figure><figcaption class="caption">This R snippet...</figcaption>
-<pre><code class="r">hc <- highchart() %>%</code></pre>
+<pre><code class="r">hc <- highchart() |></code></pre>
 </figure>
 </div>
 <div class="col-md-6">

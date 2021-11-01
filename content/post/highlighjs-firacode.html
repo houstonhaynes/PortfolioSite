@@ -62,7 +62,7 @@ VSCode screen grab of HTML from Serverless Contact Page Sidebar
 <figcaption class="caption">
 This R snippet…
 </figcaption>
-<pre><code class="r">hc <- highchart() %>%</code></pre>
+<pre><code class="r">hc <- highchart() |></code></pre>
 </figure>
 </div>
 <div class="col-md-6">
@@ -93,7 +93,7 @@ And that SQL snippet …
 <p>This wrinkle robbed Fira Code of its ability to make a nice, concise impression. At first I thought I had pasted in poorly marked-up code. But then I looked deeper to realize the inserted blocks were fine. After some head-scratching I checked the JavaScript doing the inline-encoding, and it began to dawn on me that it was “too broad” for what I needed.</p>
 <p>{{% fancybox-dark-theme-ok "/img" "HighlightJS-otherJS.png" %}}
 In the version above I set exclusions for the code classes that I <em>didn’t</em> want encoded. The “not” indicator seemed to do the trick, until I kept running into more and more exceptions. At that point there were more “not” clauses than actual code that required encoding. So I flipped the script and simply declared which classes I <em>wanted</em> to encode.</p>
-{{% fancybox-dark-theme-ok "/img" "HighlightJS-lastJS.png" %}}
+<p>{{% fancybox-dark-theme-ok "/img" "HighlightJS-lastJS.png" %}}</p>
 <p>This is both more logical and more maintainable. I only need to add a class to that list in the declaration if and when I have another language that requires markup. As a side note, I’ll say that I <em>don’t</em> use Django, but here it’s used to highlight the Hugo shortcodes, which use double-braces in the HTML. I spotted that VSCode auto-detected those files as Django - so I used that as a cheat code to highlight the double-braced parameters.</p>
 <figure>
 <figcaption class="caption">

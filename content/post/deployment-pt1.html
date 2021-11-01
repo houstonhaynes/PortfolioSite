@@ -28,7 +28,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-<script src="deployment-pt1_files/header-attrs/header-attrs.js"></script>
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="low-maintenance-repeatability" class="section level1">
@@ -137,9 +137,9 @@ push.ps1 - gather mandatory environment parameter
     )</code></pre>
 </figure>
 <p>This Param function uses a PowerShell internal mechanism to avoid over-instrumenting an error trap that would almost <em>never</em> trigger. If the parameter is not supplied PowerShell throws a standard message.</p>
-{{% fancybox-dark-theme-ok "/img" "deploy-PowerShellValidation.png" %}}
+<p>{{% fancybox-dark-theme-ok "/img" "deploy-PowerShellValidation.png" %}}</p>
 <p>And similarly if I flub the input parameter it also halts the script and gives a standard output message. The same applies to the second parameter. If it is malformed a similar error and exit will result.</p>
-{{% fancybox-dark-theme-ok "/img" "deploy-PowerShellValidation-2.png" %}}
+<p>{{% fancybox-dark-theme-ok "/img" "deploy-PowerShellValidation-2.png" %}}</p>
 <p>Moving along, this portion of the script performs due diligence of reading the properties entries from the JSON file. The one that’s actually initialized is based on the first required input parameter.</p>
 <figure>
 <figcaption class="caption">

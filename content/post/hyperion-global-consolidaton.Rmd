@@ -182,8 +182,8 @@ series = list(
   )
 )
 
-hcConcurrency <- highchart() %>%
-  hc_title(text = paste("Concurrency of Long-Running Hyperion Processes")) %>% 
+hcConcurrency <- highchart() |>
+  hc_title(text = paste("Concurrency of Long-Running Hyperion Processes")) |> 
   hc_chart(
       type = 'area',
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -193,13 +193,13 @@ hcConcurrency <- highchart() %>%
       marginTop = '60',
       marginLeft = '80',
       marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_xAxis(categories = dfConcurrency$DateTime) %>%  
-  hc_yAxis(allowDecimals = 'false') %>%
-  hc_add_series_list(series) %>%
+      style = list(fontFamily = 'Fira Code')) |>
+  hc_xAxis(categories = dfConcurrency$DateTime) |>  
+  hc_yAxis(allowDecimals = 'false') |>
+  hc_add_series_list(series) |>
   hc_plotOptions(
     series = list(
-      stacking = 'normal', marker = 'none', step = 'both')) %>% 
+      stacking = 'normal', marker = 'none', step = 'both')) |> 
   hc_add_theme(hc_theme_smpl())
 
 frameWidget(hcConcurrency, height = "50%")

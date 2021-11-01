@@ -60,7 +60,7 @@ token <- create_token(
   access_key,
   access_secret)
 
-COVIDtweets <- get_timeline("CTZebra", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
+COVIDtweets <- get_timeline("CTZebra", n = 1000, parse = TRUE, include_rts = FALSE, ) |>
   filter(str_detect(text, 'died of #covid19'))
 
 COVIDtweets <- sample(COVIDtweets$status_id)
@@ -87,10 +87,10 @@ Taking the queue from my entries about contagion spreading due to end-of-year co
 
 ```{r India_COVID_Cases_per_Million, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
-  filter(date >= "2021-01-01") %>%
-  rename(value = new_cases_smoothed_per_million) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) |>
+  filter(date >= "2021-01-01") |>
+  rename(value = new_cases_smoothed_per_million) |>
+  mutate(value = ifelse(is.na(value), 0, value)) |>
   mutate(date = ymd(date)) 
 
 data.wide <-  pivot_wider(data, names_from = location, values_from = value)
@@ -105,9 +105,9 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Fira Code")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
-widget <- highchart(type = "chart") %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "India's Kumbh Festival Dates Compared To COVID Infection Rates (per Million)", align = "center") %>%
+widget <- highchart(type = "chart") |>
+  hc_add_theme(thm) |>
+  hc_title(text = "India's Kumbh Festival Dates Compared To COVID Infection Rates (per Million)", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
     borderRadius = 8,
@@ -115,13 +115,13 @@ widget <- highchart(type = "chart") %>%
     marginBottom = '80',
     marginTop = '60',
     marginLeft = '60',
-    marginRight = '60') %>%
-  hc_plotOptions(series = list(marker = list(enabled = FALSE))) %>%
+    marginRight = '60') |>
+  hc_plotOptions(series = list(marker = list(enabled = FALSE))) |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
-  hc_add_series(data_xts$India, type = "area", name = "India", color = "#FF9933", showInLegend = FALSE) %>%
-  hc_tooltip(valueDecimals = 2) %>%
+             position = list(align = "left", x = 10, y = -5)) |>
+  hc_add_series(data_xts$India, type = "area", name = "India", color = "#FF9933", showInLegend = FALSE) |>
+  hc_tooltip(valueDecimals = 2) |>
   hc_xAxis(type = "datetime",
     plotLines = list(list(
       label = list(text = "First Bath: Maka Sankranti"),
@@ -171,7 +171,7 @@ I was fully expecting for each date to be followed by a "bump" in case rates sim
 
 ```{r India_COVID_Variants_By_Month, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-asia <- "/repo/next-strain-ncov/data/global.csv"
+asia <- "/repo/PortfolioSite/data/global.csv"
 
 asiadata <- read.csv(asia)
 
@@ -181,35 +181,36 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Fira Code")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
-data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
-  filter(Country == "India" 
-#         | Country == "Malaysia" 
-#         | Country == "Bangladesh" 
-#         | Country == "Nepal"
-#         | Country == "Sri Lanka"
-#         | Country == "Afghanistan"
-#         | Country == "Pakistan"
-#         | Country == "Maldives"
-         ) %>%
-  add_column(value = 1) %>%
-  rename(Date = Collection.Data) %>%
-  rename(Variant = PANGO.Lineage) %>%
-  mutate(Date = mdy(Date)) %>%
-  filter(Date >= "2021-01-01") %>% 
-  select(Date, Variant, value) %>%
-  group_by(Variant, Date = floor_date(Date, "15 days")) %>%
+data <- select(asiadata, date, country, pango_lineage, clade_membership) |>
+  filter(country == "India" 
+#         | country == "Malaysia" 
+#         | country == "Bangladesh" 
+#         | country == "Nepal"
+#         | country == "Sri Lanka"
+#         | country == "Afghanistan"
+#         | country == "Pakistan"
+#         | country == "Maldives"
+         ) |>
+  add_column(value = 1) |>
+  rename(Date = date) |>
+  rename(Variant = pango_lineage) |>
+  rename(clade = clade_membership) |>
+  mutate(Date = mdy(Date)) |>
+  filter(Date >= "2021-01-01") |> 
+  select(Date, Variant, value) |>
+  group_by(Variant, Date = floor_date(Date, "15 days")) |>
   summarise(value = sum(value))
 
 last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
-widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Variant, labels = FALSE)) %>%
-  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) %>%
-  hc_legend(enabled = F) %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "India COVID Variants Percentage by Month (PANGO Lineage)", align = "center") %>%
-  hc_add_theme(thm) %>%
-  hc_yAxis(title = list(enabled = FALSE)) %>%
-  hc_xAxis(title = list(enabled = FALSE)) %>%
+widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Variant, labels = FALSE)) |>
+  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) |>
+  hc_legend(enabled = F) |>
+  hc_add_theme(thm) |>
+  hc_title(text = "India COVID Variants Percentage by Month (PANGO Lineage)", align = "center") |>
+  hc_add_theme(thm) |>
+  hc_yAxis(title = list(enabled = FALSE)) |>
+  hc_xAxis(title = list(enabled = FALSE)) |>
   hc_chart(
     borderColor = 'rgba(160, 160, 160, 0.3)',
     borderRadius = 8,
@@ -217,16 +218,16 @@ widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Variant,
     marginBottom = '80',
     marginTop = '60',
     marginLeft = '60',
-    marginRight = '60') %>%
+    marginRight = '60') |>
     hc_legend(
     align = "right",
     verticalAlign = "top",
     layout = "vertical"
-    ) %>%
+    ) |>
   hc_tooltip(shared = TRUE, sort = TRUE, useHTML= TRUE,
               headerFormat = "<b>{point.key}</b><table>",
               pointFormat = "<tr><td style='color: {series.color}'>{series.name}: </td><td style='text-align: right'> {point.percentage:,.2f} %</td></tr>",
-             footerFormat = "</table>") %>%
+             footerFormat = "</table>") |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
              position = list(align = "left", x = 10, y = -5))
@@ -258,7 +259,7 @@ Looking at clade data from the same observation set shows a more succinct patter
 
 ```{r India_COVID_Clades_By_Month, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-asia <- "/repo/next-strain-ncov/data/global.csv"
+asia <- "/repo/PortfolioSite/data/global.csv"
 
 asiadata <- read.csv(asia)
 
@@ -268,34 +269,36 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Fira Code")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
-data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
-  filter(Country == "India" 
-#         | Country == "Malaysia" 
-#         | Country == "Bangladesh" 
-#         | Country == "Nepal"
-#         | Country == "Sri Lanka"
-#         | Country == "Afghanistan"
-#         | Country == "Pakistan"
-#         | Country == "Maldives"
-         ) %>%
-  add_column(value = 1) %>%
-  rename(Date = Collection.Data) %>%
-  mutate(Date = mdy(Date)) %>%
-  filter(Date >= "2021-01-01") %>% 
-  select(Date, Clade, value) %>%
-  group_by(Clade, Date = floor_date(Date, "15 days")) %>%
+data <- select(asiadata, date, country, pango_lineage, clade_membership) |>
+  filter(country == "India" 
+#         | country == "Malaysia" 
+#         | country == "Bangladesh" 
+#         | country == "Nepal"
+#         | country == "Sri Lanka"
+#         | country == "Afghanistan"
+#         | country == "Pakistan"
+#         | country == "Maldives"
+         ) |>
+  add_column(value = 1) |>
+  rename(Variant = pango_lineage) |>
+  rename(Clade = clade_membership) |>
+  rename(Date = date) |>
+  mutate(Date = mdy(Date)) |>
+  filter(Date >= "2021-01-01") |> 
+  select(Date, Clade, value) |>
+  group_by(Clade, Date = floor_date(Date, "15 days")) |>
   summarise(value = sum(value))
 
 last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
-widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Clade, labels = FALSE)) %>%
-  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) %>%
-  hc_legend(enabled = F) %>%
-  hc_add_theme(thm) %>%
-  hc_yAxis(title = list(enabled = FALSE)) %>%
-  hc_xAxis(title = list(enabled = FALSE)) %>%
-  hc_title(text = "India COVID Clades Percentage by Month (Nextstrain)", align = "center") %>%
-  hc_add_theme(thm) %>%
+widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Clade, labels = FALSE)) |>
+  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) |>
+  hc_legend(enabled = F) |>
+  hc_add_theme(thm) |>
+  hc_yAxis(title = list(enabled = FALSE)) |>
+  hc_xAxis(title = list(enabled = FALSE)) |>
+  hc_title(text = "India COVID Clades Percentage by Month (Nextstrain)", align = "center") |>
+  hc_add_theme(thm) |>
   hc_chart(
     borderColor = 'rgba(160, 160, 160, 0.3)',
     borderRadius = 8,
@@ -303,16 +306,16 @@ widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Clade, l
     marginBottom = '80',
     marginTop = '60',
     marginLeft = '60',
-    marginRight = '60') %>%
+    marginRight = '60') |>
     hc_legend(
     align = "right",
     verticalAlign = "top",
     layout = "vertical"
-    ) %>%
+    ) |>
   hc_tooltip(shared = TRUE, sort = TRUE, useHTML= TRUE,
               headerFormat = "<b>{point.key}</b><table>",
               pointFormat = "<tr><td style='color: {series.color}'>{series.name}: </td><td style='text-align: right'> {point.percentage:,.2f} %</td></tr>",
-             footerFormat = "</table>") %>%
+             footerFormat = "</table>") |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
              position = list(align = "left", x = 10, y = -5))
@@ -370,10 +373,10 @@ URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/
 
 coviddata <- read.csv(URL)
 
-data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
-  filter(date >= "2021-01-01") %>%
-  rename(value = new_cases_smoothed_per_million) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) |>
+  filter(date >= "2021-01-01") |>
+  rename(value = new_cases_smoothed_per_million) |>
+  mutate(value = ifelse(is.na(value), 0, value)) |>
   mutate(date = ymd(date)) 
 
 data.wide <-  pivot_wider(data, names_from = location, values_from = value)
@@ -390,9 +393,9 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Fira Code")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
-widget <- highchart(type = "chart") %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "India's Kumbh Festival Dates Compared To COVID Infection Rates (per Million)", align = "center") %>%
+widget <- highchart(type = "chart") |>
+  hc_add_theme(thm) |>
+  hc_title(text = "India's Kumbh Festival Dates Compared To COVID Infection Rates (per Million)", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
@@ -400,17 +403,17 @@ widget <- highchart(type = "chart") %>%
       marginBottom = '80',
       marginTop = '60',
       marginLeft = '60',
-      marginRight = '60') %>%
-  hc_plotOptions(series = list(marker = list(enabled = FALSE))) %>%
+      marginRight = '60') |>
+  hc_plotOptions(series = list(marker = list(enabled = FALSE))) |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
+             position = list(align = "left", x = 10, y = -5)) |>
   hc_add_series(data_xts$India, 
                 type = "area", 
                 name = "India", 
                 color = "#FF9933", 
-                showInLegend = FALSE) %>%
-  hc_tooltip(valueDecimals = 2) %>%
+                showInLegend = FALSE) |>
+  hc_tooltip(valueDecimals = 2) |>
   hc_xAxis(type = "datetime",
     plotLines = list(list(
       label = list(text = "First Bath: Maka Sankranti"),
@@ -466,23 +469,23 @@ asia <- "/repo/nextstrain-ncov/data/asia.csv"
 
 asiadata <- read.csv(asia)
 
-data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
-  filter(Country == "India" 
-#         | Country == "Malaysia" 
-#         | Country == "Bangladesh" 
-#         | Country == "Nepal"
-#         | Country == "Sri Lanka"
-#         | Country == "Afghanistan"
-#         | Country == "Pakistan"
-#         | Country == "Maldives"
-         ) %>%
-  add_column(value = 1) %>%
-  rename(Date = Collection.Data) %>%
-  rename(Variant = PANGO.Lineage) %>%
-  mutate(Date = mdy(Date)) %>%
-  filter(Date >= "2021-01-01") %>% 
-  select(Date, Variant, value) %>%
-  group_by(Variant, Date = floor_date(Date, "month")) %>%
+data <- select(asiadata, Collection.Data, country, PANGO.Lineage, Clade) |>
+  filter(country == "India" 
+#         | country == "Malaysia" 
+#         | country == "Bangladesh" 
+#         | country == "Nepal"
+#         | country == "Sri Lanka"
+#         | country == "Afghanistan"
+#         | country == "Pakistan"
+#         | country == "Maldives"
+         ) |>
+  add_column(value = 1) |>
+  rename(Date = Collection.Data) |>
+  rename(Variant = PANGO.Lineage) |>
+  mutate(Date = mdy(Date)) |>
+  filter(Date >= "2021-01-01") |> 
+  select(Date, Variant, value) |>
+  group_by(Variant, Date = floor_date(Date, "month")) |>
   summarise(value = sum(value))</code></pre>
 
 While the area spline and percentage charting makes for a "busy" visual, the key really is the tooltip. Note how HTML for building that mini-table is used to construct a "shared" tool tip, where mousing over any value will show the full range of values for every aggregate for that month. The late-binding of percentage-of-total has a definite "bucket brigade" vibe to it at first glance. But like most of this kind of hybrid/polyglot code exercises it becomes the "new normal" fairly quickly. There's quite a bit of lift that's being carried by the HighCharts "smarts" and that's part of the beauty in the beast.
@@ -495,28 +498,28 @@ While the area spline and percentage charting makes for a "busy" visual, the key
 
 last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
-widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Variant, labels = FALSE)) %>%
-  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) %>%
-  hc_legend(enabled = F) %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "India COVID Variants Percentage by Month (PANGO Lineage)", align = "center") %>%
-  hc_add_theme(thm) %>%
-  hc_yAxis(title = list(enabled = FALSE)) %>%
-  hc_xAxis(title = list(enabled = FALSE)) %>%
+widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Variant, labels = FALSE)) |>
+  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) |>
+  hc_legend(enabled = F) |>
+  hc_add_theme(thm) |>
+  hc_title(text = "India COVID Variants Percentage by Month (PANGO Lineage)", align = "center") |>
+  hc_add_theme(thm) |>
+  hc_yAxis(title = list(enabled = FALSE)) |>
+  hc_xAxis(title = list(enabled = FALSE)) |>
   hc_chart(borderColor = 'rgba(160, 160, 160, 0.3)',
             borderRadius = 8,
             borderWidth = 2,
             marginBottom = '80',
             marginTop = '60',
             marginLeft = '60',
-            marginRight = '60') %>%
+            marginRight = '60') |>
   hc_legend(align = "right",
             verticalAlign = "top",
-            layout = "vertical") %>%
+            layout = "vertical") |>
   hc_tooltip(shared = TRUE, sort = TRUE, useHTML= TRUE,
               headerFormat = "&#x3C;b&#x3E;{point.key}&#x3C;/b&#x3E;&#x3C;table&#x3E;",
               pointFormat = "&#x3C;tr&#x3E;&#x3C;td style=&#x27;color: {series.color}&#x27;&#x3E;{series.name}: &#x3C;/td&#x3E;&#x3C;td style=&#x27;text-align: right&#x27;&#x3E; {point.percentage:,.2f} %&#x3C;/td&#x3E;&#x3C;/tr&#x3E;",
-              footerFormat = "&#x3C;/table&#x3E;") %>%
+              footerFormat = "&#x3C;/table&#x3E;") |>
   hc_credits(enabled = TRUE, 
               text = last_updated, 
               position = list(align = "left", x = 10, y = -5))

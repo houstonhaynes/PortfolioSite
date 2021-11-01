@@ -123,8 +123,8 @@ series = list(
   )
 )
 
-hcWinLossInitial <- highchart() %>%
-  hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) %>% 
+hcWinLossInitial <- highchart() |>
+  hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) |> 
   hc_chart(
       type = 'area',
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -134,13 +134,13 @@ hcWinLossInitial <- highchart() %>%
       marginTop = '60',
       marginLeft = '60',
       marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '80') %>% 
-  hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
-  hc_add_series_list(series) %>%
+      style = list(fontFamily = 'Fira Code')) |>
+  hc_yAxis(max = '80') |> 
+  hc_xAxis(categories = dfCartLossBefore$DateTime) |> 
+  hc_add_series_list(series) |>
   hc_plotOptions(
     series = list(
-      stacking = 'normal', marker = 'none')) %>% 
+      stacking = 'normal', marker = 'none')) |> 
   hc_add_theme(hc_theme_smpl())
 
 frameWidget(hcWinLossInitial, width = "100%", height = "20rem")
@@ -181,8 +181,8 @@ series = list(
     data = dfCartLossBefore$Timeout
   )
 )
-hcWinLossInitial <- highchart() %>%
-  hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) %>% 
+hcWinLossInitial <- highchart() |>
+  hc_title(text = paste("Cart Win/Loss by Category Initial Findings")) |> 
   hc_chart(
       type = 'area',
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -192,13 +192,13 @@ hcWinLossInitial <- highchart() %>%
       marginTop = '60',
       marginLeft = '60',
       marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '80') %>% 
-  hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
-  hc_add_series_list(series) %>%
+      style = list(fontFamily = 'Fira Code')) |>
+  hc_yAxis(max = '80') |> 
+  hc_xAxis(categories = dfCartLossBefore$DateTime) |> 
+  hc_add_series_list(series) |>
   hc_plotOptions(
     series = list(
-      stacking = 'normal', marker = 'none')) %>% 
+      stacking = 'normal', marker = 'none')) |> 
   hc_add_theme(hc_theme_smpl())
 
 frameWidget(hcWinLossInitial, width = "100%", height = "20rem)</code></pre>
@@ -327,8 +327,8 @@ series = list(
   )
 )
 
-hcWinLossBefore <- highchart() %>%
-  hc_title(text = paste("Cart Summary Win-Loss Initial Findings")) %>% 
+hcWinLossBefore <- highchart() |>
+  hc_title(text = paste("Cart Summary Win-Loss Initial Findings")) |> 
   hc_chart(
       type = 'area',
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -338,13 +338,13 @@ hcWinLossBefore <- highchart() %>%
       marginTop = '60',
       marginLeft = '80',
       marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_yAxis(max = '100') %>% 
-  hc_xAxis(categories = dfCartLossBefore$DateTime) %>% 
-  hc_add_series_list(series) %>%
+      style = list(fontFamily = 'Fira Code')) |>
+  hc_yAxis(max = '100') |> 
+  hc_xAxis(categories = dfCartLossBefore$DateTime) |> 
+  hc_add_series_list(series) |>
   hc_plotOptions(
     series = list(
-      stacking = 'normal', marker = 'none')) %>% 
+      stacking = 'normal', marker = 'none')) |> 
   hc_add_theme(hc_theme_smpl())
 
 frameWidget(hcWinLossBefore, width = "100%", height = "20rem")
@@ -367,8 +367,8 @@ series = list(
   )
 )
 
-hcWinLossAfter <- highchart() %>%
-  hc_title(text = paste("Cart Summary Win-Loss After API & Feed Changes")) %>% 
+hcWinLossAfter <- highchart() |>
+  hc_title(text = paste("Cart Summary Win-Loss After API & Feed Changes")) |> 
   hc_chart(
       type = 'area',
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -378,13 +378,13 @@ hcWinLossAfter <- highchart() %>%
       marginTop = '60',
       marginLeft = '80',
       marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_xAxis(categories = dfCartLossAfter$DateTime) %>% 
-  hc_yAxis(max = '100') %>% 
-  hc_add_series_list(series) %>%
+      style = list(fontFamily = 'Fira Code')) |>
+  hc_xAxis(categories = dfCartLossAfter$DateTime) |> 
+  hc_yAxis(max = '100') |> 
+  hc_add_series_list(series) |>
   hc_plotOptions(
     series = list(
-      stacking = 'normal', marker = 'none')) %>% 
+      stacking = 'normal', marker = 'none')) |> 
   hc_add_theme(hc_theme_smpl())
 
 frameWidget(hcWinLossAfter, width = "100%", height = "20rem")
@@ -408,8 +408,8 @@ series = list(
   )
 )
 
-hcConversionRate <- highchart() %>%
-  hc_title(text = paste("Conversion Ratio Before & After API/Feed Changes")) %>% 
+hcConversionRate <- highchart() |>
+  hc_title(text = paste("Conversion Ratio Before & After API/Feed Changes")) |> 
   hc_chart(
       type = 'bar',
       borderColor = 'rgba(160, 160, 160, 0.3)',
@@ -419,12 +419,12 @@ hcConversionRate <- highchart() %>%
       marginTop = '60',
       marginLeft = '80',
       marginRight = '60',
-      style = list(fontFamily = 'Fira Code')) %>%
-  hc_xAxis(categories = dfConversionRate$Conversions) %>% 
-  hc_add_series_list(series) %>%
+      style = list(fontFamily = 'Fira Code')) |>
+  hc_xAxis(categories = dfConversionRate$Conversions) |> 
+  hc_add_series_list(series) |>
   hc_plotOptions(
     series = list(
-      marker = 'none', stacking = 'normal')) %>% 
+      marker = 'none', stacking = 'normal')) |> 
   hc_add_theme(hc_theme_smpl())
 
 frameWidget(hcConversionRate, width = "100%", height = "20rem")

@@ -34,7 +34,7 @@ library(lubridate)
 counties <- read.csv("../../data/us_county.csv", header = TRUE)
 
 counties <-
-  counties %>%
+  counties |>
   mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
 
 county_pop <- select(counties, fips, state, population)
@@ -44,16 +44,16 @@ US_COVID_data <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master
 us_data <- read.csv(US_COVID_data)
 
 us_data_map <- 
-  us_data %>%
-  filter(fips != "") %>%
-  mutate(date = ymd(date)) %>%
-  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0')) %>%
-  select(date, fips, state, county, cases, deaths)  %>%
-  left_join(county_pop, fips = fips) %>%
-  arrange(fips, date) %>%
-  mutate(ncpht = ((cases / population) * 100000)) %>%
-  mutate(ndpht = ((deaths / population) * 100000)) %>%
-  ungroup() %>%
+  us_data |>
+  filter(fips != "") |>
+  mutate(date = ymd(date)) |>
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0')) |>
+  select(date, fips, state, county, cases, deaths)  |>
+  left_join(county_pop, fips = fips) |>
+  arrange(fips, date) |>
+  mutate(ncpht = ((cases / population) * 100000)) |>
+  mutate(ndpht = ((deaths / population) * 100000)) |>
+  ungroup() |>
   rename(location = state)
 
 mask_URL <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv"
@@ -61,12 +61,12 @@ mask_URL <- "https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask
 mask_data <- read.csv(mask_URL)
 
 mask_data <- 
-  mask_data %>%
-  mutate(COUNTYFP = str_pad(COUNTYFP, 5, side = 'left', pad = '0'))  %>%
-  select(COUNTYFP, NEVER, RARELY, SOMETIMES, FREQUENTLY, ALWAYS) %>%
-  mutate(always_pct = (ALWAYS * 100)) %>%
-  rename(fips = COUNTYFP) %>%
-  left_join(county_pop, fips = fips) %>%
+  mask_data |>
+  mutate(COUNTYFP = str_pad(COUNTYFP, 5, side = 'left', pad = '0'))  |>
+  select(COUNTYFP, NEVER, RARELY, SOMETIMES, FREQUENTLY, ALWAYS) |>
+  mutate(always_pct = (ALWAYS * 100)) |>
+  rename(fips = COUNTYFP) |>
+  left_join(county_pop, fips = fips) |>
   rename(location = state)
 
 last_updated <- paste("Source: New York Times - Report Last Updated:", format(Sys.time(), "%a %b %d %Y %X"))
@@ -91,7 +91,7 @@ token <- create_token(
   access_key,
   access_secret)
 
-COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) %>%
+COVIDtweets <- get_timeline("FacesOfCOVID", n = 1000, parse = TRUE, include_rts = FALSE, ) |>
   filter(str_detect(text, 'died of COVID'))
 
 COVIDtweets <- sample(COVIDtweets$status_id)
@@ -134,16 +134,16 @@ widget <- hcmap("countries/us/us-all-all",
       value = "ncpht",
       join = "fips",
       name = "Cumulative Cases per 100 000",
-      tooltip = list(pointFormat = "State: {point.location}<br> {point.county} County: {point.value:.2f}")) %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "US Cumulative Cases by County", align = "center") %>%
-  hc_subtitle(text = "per 100,000 Population", align = "center") %>%
+      tooltip = list(pointFormat = "State: {point.location}<br> {point.county} County: {point.value:.2f}")) |>
+  hc_add_theme(thm) |>
+  hc_title(text = "US Cumulative Cases by County", align = "center") |>
+  hc_subtitle(text = "per 100,000 Population", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
-      borderWidth = 2) %>%
-  hc_colorAxis(minColor = "white", maxColor = "#800000") %>%
-  hc_legend(enabled = FALSE) %>%
+      borderWidth = 2) |>
+  hc_colorAxis(minColor = "white", maxColor = "#800000") |>
+  hc_legend(enabled = FALSE) |>
   hc_credits(enabled = TRUE,
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
@@ -159,17 +159,17 @@ widget <- hcmap("countries/us/us-all-all",
       data = mask_data,
       value = "always_pct",
       name = "Percentage that always wears masks in public",
-      join = "fips") %>%
-  hc_add_theme(thm) %>%
-  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
-  hc_title(text = "Percentage of Mask Wearing in Public", align = "center") %>%
-  hc_subtitle(text = "Respondants Claiming to Always Wear a Mask", align = "center") %>%
+      join = "fips") |>
+  hc_add_theme(thm) |>
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") |> 
+  hc_title(text = "Percentage of Mask Wearing in Public", align = "center") |>
+  hc_subtitle(text = "Respondants Claiming to Always Wear a Mask", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
-      borderWidth = 2) %>%
-  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
-  hc_legend(enabled = FALSE) %>%
+      borderWidth = 2) |>
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")|>
+  hc_legend(enabled = FALSE) |>
   hc_credits(enabled = TRUE,
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
@@ -210,7 +210,7 @@ library(lubridate)
 counties <- read.csv("../../data/us_county.csv", header = TRUE)
 
 counties <-
-  counties %>%
+  counties |>
   mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
 
 county_pop <- select(counties, fips, state, population)
@@ -221,12 +221,12 @@ mask_URL <-
 mask_data <- read.csv(mask_URL)
 
 mask_data <- 
-  mask_data %>%
-  mutate(COUNTYFP = str_pad(COUNTYFP, 5, side = 'left', pad = '0'))  %>%
-  select(COUNTYFP, NEVER, RARELY, SOMETIMES, FREQUENTLY, ALWAYS) %>%
-  mutate(always_pct = (ALWAYS * 100)) %>%
-  rename(fips = COUNTYFP) %>%
-  left_join(county_pop, fips = fips) %>%
+  mask_data |>
+  mutate(COUNTYFP = str_pad(COUNTYFP, 5, side = 'left', pad = '0'))  |>
+  select(COUNTYFP, NEVER, RARELY, SOMETIMES, FREQUENTLY, ALWAYS) |>
+  mutate(always_pct = (ALWAYS * 100)) |>
+  rename(fips = COUNTYFP) |>
+  left_join(county_pop, fips = fips) |>
   rename(location = state)
 
 last_updated <- paste("Source: New York Times  -  Report Last Updated:"
@@ -238,17 +238,17 @@ widget <- hcmap("countries/us/us-all-all",
       data = mask_data,
       value = "always_pct",
       name = "Percentage that always wears masks in public",
-      join = "fips") %>%
-  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+      join = "fips") |>
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") |> 
   hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public"
-            , align = "center") %>%
+            , align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
-      borderWidth = 2) %>%
-  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
+      borderWidth = 2) |>
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")|>
   hc_legend(layout = "vertical", verticalAlign = "top",
-            align = "right", valueDecimals = 0) %>%
+            align = "right", valueDecimals = 0) |>
   hc_credits(enabled = TRUE,
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))
@@ -266,7 +266,7 @@ library(lubridate)
 counties <- read.csv("../../data/us_county.csv", header = TRUE)
 
 counties <-
-  counties %>%
+  counties |>
   mutate(fips = str_pad(fips, 5, side = 'left', pad = '0'))
 
 county_pop <- select(counties, fips, state, population)
@@ -277,16 +277,16 @@ US_COVID_data <-
 us_data <- read.csv(US_COVID_data)
 
 us_data_map <- 
-  us_data %>%
-  filter(fips != "") %>%
-  mutate(date = ymd(date)) %>%
-  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0')) %>%
-  select(date, fips, state, county, cases, deaths)  %>%
-  left_join(county_pop, fips = fips) %>%
-  arrange(fips, date) %>%
-  mutate(ncpht = ((cases / population) * 100000)) %>%
-  mutate(ndpht = ((deaths / population) * 100000)) %>%
-  ungroup() %>%
+  us_data |>
+  filter(fips != "") |>
+  mutate(date = ymd(date)) |>
+  mutate(fips = str_pad(fips, 5, side = 'left', pad = '0')) |>
+  select(date, fips, state, county, cases, deaths)  |>
+  left_join(county_pop, fips = fips) |>
+  arrange(fips, date) |>
+  mutate(ncpht = ((cases / population) * 100000)) |>
+  mutate(ndpht = ((deaths / population) * 100000)) |>
+  ungroup() |>
   rename(location = state)
 
 last_updated <- paste("Source: New York Times  -  Report Last Updated:"
@@ -298,17 +298,17 @@ widget <- hcmap("countries/us/us-all-all",
       data = mask_data,
       value = "always_pct",
       name = "Percentage that always wears masks in public",
-      join = "fips") %>%
-  hc_colorAxis(minColor = "white", maxColor = "#32644F") %>% 
+      join = "fips") |>
+  hc_colorAxis(minColor = "white", maxColor = "#32644F") |> 
   hc_title(text = "Percentage of US Respondants Claiming to Always Wear Masks in Public"
-            , align = "center") %>%
+            , align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
-      borderWidth = 2) %>%
-  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")%>%
+      borderWidth = 2) |>
+  hc_tooltip(pointFormat = "State: {point.location}<br> {point.name} County: {point.value}%")|>
   hc_legend(layout = "vertical", verticalAlign = "top",
-            align = "right", valueDecimals = 0) %>%
+            align = "right", valueDecimals = 0) |>
   hc_credits(enabled = TRUE,
              text = last_updated,
              position = list(align = "left", x = 10, y = -5))

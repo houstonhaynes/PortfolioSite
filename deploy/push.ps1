@@ -26,15 +26,15 @@ Remove-Item C:\repo\PortfolioSite\public\* -Recurse -Force
 
 If ($build -eq 'Rmd') {
     Remove-Item C:\repo\PortfolioSite\content\post\*.html -Recurse -Force
-    cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-site.R'
+    cmd.exe /C '"C:\Program Files\R\R-4.1.1\bin\x64\Rscript.exe" build-site.R'
 }
 
 
 # run R terminal to build blogdown site for specific URL pattern
 If ($environment -eq 'prd') {
-    cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-prd.R'
+    cmd.exe /C '"C:\Program Files\R\R-4.1.1\bin\x64\Rscript.exe" build-prd.R'
 } else {
-    cmd.exe /C '"C:\Program Files\Microsoft\R Open\R-4.0.2\bin\x64\Rscript.exe" build-int.R'
+    cmd.exe /C '"C:\Program Files\R\R-4.1.1\bin\x64\Rscript.exe" build-int.R'
 }
 
 Get-ChildItem  -Path c:\repo\PortfolioSite\public\*.html -recurse | ForEach-Object { If (Get-Content $_.FullName | Select-String -Pattern '/figure-html//widgets/') 

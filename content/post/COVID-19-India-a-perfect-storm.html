@@ -34,14 +34,14 @@ editor_options:
 <div id="congregate-events" class="section level2">
 <h2>Congregate Events</h2>
 <p>Taking the queue from my entries about contagion spreading due to end-of-year congregate events in {{% url-link "Canada" "/post/COVID-19-Canadian-Case-Study" "_self" %}} and {{% url-link "Israel" "/post/COVID-19-Israel-Case-Study" "_self" %}}, my friend supposed that the same would happen in India with the advent of the national {{% url-link "Kumbh Festival" "https://www.bbc.com/news/world-asia-india-56770460" %}}. Even though many of those public events are held outdoors, my friend explained some of the cultural norms had a great deal of close contact over extended periods. So I decided to dive back into the “Our World In Data” repository and line up India’s infection data with the dates of the festival.</p>
-{{% fancybox-iframe "/post/COVID-19-India-a-perfect-storm_files/figure-html/widgets/widget_India_COVID_Cases_per_Million.html" %}}
+<p>{{% fancybox-iframe "/post/COVID-19-India-a-perfect-storm_files/figure-html/widgets/widget_India_COVID_Cases_per_Million.html" %}}</p>
 <div id="htmlwidget-1" style="width:100%;height:26rem;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/COVID-19-India-a-perfect-storm_files/figure-html//widgets/widget_India_COVID_Cases_per_Million.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <p>I was fully expecting for each date to be followed by a “bump” in case rates similar to what occurred in Canada and Israel. And while it <em>can</em> be influenced by under-reporting it’s hard to see <em>that</em> many events remaining flat. So what could be the reason for such a huge wave of cases? It’s entirely possible that there’s no correlation whatsoever, or that there’s something tangential about the later events that were minor contributors. There are too many <em>unknown unknowns</em> for this to be an <strong>aha!</strong> moment. But with news of more virulent strains migrating to and gaining a footing in India I thought I’d take a look at genomics records to see if there’s anything <em>else</em> that emerges. So I dug into {{% url-link "Nextstrain's data" "https://nextstrain.org/ncov/global?c=pango_lineage" %}}. Even if there weren’t any answers I was hoping it would lead to better questions.</p>
-{{% fancybox-iframe "/post/COVID-19-India-a-perfect-storm_files/figure-html/widgets/widget_India_COVID_Variants_By_Month.html" %}}
+<p>{{% fancybox-iframe "/post/COVID-19-India-a-perfect-storm_files/figure-html/widgets/widget_India_COVID_Variants_By_Month.html" %}}</p>
 <div id="htmlwidget-2" style="width:100%;height:26rem;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/COVID-19-India-a-perfect-storm_files/figure-html//widgets/widget_India_COVID_Variants_By_Month.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-{{% alert "info" "Hover:" "Shows tooltop with percentage of each variant present in data for that month aggregate." %}}
+<p>{{% alert "info" "Hover:" "Shows tooltop with percentage of each variant present in data for that month aggregate." %}}</p>
 <p>This visualization is structured as a percentage chart where each variant is represented as a percent of total observations for a given month. The tooltip sort order re-shuffles the results to show the most prevalent variants for the month displayed. It’s been interesting to see how sample levels and back-dated sequence reporting has continued to shape the percentages for a given period. April is still “shifting” as May data continue to come in. As usual, correlation does not mean causation - and in systems like this even correlation can be elusive, but it’s certainly enough to justify spending a bit more time with the data.</p>
 <div id="side-bar-interest-concern-consequence-variant-clade" class="section level3">
 <h3>Side Bar: Interest, Concern, Consequence, Variant &amp; Clade</h3>
@@ -60,10 +60,10 @@ editor_options:
 <div id="higher-level-view" class="section level2">
 <h2>Higher Level View</h2>
 <p>Looking at clade data from the same observation set shows a more succinct pattern. While it looks like May has some drop off in the partial month data, April shows a clear take-over of 20I/501Y.V1 (primarily due to B.1.1.7) and 21A (due to B.1.617.2) which are the two variants that are currently causing the most worry around the globe.</p>
-{{% fancybox-iframe "/post/COVID-19-India-a-perfect-storm_files/figure-html/widgets/widget_India_COVID_Clades_By_Month.html" %}}
+<p>{{% fancybox-iframe "/post/COVID-19-India-a-perfect-storm_files/figure-html/widgets/widget_India_COVID_Clades_By_Month.html" %}}</p>
 <div id="htmlwidget-3" style="width:100%;height:26rem;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3">{"x":{"url":"/post/COVID-19-India-a-perfect-storm_files/figure-html//widgets/widget_India_COVID_Clades_By_Month.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-{{% alert "info" "Hover:" "Shows tooltip with percentage of each clade present in data for that month aggregate." %}}
+<p>{{% alert "info" "Hover:" "Shows tooltip with percentage of each clade present in data for that month aggregate." %}}</p>
 <p>Many experts around the globe are watching this very closely, and like variants and clades, so too will the information surrounding them continue to develop.</p>
 </div>
 <div id="news-from-the-world" class="section level2">
@@ -88,13 +88,13 @@ US Health Care Workers Lost to COVID-19
 <figure>
 <div class="row">
 <div class="col-md-4">
-{{% tweet-single "1369067909075636227" %}}
+{{% tweet-single "1454906018060640260" %}}
 </div>
 <div class="col-md-4">
-{{% tweet-single "1363619004808630273" %}}
+{{% tweet-single "1383839115565699081" %}}
 </div>
 <div class="col-md-4">
-{{% tweet-single "1358468064006852609" %}}
+{{% tweet-single "1443376295874752514" %}}
 </div>
 </div>
 <figcaption class="caption">
@@ -102,7 +102,7 @@ The pandemic-related posts on this site are about more than data. <strong>Behind
 </figcaption>
 <hr>
 </figure>
-{{% alert "info" "" "If anyone knows a curated Twitter account that lists similar info for Indian healthcare workers I'd be glad to modify my script for this page. I tried a few options using plain text search, but it pulled so many spam posts that were jacking keywords that I couldn't make the switch. This is a global phenomenon and we should honor all of those that have given the last full measure to stem the tide of this horrific pandemic." %}}
+<p>{{% alert "info" "" "If anyone knows a curated Twitter account that lists similar info for Indian healthcare workers I'd be glad to modify my script for this page. I tried a few options using plain text search, but it pulled so many spam posts that were jacking keywords that I couldn't make the switch. This is a global phenomenon and we should honor all of those that have given the last full measure to stem the tide of this horrific pandemic." %}}</p>
 </div>
 <div id="the-code-behind-the-charts" class="section level2">
 <h2>The Code Behind the Charts</h2>
@@ -119,10 +119,10 @@ URL <- "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/
 
 coviddata <- read.csv(URL)
 
-data <- select(coviddata, date, location, new_cases_smoothed_per_million) %>%
-  filter(date >= "2021-01-01") %>%
-  rename(value = new_cases_smoothed_per_million) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) %>%
+data <- select(coviddata, date, location, new_cases_smoothed_per_million) |>
+  filter(date >= "2021-01-01") |>
+  rename(value = new_cases_smoothed_per_million) |>
+  mutate(value = ifelse(is.na(value), 0, value)) |>
   mutate(date = ymd(date)) 
 
 data.wide <-  pivot_wider(data, names_from = location, values_from = value)
@@ -137,9 +137,9 @@ thm <- hc_theme_merge(
            subtitle = list(style = list(fontFamily = "Fira Code")),
            legend = list(itemStyle = list(fontFamily ='Ubuntu'))))
 
-widget <- highchart(type = "chart") %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "India's Kumbh Festival Dates Compared To COVID Infection Rates (per Million)", align = "center") %>%
+widget <- highchart(type = "chart") |>
+  hc_add_theme(thm) |>
+  hc_title(text = "India's Kumbh Festival Dates Compared To COVID Infection Rates (per Million)", align = "center") |>
     hc_chart(
       borderColor = 'rgba(160, 160, 160, 0.3)',
       borderRadius = 8,
@@ -147,17 +147,17 @@ widget <- highchart(type = "chart") %>%
       marginBottom = '80',
       marginTop = '60',
       marginLeft = '60',
-      marginRight = '60') %>%
-  hc_plotOptions(series = list(marker = list(enabled = FALSE))) %>%
+      marginRight = '60') |>
+  hc_plotOptions(series = list(marker = list(enabled = FALSE))) |>
   hc_credits(enabled = TRUE, 
              text = last_updated, 
-             position = list(align = "left", x = 10, y = -5)) %>%
+             position = list(align = "left", x = 10, y = -5)) |>
   hc_add_series(data_xts$India, 
                 type = "area", 
                 name = "India", 
                 color = "#FF9933", 
-                showInLegend = FALSE) %>%
-  hc_tooltip(valueDecimals = 2) %>%
+                showInLegend = FALSE) |>
+  hc_tooltip(valueDecimals = 2) |>
   hc_xAxis(type = "datetime",
     plotLines = list(list(
       label = list(text = "First Bath: Maka Sankranti"),
@@ -210,23 +210,23 @@ asia <- "/repo/nextstrain-ncov/data/asia.csv"
 
 asiadata <- read.csv(asia)
 
-data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
-  filter(Country == "India" 
-#         | Country == "Malaysia" 
-#         | Country == "Bangladesh" 
-#         | Country == "Nepal"
-#         | Country == "Sri Lanka"
-#         | Country == "Afghanistan"
-#         | Country == "Pakistan"
-#         | Country == "Maldives"
-         ) %>%
-  add_column(value = 1) %>%
-  rename(Date = Collection.Data) %>%
-  rename(Variant = PANGO.Lineage) %>%
-  mutate(Date = mdy(Date)) %>%
-  filter(Date >= "2021-01-01") %>% 
-  select(Date, Variant, value) %>%
-  group_by(Variant, Date = floor_date(Date, "month")) %>%
+data <- select(asiadata, Collection.Data, country, PANGO.Lineage, Clade) |>
+  filter(country == "India" 
+#         | country == "Malaysia" 
+#         | country == "Bangladesh" 
+#         | country == "Nepal"
+#         | country == "Sri Lanka"
+#         | country == "Afghanistan"
+#         | country == "Pakistan"
+#         | country == "Maldives"
+         ) |>
+  add_column(value = 1) |>
+  rename(Date = Collection.Data) |>
+  rename(Variant = PANGO.Lineage) |>
+  mutate(Date = mdy(Date)) |>
+  filter(Date >= "2021-01-01") |> 
+  select(Date, Variant, value) |>
+  group_by(Variant, Date = floor_date(Date, "month")) |>
   summarise(value = sum(value))</code></pre>
 <p>While the area spline and percentage charting makes for a “busy” visual, the key really is the tooltip. Note how HTML for building that mini-table is used to construct a “shared” tool tip, where mousing over any value will show the full range of values for every aggregate for that month. The late-binding of percentage-of-total has a definite “bucket brigade” vibe to it at first glance. But like most of this kind of hybrid/polyglot code exercises it becomes the “new normal” fairly quickly. There’s quite a bit of lift that’s being carried by the HighCharts “smarts” and that’s part of the beauty in the beast.</p>
 <pre><code class="r">thm <- hc_theme_merge(
@@ -237,28 +237,28 @@ data <- select(asiadata, Collection.Data, Country, PANGO.Lineage, Clade) %>%
 
 last_updated <- paste("Source: https://nextstrain.org/sars-cov-2  -  Report Last Updated:",  format(Sys.time(), "%a %b %d %Y %X"))
 
-widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Variant, labels = FALSE)) %>%
-  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) %>%
-  hc_legend(enabled = F) %>%
-  hc_add_theme(thm) %>%
-  hc_title(text = "India COVID Variants Percentage by Month (PANGO Lineage)", align = "center") %>%
-  hc_add_theme(thm) %>%
-  hc_yAxis(title = list(enabled = FALSE)) %>%
-  hc_xAxis(title = list(enabled = FALSE)) %>%
+widget <- hchart(data, "areaspline", hcaes(x = Date, y = value, group = Variant, labels = FALSE)) |>
+  hc_plotOptions(series = list(stacking = 'percent', marker = list(enabled = FALSE))) |>
+  hc_legend(enabled = F) |>
+  hc_add_theme(thm) |>
+  hc_title(text = "India COVID Variants Percentage by Month (PANGO Lineage)", align = "center") |>
+  hc_add_theme(thm) |>
+  hc_yAxis(title = list(enabled = FALSE)) |>
+  hc_xAxis(title = list(enabled = FALSE)) |>
   hc_chart(borderColor = 'rgba(160, 160, 160, 0.3)',
             borderRadius = 8,
             borderWidth = 2,
             marginBottom = '80',
             marginTop = '60',
             marginLeft = '60',
-            marginRight = '60') %>%
+            marginRight = '60') |>
   hc_legend(align = "right",
             verticalAlign = "top",
-            layout = "vertical") %>%
+            layout = "vertical") |>
   hc_tooltip(shared = TRUE, sort = TRUE, useHTML= TRUE,
               headerFormat = "&#x3C;b&#x3E;{point.key}&#x3C;/b&#x3E;&#x3C;table&#x3E;",
               pointFormat = "&#x3C;tr&#x3E;&#x3C;td style=&#x27;color: {series.color}&#x27;&#x3E;{series.name}: &#x3C;/td&#x3E;&#x3C;td style=&#x27;text-align: right&#x27;&#x3E; {point.percentage:,.2f} %&#x3C;/td&#x3E;&#x3C;/tr&#x3E;",
-              footerFormat = "&#x3C;/table&#x3E;") %>%
+              footerFormat = "&#x3C;/table&#x3E;") |>
   hc_credits(enabled = TRUE, 
               text = last_updated, 
               position = list(align = "left", x = 10, y = -5))
