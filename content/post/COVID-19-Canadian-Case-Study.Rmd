@@ -7,7 +7,7 @@ author: "Houston Haynes"
 date: '2020-11-13T14:59:43+05:30'
 featuredpath: img
 featured: COVID-19.png
-ogfeatured: "H3_og_wide_covid19.png
+ogfeatured: H3_og_wide_covid19.png
 emblem: health.png
 description: COVID-19 in Motion - a preamble to a Thanksgiving outbreak in the US?
 draft: false
