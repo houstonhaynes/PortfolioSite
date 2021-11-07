@@ -9,8 +9,8 @@ output:
 author: "Houston Haynes"
 date: '2020-12-06T14:59:43+05:30'
 featuredpath: img
-featured: "telematics.png"
-ogfeatured: "h3_og_wide_telematics.png"
+featured: "Telematics.png"
+ogfeatured: "H3_og_wide_telematics.png"
 emblem: iot.png
 description: Unpacking a vehicle telemetry solution from the code-side out
 draft: false

@@ -10,7 +10,7 @@ author: "Houston Haynes"
 date: '2021-06-02T15:59:43+05:30'
 featuredpath: img
 featured: fsharp.png
-ogfeatured: h3_og_wide_fsharp.png
+ogfeatured: "H3_og_wide_fsharp.png
 emblem: perspective.png
 description: A winding journey to a more functional and more hopeful path forward in the cloud and at the edge
 draft: false
